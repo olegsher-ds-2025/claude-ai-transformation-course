@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Transformation with Claude</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column; lesson sections in order; flat SVG illustrations; warm boxes = things you do, teal = reference */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --ink:#14232b; --muted:#56666e; --line:#d5dfe1;
+  --accent:#0f7a72; --accent-soft:#dcefed; --warm:#c8642c; --warm-soft:#f6e6dc;
+  --code-bg:#eef3f4;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,5vw,2.8rem);font-weight:700}
+h2{font-size:1.55rem;font-weight:700;margin-top:52px;margin-bottom:12px}
+h3{font-size:1.15rem;font-weight:700;margin-top:24px;margin-bottom:8px}
+p{margin:0 0 12px;max-width:68ch}
+ul,ol{padding-left:20px;max-width:68ch}
+li{margin-bottom:6px}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:1.15rem;color:var(--muted);margin-top:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font-family:var(--mono);font-size:.78rem;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}
+.objectives{margin-top:28px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.objectives h3{margin-top:0}
+figure{margin:24px 0;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:10px}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .sm{font-size:12px;fill:var(--muted)}
+.s-acc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.s-warm{fill:var(--warm-soft);stroke:var(--warm);stroke-width:2}
+.s-plain{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.ln{stroke:var(--muted);stroke-width:2;fill:none}
+.dot{fill:var(--accent)}
+.dot-w{fill:var(--warm)}
+.tbl{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.5;margin:12px 0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:3px}
+pre code{background:none;padding:0}
+.lab{margin-top:20px;padding:18px 20px;background:var(--warm-soft);border-radius:10px}
+.lab h3{margin-top:0;color:var(--warm)}
+.tip{padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 6px 6px 0;margin:16px 0;font-size:.95rem}
+.check li{margin-bottom:10px}
+details{margin-top:6px}
+summary{cursor:pointer;color:var(--accent);font-size:.9rem}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+</style>
+</head><body>
+<div class="wrap">
+<div class="eyebrow">Self-study course · 12 weeks · Python-first</div>
+<h1>AI Transformation with Claude</h1>
+<p class="lede">A technical, practical path to becoming an AI transformation consultant for small and mid-size companies, built on Anthropic's Claude products. Every module ends with a lab and a deliverable.</p>
+<p><a href="syllabus/index.html">Read the full syllabus</a> · <a href="https://github.com/olegsher-ds-2025/claude-ai-transformation-course">Source on GitHub</a></p>
+<h2>Part 1 · Foundations</h2>
+<div class="tbl"><table><tbody>
+<tr><td style="width:3rem"><b>1</b></td><td><a href="modules/module-01.html">Transformation landscape</a><br><span style="color:var(--muted);font-size:.9rem">Levels of AI change, model choice, Claude products, privacy, evidence</span></td></tr>
+<tr><td style="width:3rem"><b>2</b></td><td><a href="modules/module-02.html">Prompt and context engineering</a><br><span style="color:var(--muted);font-size:.9rem">Prompt patterns, structured output, tested prompt library</span></td></tr>
+<tr><td style="width:3rem"><b>3</b></td><td><a href="modules/module-03.html">Claude apps for knowledge work</a><br><span style="color:var(--muted);font-size:.9rem">Projects, connectors, scheduled tasks, rollout playbook</span></td></tr>
+</tbody></table></div>
+<h2>Part 2 · Building with Claude</h2>
+<div class="tbl"><table><tbody>
+<tr><td style="width:3rem"><b>4</b></td><td><a href="modules/module-04.html">Claude API in Python</a><br><span style="color:var(--muted);font-size:.9rem">Tool use, caching, batches, invoice extractor</span></td></tr>
+<tr><td style="width:3rem"><b>5</b></td><td><a href="modules/module-05.html">Knowledge retrieval (RAG)</a><br><span style="color:var(--muted);font-size:.9rem">Hebrew/English document assistant with citations</span></td></tr>
+<tr><td style="width:3rem"><b>6</b></td><td><a href="modules/module-06.html">Model Context Protocol (MCP)</a><br><span style="color:var(--muted);font-size:.9rem">Build and connect MCP servers</span></td></tr>
+<tr><td style="width:3rem"><b>7</b></td><td><a href="modules/module-07.html">Claude Code as a delivery engine</a><br><span style="color:var(--muted);font-size:.9rem">CLAUDE.md, hooks, subagents, project template</span></td></tr>
+<tr><td style="width:3rem"><b>8</b></td><td><a href="modules/module-08.html">Agents, Skills and plugins</a><br><span style="color:var(--muted);font-size:.9rem">Agent patterns, Agent SDK, Skills, lead-to-proposal agent</span></td></tr>
+</tbody></table></div>
+<h2>Part 3 · Production</h2>
+<div class="tbl"><table><tbody>
+<tr><td style="width:3rem"><b>9</b></td><td><a href="modules/module-09.html">Evaluation, cost and reliability</a><br><span style="color:var(--muted);font-size:.9rem">Eval sets, graders, routing, monitoring</span></td></tr>
+<tr><td style="width:3rem"><b>10</b></td><td><a href="modules/module-10.html">Security, governance and compliance</a><br><span style="color:var(--muted);font-size:.9rem">Prompt injection, PII, Israeli privacy law, policy templates</span></td></tr>
+</tbody></table></div>
+<h2>Part 4 · Consulting practice</h2>
+<div class="tbl"><table><tbody>
+<tr><td style="width:3rem"><b>11</b></td><td><a href="modules/module-11.html">Discovery, ROI and proposals</a><br><span style="color:var(--muted);font-size:.9rem">Readiness audit, scoring, ROI model, SOW</span></td></tr>
+<tr><td style="width:3rem"><b>12</b></td><td><a href="modules/module-12.html">Capstone and positioning</a><br><span style="color:var(--muted);font-size:.9rem">Case study, positioning, 90-day go-to-market</span></td></tr>
+</tbody></table></div>
+
+<p class="note" style="font-size:.85rem;color:var(--muted);margin-top:40px">Written October 2026. Check model names, API parameters and Claude Code settings against docs.claude.com before relying on them. Lab code has not yet been run against the live API. Module 10 is not legal advice.</p>
+</div></body></html>

@@ -2,7 +2,7 @@
 
 A 12-week, technical and practical self-study course for becoming an AI transformation consultant for small and mid-size companies, built around Anthropic's Claude products. Python-first. Every module ends with a lab and a deliverable you can show a client.
 
-Open `syllabus/index.html` for the overview, or read the modules below. Each page is a single self-contained HTML file (light and dark theme, works on a phone).
+Start at `index.html` (course home) or `syllabus/index.html` for the overview, or read the modules below. Each page is a single self-contained HTML file (light and dark theme, works on a phone).
 
 ## Modules
 
