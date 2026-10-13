@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Module 5 · Company Knowledge RAG</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column; lesson sections in order; flat SVG illustrations; warm boxes = things you do, teal = reference */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --ink:#14232b; --muted:#56666e; --line:#d5dfe1;
+  --accent:#0f7a72; --accent-soft:#dcefed; --warm:#c8642c; --warm-soft:#f6e6dc;
+  --code-bg:#eef3f4;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,5vw,2.8rem);font-weight:700}
+h2{font-size:1.55rem;font-weight:700;margin-top:52px;margin-bottom:12px}
+h3{font-size:1.15rem;font-weight:700;margin-top:24px;margin-bottom:8px}
+p{margin:0 0 12px;max-width:68ch}
+ul,ol{padding-left:20px;max-width:68ch}
+li{margin-bottom:6px}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:1.15rem;color:var(--muted);margin-top:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font-family:var(--mono);font-size:.78rem;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}
+.objectives{margin-top:28px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.objectives h3{margin-top:0}
+figure{margin:24px 0;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:10px}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .sm{font-size:12px;fill:var(--muted)}
+.s-acc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.s-warm{fill:var(--warm-soft);stroke:var(--warm);stroke-width:2}
+.s-plain{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.ln{stroke:var(--muted);stroke-width:2;fill:none}
+.dot{fill:var(--accent)}
+.dot-w{fill:var(--warm)}
+.tbl{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.5;margin:12px 0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:3px}
+pre code{background:none;padding:0}
+.lab{margin-top:20px;padding:18px 20px;background:var(--warm-soft);border-radius:10px}
+.lab h3{margin-top:0;color:var(--warm)}
+.tip{padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 6px 6px 0;margin:16px 0;font-size:.95rem}
+.check li{margin-bottom:10px}
+details{margin-top:6px}
+summary{cursor:pointer;color:var(--accent);font-size:.9rem}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+</style>
+
+<div class="wrap">
+
+<div class="eyebrow">AI Transformation with Claude · Part 2 · Week 5</div>
+<h1>Module 5. Knowledge retrieval (RAG) for company documents</h1>
+<p class="lede">Every client has the same complaint: "the answer is somewhere in our documents". This module shows how to choose between pasting documents into Claude and building retrieval, and then how to build a Hebrew, Russian and English search-and-answer system that cites its sources and can be measured.</p>
+<div class="meta"><span class="chip">≈ 9 h</span><span class="chip">reading 2 h</span><span class="chip">lab 5 h</span><span class="chip">deliverable 2 h</span></div>
+
+<div class="objectives">
+<h3>By the end of this module you can</h3>
+<ul>
+<li>Decide, for a given client, between Projects knowledge, long context with caching, and retrieval</li>
+<li>Turn PDF, DOCX and HTML into clean text, chunk it by structure, and attach useful metadata</li>
+<li>Choose an embedding model for Hebrew, Russian and English, knowing Anthropic does not ship one</li>
+<li>Combine BM25 and vector search, and explain when to add a reranker</li>
+<li>Add contextual retrieval with Claude and prompt caching, and say what it costs and buys</li>
+<li>Return answers with citations, and refuse when the documents do not contain the answer</li>
+<li>Handle Hebrew and Russian specifics: RTL, prefixes, inflection, normalisation</li>
+<li>Measure recall@k and faithfulness on a small labelled set, and keep the index fresh</li>
+</ul>
+</div>
+
+<!-- 5.1 -->
+<h2>5.1 Long context, Projects, or retrieval?</h2>
+<p>Do not build retrieval by reflex. If the whole document set fits in Claude's context with room to spare, pasting it in is simpler, has fewer moving parts, and lets Claude reason across documents. Retrieval earns its complexity when the set is too big, changes often, or must respect who may see what.</p>
+
+<figure>
+<svg viewBox="0 0 800 320" role="img" aria-label="Decision tree: if the documents fit in context, use Projects for app users or long context with caching for your own code; otherwise use retrieval">
+  <rect class="s-plain" x="290" y="14" width="220" height="60" rx="8"/>
+  <text x="400" y="40" text-anchor="middle" font-weight="600">Fits in context?</text>
+  <text x="400" y="60" text-anchor="middle" class="sm">with room to spare</text>
+  <path class="ln" d="M290 44 H150 V110"/><path class="ln" d="M144 102 L150 112 L156 102"/>
+  <path class="ln" d="M510 44 H670 V110"/><path class="ln" d="M664 102 L670 112 L676 102"/>
+  <text x="215" y="36" text-anchor="middle" class="sm">yes</text>
+  <text x="600" y="36" text-anchor="middle" class="sm">no</text>
+  <rect class="s-plain" x="30" y="112" width="240" height="60" rx="8"/>
+  <text x="150" y="138" text-anchor="middle" font-weight="600">Used in the Claude app?</text>
+  <text x="150" y="158" text-anchor="middle" class="sm">by people, not by your code</text>
+  <path class="ln" d="M150 172 V200 H105 V230"/><path class="ln" d="M99 222 L105 232 L111 222"/>
+  <path class="ln" d="M150 200 H310 V230"/><path class="ln" d="M304 222 L310 232 L316 222"/>
+  <text x="70" y="194" class="sm">yes</text>
+  <text x="240" y="194" class="sm">no</text>
+  <rect class="s-acc" x="20" y="232" width="170" height="70" rx="8"/>
+  <text x="105" y="262" text-anchor="middle" font-weight="600">Projects</text>
+  <text x="105" y="282" text-anchor="middle" class="sm">no code, fastest start</text>
+  <rect class="s-acc" x="215" y="232" width="190" height="70" rx="8"/>
+  <text x="310" y="262" text-anchor="middle" font-weight="600">Long context</text>
+  <text x="310" y="282" text-anchor="middle" class="sm">paste docs, cache the prefix</text>
+  <rect class="s-warm" x="560" y="112" width="220" height="70" rx="8"/>
+  <text x="670" y="142" text-anchor="middle" font-weight="600">Retrieval (RAG)</text>
+  <text x="670" y="162" text-anchor="middle" class="sm">search first, send only</text>
+  <text x="670" y="176" text-anchor="middle" class="sm">the best passages</text>
+  <text x="670" y="222" text-anchor="middle" class="sm">Also choose RAG, even if it fits, when:</text>
+  <text x="670" y="244" text-anchor="middle" class="sm">different people may see different files</text>
+  <text x="670" y="262" text-anchor="middle" class="sm">files change every day</text>
+  <text x="670" y="280" text-anchor="middle" class="sm">cost per question matters</text>
+</svg>
+<figcaption>Ask the "fits in context" question first, with real page counts from the client. Re-ask it every time the document set grows.</figcaption>
+</figure>
+
+<div class="tbl"><table>
+<thead><tr><th>Option</th><th>Good when</th><th>Watch out for</th></tr></thead>
+<tbody>
+<tr><td>Projects knowledge (Claude app)</td><td>A team of 5 to 50 people asks questions about a stable set of files, and nobody wants to maintain code</td><td>No custom permissions, no custom eval harness, and no use from your own app. Check the current Projects behaviour in the Help Center before promising anything</td></tr>
+<tr><td>Long context + prompt caching (API)</td><td>You need the answer inside your own app or workflow, and the full set fits in the context window. Cross-document questions ("which policies conflict?") work well</td><td>Every question pays to read the full set, even with caching. Quality can drop when the prompt is very long. Cache expiry makes latency uneven</td></tr>
+<tr><td>Retrieval (RAG)</td><td>The set is large, grows, changes daily, or has per-user access rules. You want citations to exact pages</td><td>More parts to build and monitor. Bad retrieval means a confident answer from the wrong page. You must measure it</td></tr>
+<tr><td>Hybrid of the two</td><td>Retrieve whole documents or large sections, then give Claude those in full</td><td>Needs good document-level metadata. Larger prompts per question</td></tr>
+</tbody></table></div>
+
+<div class="tip"><b>Consultant's line:</b> "For 40 pages and ten users we use a Claude Project this week. At 2,000 pages, or when payroll files must stay hidden from most staff, we build retrieval. We decide with your real page count, not a guess."</div>
+
+<p>Context window sizes and prompt caching rules change. Look up the current numbers in the Claude docs (models overview and prompt caching pages) before you quote any size to a client.</p>
+
+<!-- 5.2 -->
+<h2>5.2 The pipeline, ingestion and chunking</h2>
+<p>A RAG system is two loops. The offline loop turns files into an index and runs when documents change. The online loop runs for every question: find candidates, tighten them, and let Claude answer from them with citations.</p>
+
+<figure>
+<svg viewBox="0 0 800 290" role="img" aria-label="RAG pipeline: ingest, chunk, embed, index offline; retrieve, rerank, answer with citations online">
+  <text x="20" y="18" class="sm">offline: runs when documents change</text>
+  <rect class="s-plain" x="20" y="30" width="150" height="70" rx="8"/>
+  <text x="95" y="58" text-anchor="middle" font-weight="600">Ingest</text>
+  <text x="95" y="78" text-anchor="middle" class="sm">PDF, DOCX, HTML</text>
+  <text x="95" y="92" text-anchor="middle" class="sm">to clean text</text>
+  <rect class="s-plain" x="210" y="30" width="150" height="70" rx="8"/>
+  <text x="285" y="58" text-anchor="middle" font-weight="600">Chunk</text>
+  <text x="285" y="78" text-anchor="middle" class="sm">split by structure,</text>
+  <text x="285" y="92" text-anchor="middle" class="sm">keep metadata</text>
+  <rect class="s-plain" x="400" y="30" width="150" height="70" rx="8"/>
+  <text x="475" y="58" text-anchor="middle" font-weight="600">Embed</text>
+  <text x="475" y="78" text-anchor="middle" class="sm">multilingual model,</text>
+  <text x="475" y="92" text-anchor="middle" class="sm">plus BM25 tokens</text>
+  <rect class="s-acc" x="590" y="30" width="150" height="70" rx="8"/>
+  <text x="665" y="58" text-anchor="middle" font-weight="600">Index</text>
+  <text x="665" y="78" text-anchor="middle" class="sm">vector store and</text>
+  <text x="665" y="92" text-anchor="middle" class="sm">keyword index</text>
+  <path class="ln" d="M170 65 H210"/><path class="ln" d="M202 59 L210 65 L202 71"/>
+  <path class="ln" d="M360 65 H400"/><path class="ln" d="M392 59 L400 65 L392 71"/>
+  <path class="ln" d="M550 65 H590"/><path class="ln" d="M582 59 L590 65 L582 71"/>
+  <circle class="dot" cx="665" cy="100" r="5"/>
+  <path class="ln" d="M665 105 V140 H95 V180"/><path class="ln" d="M89 172 L95 182 L101 172"/>
+  <rect class="s-warm" x="20" y="182" width="150" height="70" rx="8"/>
+  <text x="95" y="210" text-anchor="middle" font-weight="600">Retrieve</text>
+  <text x="95" y="230" text-anchor="middle" class="sm">vectors and BM25,</text>
+  <text x="95" y="244" text-anchor="middle" class="sm">fused</text>
+  <rect class="s-warm" x="210" y="182" width="150" height="70" rx="8"/>
+  <text x="285" y="210" text-anchor="middle" font-weight="600">Rerank</text>
+  <text x="285" y="230" text-anchor="middle" class="sm">reorder, keep</text>
+  <text x="285" y="244" text-anchor="middle" class="sm">the best few</text>
+  <rect class="s-warm" x="400" y="182" width="250" height="70" rx="8"/>
+  <text x="525" y="210" text-anchor="middle" font-weight="600">Answer with citations</text>
+  <text x="525" y="230" text-anchor="middle" class="sm">Claude answers only from the passages</text>
+  <text x="525" y="244" text-anchor="middle" class="sm">and points at the source of each claim</text>
+  <path class="ln" d="M170 217 H210"/><path class="ln" d="M202 211 L210 217 L202 223"/>
+  <path class="ln" d="M360 217 H400"/><path class="ln" d="M392 211 L400 217 L392 223"/>
+  <text x="20" y="278" class="sm">online: runs for every question</text>
+</svg>
+<figcaption>Most retrieval failures are made in the left half: bad text extraction and bad chunks. Fix those before you tune anything on the right.</figcaption>
+</figure>
+
+<h3>From file to clean text</h3>
+<ul>
+<li><b>PDF.</b> Digital PDFs extract with a library such as pypdf. Scanned PDFs have no text layer and need OCR, or can be sent to Claude as PDF input. Always read a sample of the output: Hebrew in some PDFs comes out reversed, and headers and footers repeat on every page.</li>
+<li><b>DOCX.</b> Use python-docx. Headings give you free structure. Tables need explicit handling or they disappear; the lab turns each row into "cell | cell | cell".</li>
+<li><b>HTML.</b> Use BeautifulSoup. Drop navigation, scripts and footers, and keep headings, paragraphs and list items. Intranet wiki exports are often cleaner than the PDFs made from them.</li>
+</ul>
+
+<h3>Chunking strategies</h3>
+<div class="tbl"><table>
+<thead><tr><th>Strategy</th><th>How it works</th><th>Use it when</th></tr></thead>
+<tbody>
+<tr><td>Fixed size + overlap</td><td>Cut every N characters, repeat a tail</td><td>Quick baseline only. It cuts through sentences and tables</td></tr>
+<tr><td>Structure-aware</td><td>Split on headings and paragraphs, merge small pieces up to a target size</td><td>Default for policies and procedures. The lab uses this</td></tr>
+<tr><td>Semantic</td><td>Split where the embedding similarity between sentences drops</td><td>Long unstructured text such as meeting notes. Costs more, gains are uneven</td></tr>
+<tr><td>Parent-child</td><td>Search small chunks, but send Claude the whole section they belong to</td><td>Answers need surrounding context, for example exceptions listed below a rule</td></tr>
+<tr><td>Whole-document</td><td>One entry per short document (a form, an FAQ item)</td><td>Many tiny documents</td></tr>
+</tbody></table></div>
+<p>Chunk size is a trade: small chunks match precisely but lose context; large chunks keep context but blur the match and use more of the prompt. Start with a few paragraphs, then tune the number with your eval from 5.8. Do not argue about it from theory.</p>
+
+<h3>Metadata is half the value</h3>
+<p>Store, for each chunk: source file, page or section heading, language, last-modified date, document version or status (current, superseded), department or owner, and an access group. These fields give you citations ("handbook, page 14"), filters ("only current policies", "only documents this user may see") and freshness control later.</p>
+
+<!-- 5.3 -->
+<h2>5.3 Embeddings: choosing a model for Hebrew, Russian and English</h2>
+<p>An embedding model turns text into a vector so that similar meanings land close together. Anthropic does not ship its own embedding model. The <a href="https://docs.claude.com/en/docs/build-with-claude/embeddings" target="_blank" rel="noopener">embeddings page in the Claude docs</a> discusses the options and points to a provider, Voyage AI. You will still pick a model yourself, and the choice matters most for Hebrew.</p>
+
+<div class="tbl"><table>
+<thead><tr><th>Option</th><th>Hosting</th><th>Notes for Hebrew and Russian</th></tr></thead>
+<tbody>
+<tr><td>Voyage AI models</td><td>Hosted API</td><td>Strong retrieval quality and the one the Claude docs point to. Check which models list multilingual support, and test Hebrew on your own questions</td></tr>
+<tr><td>BAAI bge-m3</td><td>Open weights, run it yourself</td><td>Multilingual, handles cross-language queries (Hebrew question, English document). Runs on your machine or client server, so text never leaves. The lab uses it</td></tr>
+<tr><td>multilingual-e5 family</td><td>Open weights, run it yourself</td><td>Multilingual and widely used. Needs the "query: " and "passage: " prefixes in front of text, or quality drops</td></tr>
+<tr><td>Other cloud providers' embedding APIs</td><td>Hosted API</td><td>Fine if the client already uses that provider. Check data terms and test Hebrew first</td></tr>
+</tbody></table></div>
+
+<div class="tip">Choose with a test, not a leaderboard. Run the 30-question set from 5.8 on two or three candidates and keep the winner. Store the model name in the index (the lab does) because changing the model means re-embedding everything.</div>
+
+<p>Two practical rules. First, hosted versus local is a client decision about where HR text may go; ask early, and check Israeli privacy requirements with the client's counsel for employee data. Second, a model that handles the languages separately is not enough for a bilingual company: you want Hebrew and English questions to find the same document.</p>
+
+<!-- 5.4 -->
+<h2>5.4 Hybrid search and reranking</h2>
+<p>Vector search finds meaning: "how many days off do I get" matches a paragraph titled "annual leave entitlement". It is weaker on exact strings: form numbers, product names, names of systems, acronyms. BM25 is the opposite: it scores exact word overlap and ignores meaning. Use both.</p>
+<div class="tbl"><table>
+<thead><tr><th>Step</th><th>What it does</th><th>In the lab</th></tr></thead>
+<tbody>
+<tr><td>Vector search</td><td>Nearest chunks by embedding similarity</td><td>Chroma, cosine distance</td></tr>
+<tr><td>BM25</td><td>Keyword ranking over the same chunks</td><td>rank_bm25 with a Hebrew-aware tokenizer</td></tr>
+<tr><td>Fusion</td><td>Merge the two ranked lists. Reciprocal rank fusion uses only ranks, so you never calibrate scores</td><td><code>rrf()</code> in retrieve.py</td></tr>
+<tr><td>Rerank (optional)</td><td>A second model reads the question and each candidate together and reorders them</td><td>Small Claude model as a listwise reranker. A dedicated reranker model is the usual alternative</td></tr>
+</tbody></table></div>
+<p>Rerank when your eval shows the right chunk is often in the candidates but not in the top few. It adds latency and cost per question, so it is a measured upgrade, not a default.</p>
+
+<!-- 5.5 -->
+<h2>5.5 Contextual retrieval</h2>
+<p>A chunk taken out of its document often loses what it is about. "Unused days expire in March" does not say whether it means vacation, sick leave or training days. Anthropic's <a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank" rel="noopener">contextual retrieval</a> fixes this at ingestion time: for each chunk, Claude reads the whole document and writes one or two sentences placing the chunk in it. That note is prepended to the chunk before embedding and before BM25 indexing.</p>
+
+<figure>
+<svg viewBox="0 0 800 230" role="img" aria-label="Contextual retrieval: a raw chunk and the whole document go to Claude, which writes a context note; the note plus chunk is indexed">
+  <rect class="s-plain" x="20" y="60" width="210" height="110" rx="8"/>
+  <text x="125" y="88" text-anchor="middle" font-weight="600">Raw chunk</text>
+  <text x="125" y="114" text-anchor="middle" class="sm">"Unused days expire</text>
+  <text x="125" y="130" text-anchor="middle" class="sm">in March."</text>
+  <text x="125" y="154" text-anchor="middle" class="sm">which days? which policy?</text>
+  <rect class="s-warm" x="290" y="30" width="220" height="170" rx="8"/>
+  <text x="400" y="62" text-anchor="middle" font-weight="600">Claude reads both</text>
+  <text x="400" y="92" text-anchor="middle" class="sm">the full document (cached,</text>
+  <text x="400" y="108" text-anchor="middle" class="sm">reused for every chunk)</text>
+  <text x="400" y="128" text-anchor="middle" class="sm">and the chunk, then writes</text>
+  <text x="400" y="144" text-anchor="middle" class="sm">one short situating note</text>
+  <circle class="dot-w" cx="400" cy="172" r="5"/>
+  <rect class="s-acc" x="570" y="30" width="210" height="170" rx="8"/>
+  <text x="675" y="62" text-anchor="middle" font-weight="600">Indexed text</text>
+  <text x="675" y="92" text-anchor="middle" class="sm">"Leave policy, annual</text>
+  <text x="675" y="108" text-anchor="middle" class="sm">vacation section."</text>
+  <text x="675" y="132" text-anchor="middle" class="sm">+ "Unused days expire</text>
+  <text x="675" y="148" text-anchor="middle" class="sm">in March."</text>
+  <text x="675" y="178" text-anchor="middle" class="sm">embedded and BM25-indexed</text>
+  <path class="ln" d="M230 115 H290"/><path class="ln" d="M282 109 L290 115 L282 121"/>
+  <path class="ln" d="M510 115 H570"/><path class="ln" d="M562 109 L570 115 L562 121"/>
+</svg>
+<figcaption>The note is written once, at ingestion. Questions at run time cost the same as before.</figcaption>
+</figure>
+
+<ul>
+<li><b>Why prompt caching matters.</b> Every chunk of a document needs the same whole-document text in the prompt. Mark that block with <code>cache_control</code> and later chunks of the same file reuse it instead of paying full price. Process one file's chunks in a row, so the cache stays warm. For a large backlog, the Batch API is another cost lever; the caching and batch docs describe how the two interact.</li>
+<li><b>What it buys.</b> Anthropic's post reports measured reductions in failed retrievals, larger when combined with BM25 and reranking. Read the post for the numbers and the setup, then measure your own corpus: gains are biggest where chunks are short, anonymous and repetitive, as in policy documents.</li>
+<li><b>What it costs.</b> One small-model call per chunk, only for new or changed files. The context note is generated text from a model, so check a sample for invented details.</li>
+<li><b>Language.</b> Ask for the note in the chunk's language, as the lab prompt does. A Hebrew chunk with an English note embeds worse than a Hebrew chunk with a Hebrew note, unless your model is strongly cross-lingual; test it.</li>
+</ul>
+
+<!-- 5.6 -->
+<h2>5.6 Grounding and citations</h2>
+<p>An answer without a source is a claim the employee cannot check. Two approaches work.</p>
+<h3>Option A: the Claude citations feature</h3>
+<p>You pass the retrieved passages as document blocks with citations enabled. Claude's reply then carries structured citation objects that point to the exact passage used for each claim, so you do not have to trust a source name the model typed. The lab uses this. The block types, citation types and current limits are in the <a href="https://docs.claude.com/en/docs/build-with-claude/citations" target="_blank" rel="noopener">citations documentation</a>; read it rather than relying on a summary, because the details evolve.</p>
+<h3>Option B: quoted spans with source ids</h3>
+<p>Label each passage with an id, ask Claude to put a short verbatim quote and the id after each claim, and verify in code that the quote really appears in that passage. This works with any model and any output format, and the verification is cheap:</p>
+<pre><code>def quote_is_real(quote: str, passage: str) -&gt; bool:
+    norm = lambda s: " ".join(s.split())
+    return norm(quote) in norm(passage)</code></pre>
+<p>Reject or flag any answer whose quotes fail the check. Hebrew needs the same normalisation here as in search, or niqqud and quote-mark differences will cause false alarms.</p>
+
+<h3>Rules that make answers trustworthy</h3>
+<ul>
+<li>Say in the system prompt: use only the documents; if they do not contain the answer, say so and name who to ask.</li>
+<li>Show the source file, page and the cited sentence next to the answer in the UI.</li>
+<li>Show the document date. A correct quote from a superseded policy is still a wrong answer.</li>
+<li>Count "answered with no citation" as a defect in your eval.</li>
+</ul>
+
+<!-- 5.7 -->
+<h2>5.7 Hebrew and Russian specifics</h2>
+<div class="tbl"><table>
+<thead><tr><th>Issue</th><th>What goes wrong</th><th>What to do</th></tr></thead>
+<tbody>
+<tr><td>Right-to-left</td><td>Extraction order from PDFs can reverse Hebrew; digits and Latin words inside Hebrew text jump around in the UI</td><td>Store text in logical order. Check extraction by eye. In HTML output use <code>dir="auto"</code> on each answer block so Hebrew, English and Russian each align correctly</td></tr>
+<tr><td>Hebrew prefixes</td><td>One-letter prefixes (ו, ה, ב, כ, ל, מ, ש) are glued to the word. A query for "חופשה" will not match "בחופשה" or "והחופשה" in BM25, because they are different tokens</td><td>Generate both the original token and prefix-stripped variants, as <code>tokenize()</code> does. This over-generates (a real first letter gets stripped sometimes), which is acceptable because the original token is still indexed. A Hebrew morphological analyser is the heavier option; measure first</td></tr>
+<tr><td>Spelling variants</td><td>The same word appears with and without added vowel letters, and abbreviations use different quote marks: דוח, דו"ח, דו״ח</td><td>Normalise gershayim, geresh and curly quotes, then remove quotes inside words. Strip niqqud. Apply the same function to documents and queries</td></tr>
+<tr><td>Russian inflection</td><td>отпуск, отпуска, отпуске are three tokens to BM25</td><td>Vectors cover most of it. For BM25, add a stemmer or lemmatiser for Russian if misses show up in the eval</td></tr>
+<tr><td>Mixed language</td><td>Hebrew sentences contain English system names (Workday, Jira) and numbers</td><td>This is where BM25 helps: exact Latin tokens match perfectly. Keep them, lowercased</td></tr>
+<tr><td>Cross-language questions</td><td>An employee asks in Hebrew about a policy that exists only in English</td><td>Use a multilingual embedding model, and have Claude answer in the question's language while citing the English source</td></tr>
+</tbody></table></div>
+<div class="tip">Build the Hebrew-specific part as a small, tested function, not as scattered regexes. When a client's documents turn out to have unusual spelling habits, you change one function and re-ingest.</div>
+
+<!-- 5.8 -->
+<h2>5.8 Evaluating retrieval and answers</h2>
+<p>"It seems to work" is not a deliverable. Build a small labelled set before you tune anything, and rerun it after every change.</p>
+
+<h3>The question set</h3>
+<p>Write about 30 questions from the real documents, with a reference answer and the source file and page that contains it. Mix them on purpose:</p>
+<ul>
+<li>About 12 in Hebrew and 12 in English, written the way employees write, not copied from headings</li>
+<li>A few Hebrew questions whose answer is only in an English document, and the reverse</li>
+<li>A few questions whose answer needs an exact term or number (form name, system name)</li>
+<li>At least 3 questions the documents cannot answer. The right behaviour is "I could not find this"</li>
+</ul>
+
+<div class="tbl"><table>
+<thead><tr><th>Metric</th><th>Question it answers</th><th>How to compute</th></tr></thead>
+<tbody>
+<tr><td>recall@k</td><td>Was the right passage among the top k retrieved?</td><td>Share of answerable questions where any top-k chunk matches the gold source (and page)</td></tr>
+<tr><td>Faithfulness</td><td>Is every claim in the answer supported by the passages given?</td><td>Claude as judge, given the passages and the answer</td></tr>
+<tr><td>Correctness</td><td>Does the answer agree with the reference?</td><td>Claude as judge, given the reference</td></tr>
+<tr><td>Citation rate</td><td>Did answerable questions get at least one citation?</td><td>Count answers with a non-empty citation list</td></tr>
+<tr><td>Refusal quality</td><td>Does it admit when the documents are silent?</td><td>On unanswerable questions, check that the answer says so</td></tr>
+</tbody></table></div>
+
+<p>Read recall and faithfulness together. Low recall means search is the problem: look at chunks, tokenizer, embedding model. High recall with low faithfulness means the prompt or the model is the problem. A faithful but wrong answer usually means the right passage was never retrieved, or the documents conflict.</p>
+<div class="tip"><b>Judge the judge.</b> Hand-check about ten judged answers, including some the judge approved. Use a model at least as capable as the one that answers, tell it to be strict, and report results per language. With 30 questions, one question is worth three points: treat differences of one or two questions as noise.</div>
+
+<!-- 5.9 -->
+<h2>5.9 Keeping the index fresh</h2>
+<p>A knowledge assistant that quotes last year's policy is worse than none. Plan freshness before go-live.</p>
+<ul>
+<li><b>Detect change.</b> Store a content hash per file (the lab keeps a manifest). On each run, re-process only files whose hash changed.</li>
+<li><b>Replace, never append.</b> Delete the old chunks of a changed file before adding new ones. Delete chunks of files that disappeared.</li>
+<li><b>Version and status.</b> When a policy is replaced, mark the old one superseded or remove it. Show the last-modified date in answers.</li>
+<li><b>Trigger.</b> A nightly scheduled run is enough for most SMBs. A webhook from Drive or SharePoint is the upgrade.</li>
+<li><b>Model changes.</b> A new embedding model, or a new chunking rule, means a full rebuild. Keep the model name in the index and refuse to query a mismatched one.</li>
+<li><b>Permissions.</b> If documents have different audiences, copy the access group into metadata and filter every query by the caller's groups. Never rely on the prompt to hide text.</li>
+<li><b>Learn from gaps.</b> Log questions that got "not found" or a thumbs-down. They tell the client which documents are missing or unclear.</li>
+</ul>
+
+<!-- LAB -->
+<div class="lab">
+<h3>Lab 5. Bilingual HR and procedures assistant</h3>
+<p>Goal: build, run and measure a Hebrew and English assistant over about 200 pages of HR policies and procedures, with hybrid retrieval, cited answers and an eval script. Four files, each runnable on its own.</p>
+
+<p><b>Corpus.</b> Use a friendly client's non-sensitive procedures, or make a synthetic set: ask Claude to write 12 to 15 documents (leave, sick days, expenses, remote work, onboarding, safety, equipment, travel) in Hebrew and English, with a few deliberate conflicts and one superseded version. Save them as a mix of PDF, DOCX and HTML in <code>docs/</code>. Do not put real employee data in your lab.</p>
+
+<p><b>Setup</b></p>
+<pre><code>mkdir hr-rag &amp;&amp; cd hr-rag
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install anthropic chromadb sentence-transformers rank-bm25 pypdf python-docx beautifulsoup4 python-dotenv
+echo "ANTHROPIC_API_KEY=sk-ant-..." &gt; .env
+mkdir docs     # put your 200 pages here</code></pre>
+<p>The first run downloads the embedding model, which is large. Run <code>pip</code> and the first ingest on a good connection.</p>
+
+<p><b>ingest.py</b></p>
+<pre><code>"""ingest.py - read PDF/DOCX/HTML, chunk, optionally add Claude-written context, embed, store in Chroma.
+
+Usage:
+    python ingest.py ./docs
+    python ingest.py ./docs --contextualize
+    python ingest.py ./docs --rebuild
+"""
+import argparse
+import hashlib
+import json
+import re
+from datetime import datetime, timezone
+from pathlib import Path
+
+import anthropic
+import chromadb
+from dotenv import load_dotenv
+from sentence_transformers import SentenceTransformer
+
+load_dotenv()
+
+EMBED_MODEL = "BAAI/bge-m3"          # multilingual: Hebrew, Russian, English
+COLLECTION = "hr_docs"
+INDEX_DIR = "index"
+MANIFEST = Path(INDEX_DIR) / "manifest.json"
+CONTEXT_MODEL = "claude-haiku-5-5"   # check current model IDs at docs.claude.com
+TARGET_CHARS = 1400                  # tune with your eval, not by feel
+OVERLAP_CHARS = 200
+MAX_DOC_CHARS = 300_000              # keep the whole-document prompt inside the model context
+
+
+# ---------- 1. readers: file -&gt; list of {page, heading, text} ----------
+def read_pdf(path):
+    from pypdf import PdfReader
+    units = []
+    for i, page in enumerate(PdfReader(str(path)).pages, start=1):
+        # Check Hebrew output by eye: some PDFs extract reversed or with broken digits.
+        units.append({"page": i, "heading": "", "text": page.extract_text() or ""})
+    return units
+
+
+def read_docx(path):
+    import docx
+    d = docx.Document(str(path))
+    units, heading, buf = [], "", []
+    for p in d.paragraphs:
+        txt = p.text.strip()
+        if not txt:
+            continue
+        if p.style.name.lower().startswith("heading"):
+            if buf:
+                units.append({"page": 0, "heading": heading, "text": "\n\n".join(buf)})
+                buf = []
+            heading = txt
+        else:
+            buf.append(txt)
+    if buf:
+        units.append({"page": 0, "heading": heading, "text": "\n\n".join(buf)})
+    for t in d.tables:  # keep table rows as "cell | cell | cell" lines
+        rows = [" | ".join(c.text.strip() for c in r.cells) for r in t.rows]
+        units.append({"page": 0, "heading": heading, "text": "\n".join(rows)})
+    return units
+
+
+def read_html(path):
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(path.read_text(encoding="utf-8", errors="ignore"), "html.parser")
+    for tag in soup(["script", "style", "nav", "footer", "header"]):
+        tag.decompose()
+    units, heading, buf = [], "", []
+    for el in soup.find_all(["h1", "h2", "h3", "p", "li"]):
+        txt = el.get_text(" ", strip=True)
+        if not txt:
+            continue
+        if el.name in ("h1", "h2", "h3"):
+            if buf:
+                units.append({"page": 0, "heading": heading, "text": "\n\n".join(buf)})
+                buf = []
+            heading = txt
+        else:
+            buf.append(txt)
+    if buf:
+        units.append({"page": 0, "heading": heading, "text": "\n\n".join(buf)})
+    return units
+
+
+READERS = {".pdf": read_pdf, ".docx": read_docx, ".html": read_html, ".htm": read_html}
+
+
+# ---------- 2. chunking: paragraphs first, sentences if a paragraph is too long ----------
+def split_text(text, target=TARGET_CHARS, overlap=OVERLAP_CHARS):
+    text = re.sub(r"[ \t]+", " ", text)
+    pieces = []
+    for para in (p.strip() for p in re.split(r"\n\s*\n", text)):
+        if not para:
+            continue
+        if len(para) &lt;= target:
+            pieces.append(para)
+        else:
+            pieces.extend(s.strip() for s in re.split(r"(?&lt;=[.!?])\s+", para) if s.strip())
+    chunks, cur = [], ""
+    for piece in pieces:
+        if cur and len(cur) + len(piece) + 1 &gt; target:
+            chunks.append(cur)
+            tail = cur[-overlap:].split(" ", 1)[-1]   # drop a cut-off first word
+            cur = tail + " " + piece
+        else:
+            cur = (cur + "\n" + piece) if cur else piece
+    if cur.strip():
+        chunks.append(cur)
+    return chunks
+
+
+def detect_lang(text):
+    he = len(re.findall(r"[֐-׿]", text))
+    ru = len(re.findall(r"[Ѐ-ӿ]", text))
+    en = len(re.findall(r"[A-Za-z]", text))
+    return max((("he", he), ("ru", ru), ("en", en)), key=lambda x: x[1])[0]
+
+
+# ---------- 3. contextual retrieval: Claude writes a situating note per chunk ----------
+def make_context(client, doc_text, chunk_text):
+    try:
+        resp = client.messages.create(
+            model=CONTEXT_MODEL,
+            max_tokens=150,
+            messages=[{"role": "user", "content": [
+                # Same document block for every chunk of this file: cache it.
+                {"type": "text", "text": f"&lt;document&gt;\n{doc_text}\n&lt;/document&gt;",
+                 "cache_control": {"type": "ephemeral"}},
+                {"type": "text", "text": (
+                    "Here is a chunk from the document above:\n&lt;chunk&gt;\n" + chunk_text + "\n&lt;/chunk&gt;\n"
+                    "Write one or two short sentences that place this chunk in the whole document "
+                    "(which policy, which section, which topic) so a search engine can find it. "
+                    "Write in the same language as the chunk. Output only those sentences.")},
+            ]}],
+        )
+        return resp.content[0].text.strip()
+    except anthropic.APIError as e:
+        print("  context failed, continuing without it:", e)
+        return ""
+
+
+# ---------- 4. main: only changed files are re-processed ----------
+def sha256(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("folder")
+    ap.add_argument("--contextualize", action="store_true")
+    ap.add_argument("--rebuild", action="store_true")
+    args = ap.parse_args()
+
+    root = Path(args.folder)
+    Path(INDEX_DIR).mkdir(exist_ok=True)
+    db = chromadb.PersistentClient(path=INDEX_DIR)
+    if args.rebuild:
+        try:
+            db.delete_collection(COLLECTION)
+        except Exception:
+            pass
+        manifest = {}
+    else:
+        manifest = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {}
+    col = db.get_or_create_collection(
+        COLLECTION, metadata={"hnsw:space": "cosine", "embed_model": EMBED_MODEL})
+
+    client = anthropic.Anthropic() if args.contextualize else None
+    model = None
+    seen = set()
+
+    for path in sorted(p for p in root.rglob("*") if p.suffix.lower() in READERS):
+        key = str(path.relative_to(root))
+        seen.add(key)
+        digest = sha256(path)
+        if manifest.get(key) == digest:
+            continue
+        print("indexing", key)
+        col.delete(where={"source": key})            # drop the old version of this file
+
+        units = [u for u in READERS[path.suffix.lower()](path) if u["text"].strip()]
+        doc_text = "\n\n".join(u["text"] for u in units)[:MAX_DOC_CHARS]
+        mtime = datetime.fromtimestamp(path.stat().st_mtime, timezone.utc).date().isoformat()
+
+        rows = []
+        for u in units:
+            for piece in split_text(u["text"]):
+                ctx = make_context(client, doc_text, piece) if client else ""
+                rows.append({"text": piece, "context": ctx, "page": u["page"], "heading": u["heading"]})
+        if not rows:
+            manifest[key] = digest
+            continue
+
+        if model is None:
+            model = SentenceTransformer(EMBED_MODEL)
+        to_embed = [(r["context"] + "\n" + r["text"]).strip() for r in rows]
+        vecs = model.encode(to_embed, normalize_embeddings=True, batch_size=16).tolist()
+        col.add(
+            ids=[f"{key}#{n}" for n in range(len(rows))],
+            embeddings=vecs,
+            documents=[r["text"] for r in rows],
+            metadatas=[{"source": key, "page": r["page"], "heading": r["heading"],
+                        "lang": detect_lang(r["text"]), "context": r["context"],
+                        "mtime": mtime, "sha": digest[:12]} for r in rows],
+        )
+        manifest[key] = digest
+
+    for gone in set(manifest) - seen:                # file was deleted from the folder
+        print("removing", gone)
+        col.delete(where={"source": gone})
+        del manifest[gone]
+
+    MANIFEST.write_text(json.dumps(manifest, indent=2))
+    print("chunks in index:", col.count())
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+
+<p><b>retrieve.py</b></p>
+<pre><code>"""retrieve.py - hybrid retrieval: vectors (Chroma) + BM25, fused with reciprocal rank fusion.
+
+Usage:
+    python retrieve.py "כמה ימי מחלה מותר לצבור?"
+"""
+import json
+import re
+import sys
+import unicodedata
+
+import anthropic
+import chromadb
+from dotenv import load_dotenv
+from rank_bm25 import BM25Okapi
+from sentence_transformers import SentenceTransformer
+
+load_dotenv()
+
+EMBED_MODEL = "BAAI/bge-m3"
+COLLECTION = "hr_docs"
+INDEX_DIR = "index"
+RERANK_MODEL = "claude-haiku-5-5"    # check current model IDs at docs.claude.com
+
+NIQQUD = re.compile(r"[֑-ׇ]")
+TOKEN = re.compile(r"\w+", re.UNICODE)
+HE_PREFIXES = "והבכלמש"              # vav, he, bet, kaf, lamed, mem, shin
+
+
+def normalize(text):
+    t = unicodedata.normalize("NFKC", text)
+    t = NIQQUD.sub("", t)                                   # vowel marks
+    t = t.replace("״", '"').replace("“", '"').replace("”", '"')   # gershayim, curly quotes
+    t = t.replace("׳", "'").replace("’", "'")
+    t = re.sub(r"(?&lt;=\w)[\"'](?=\w)", "", t)                # בע"מ -&gt; בעמ, דו"ח -&gt; דוח
+    return t.lower()
+
+
+def tokenize(text):
+    """Word tokens plus Hebrew prefix-stripped variants (over-generates on purpose)."""
+    out = []
+    for w in TOKEN.findall(normalize(text)):
+        out.append(w)
+        stem = w
+        for _ in range(2):                                  # allow two stacked prefixes
+            if len(stem) &gt; 3 and stem[0] in HE_PREFIXES:
+                stem = stem[1:]
+                out.append(stem)
+            else:
+                break
+    return out
+
+
+def rrf(rankings, k=60):
+    """Reciprocal rank fusion: robust, no score calibration needed."""
+    score = {}
+    for ranking in rankings:
+        for rank, doc_id in enumerate(ranking):
+            score[doc_id] = score.get(doc_id, 0.0) + 1.0 / (k + rank + 1)
+    return sorted(score, key=score.get, reverse=True), score
+
+
+def chroma_where(where):
+    if not where:
+        return None
+    items = [{k: v} for k, v in where.items()]
+    return items[0] if len(items) == 1 else {"$and": items}
+
+
+def rerank_with_claude(query, hits):
+    """Optional listwise rerank by a small Claude model. A dedicated reranker model is the alternative."""
+    client = anthropic.Anthropic()
+    listing = "\n\n".join(f"[{n}] {h['text'][:600]}" for n, h in enumerate(hits))
+    msg = client.messages.create(
+        model=RERANK_MODEL, max_tokens=200,
+        messages=[{"role": "user", "content": (
+            f"Question: {query}\n\nPassages:\n{listing}\n\n"
+            "Return a JSON list of passage numbers, most useful for answering the question first. "
+            "Output only the JSON list.")}])
+    m = re.search(r"\[[\d,\s]*\]", msg.content[0].text)
+    if not m:
+        return hits
+    order = [i for i in json.loads(m.group(0)) if isinstance(i, int) and 0 &lt;= i &lt; len(hits)]
+    order += [i for i in range(len(hits)) if i not in order]
+    seen, result = set(), []
+    for i in order:
+        if i not in seen:
+            seen.add(i)
+            result.append(hits[i])
+    return result
+
+
+class Retriever:
+    def __init__(self):
+        db = chromadb.PersistentClient(path=INDEX_DIR)
+        self.col = db.get_collection(COLLECTION)
+        if (self.col.metadata or {}).get("embed_model") != EMBED_MODEL:
+            raise SystemExit("Index was built with a different embedding model. Re-run ingest.py --rebuild.")
+        self.model = SentenceTransformer(EMBED_MODEL)
+        data = self.col.get(include=["documents", "metadatas"])
+        self.ids, self.docs, self.metas = data["ids"], data["documents"], data["metadatas"]
+        self.pos = {i: n for n, i in enumerate(self.ids)}
+        # BM25 sees the Claude-written context too, when ingest was run with --contextualize
+        corpus = [tokenize(m.get("context", "") + " " + d) for d, m in zip(self.docs, self.metas)]
+        self.bm25 = BM25Okapi(corpus)
+
+    def _hit(self, doc_id, score):
+        n = self.pos[doc_id]
+        return {"id": doc_id, "text": self.docs[n], "meta": self.metas[n], "score": score}
+
+    def search(self, query, k=5, candidates=30, mode="hybrid", where=None, rerank=False):
+        """mode: 'hybrid' | 'vector' | 'bm25'. where: equality filter such as {'lang': 'he'}."""
+        rankings = []
+        if mode in ("hybrid", "vector"):
+            qv = self.model.encode([query], normalize_embeddings=True).tolist()
+            res = self.col.query(query_embeddings=qv, n_results=min(candidates, len(self.ids)),
+                                 where=chroma_where(where))
+            rankings.append(res["ids"][0])
+        if mode in ("hybrid", "bm25"):
+            scores = self.bm25.get_scores(tokenize(query))
+            order = sorted(range(len(scores)), key=lambda n: -scores[n])
+            ids = [self.ids[n] for n in order if scores[n] &gt; 0
+                   and all(self.metas[n].get(a) == b for a, b in (where or {}).items())]
+            rankings.append(ids[:candidates])
+        fused, score = rrf(rankings)
+        pool = fused[: max(k, 20)] if rerank else fused[:k]
+        hits = [self._hit(i, score[i]) for i in pool]
+        if rerank:
+            hits = rerank_with_claude(query, hits)
+        return hits[:k]
+
+
+if __name__ == "__main__":
+    r = Retriever()
+    for h in r.search(" ".join(sys.argv[1:]) or "annual leave"):
+        m = h["meta"]
+        print(f"{h['score']:.4f}  {m['source']} p.{m['page']}  {h['text'][:100]!r}")</code></pre>
+
+<p><b>answer.py</b></p>
+<pre><code>"""answer.py - retrieve, then let Claude answer with citations that point at the retrieved passages.
+
+Usage:
+    python answer.py "How do I request remote work days?"
+"""
+import sys
+
+import anthropic
+from dotenv import load_dotenv
+
+from retrieve import Retriever
+
+load_dotenv()
+
+MODEL = "claude-sonnet-5-5"          # check current model IDs at docs.claude.com
+client = anthropic.Anthropic()
+
+SYSTEM = """You answer employee questions about HR policy and company procedures.
+Rules:
+- Use only the provided documents. If they do not contain the answer, say so plainly and suggest asking HR. Do not guess.
+- Reply in the language of the question (Hebrew, English or Russian). Be short and concrete.
+- If documents disagree or look outdated, say so and name both."""
+
+
+def doc_blocks(hits):
+    blocks = []
+    for h in hits:
+        m = h["meta"]
+        title = m["source"] + (f" p.{m['page']}" if m.get("page") else "")
+        blocks.append({
+            "type": "document",
+            "source": {"type": "text", "media_type": "text/plain", "data": h["text"]},
+            "title": title,
+            "context": f"Section: {m.get('heading') or '-'}. Last modified: {m.get('mtime', '?')}.",
+            "citations": {"enabled": True},
+        })
+    return blocks
+
+
+def ask(question, retriever, k=5, rerank=False, hits=None):
+    hits = hits if hits is not None else retriever.search(question, k=k, rerank=rerank)
+    resp = client.messages.create(
+        model=MODEL, max_tokens=800, system=SYSTEM,
+        messages=[{"role": "user", "content": doc_blocks(hits) + [{"type": "text", "text": question}]}],
+    )
+    parts, numbering, citations = [], {}, []
+    for block in resp.content:
+        if block.type != "text":
+            continue
+        parts.append(block.text)
+        for c in (block.citations or []):
+            idx = c.document_index
+            if idx not in numbering:
+                numbering[idx] = len(numbering) + 1
+                m = hits[idx]["meta"]
+                citations.append({"n": numbering[idx], "source": m["source"], "page": m.get("page"),
+                                  "quote": c.cited_text, "chunk_id": hits[idx]["id"]})
+            parts.append(f" [{numbering[idx]}]")
+    return {"answer": "".join(parts).strip(), "citations": citations, "hits": hits}
+
+
+if __name__ == "__main__":
+    result = ask(" ".join(sys.argv[1:]), Retriever())
+    print(result["answer"], "\n")
+    for c in result["citations"]:
+        page = f" p.{c['page']}" if c["page"] else ""
+        print(f"[{c['n']}] {c['source']}{page}: {c['quote'][:120]!r}")</code></pre>
+
+<p><b>eval.py</b></p>
+<pre><code>"""eval.py - recall@k for retrieval, plus faithfulness and correctness judged by Claude.
+
+qa.jsonl, one JSON object per line:
+  {"q": "...", "ref": "reference answer", "source": "file.pdf", "page": 14, "lang": "he"}
+For DOCX/HTML leave out "page". For a question the documents cannot answer, use "source": null.
+
+Usage:
+    python eval.py --qa qa.jsonl --k 5 --mode hybrid
+    python eval.py --qa qa.jsonl --no-judge          # retrieval only, no API cost
+"""
+import argparse
+import json
+import re
+from collections import defaultdict
+
+import anthropic
+from dotenv import load_dotenv
+
+from answer import ask
+from retrieve import Retriever
+
+load_dotenv()
+
+JUDGE_MODEL = "claude-sonnet-5-5"    # check current model IDs; ideally not the weakest model you ship
+
+JUDGE_PROMPT = """You grade a document Q&amp;A system. Be strict.
+
+QUESTION: {q}
+
+REFERENCE ANSWER (written by a human from the documents; may say the documents have no answer):
+{ref}
+
+PASSAGES THE SYSTEM WAS GIVEN:
+{passages}
+
+SYSTEM ANSWER:
+{ans}
+
+Return JSON only: {{"faithful": true|false, "correct": true|false, "unsupported_claims": ["..."]}}
+faithful: every factual claim in the system answer is supported by the passages above.
+correct: the system answer agrees with the reference answer in substance.
+If the system says the documents do not contain the answer, faithful is true, and correct is true only if the reference also says there is no answer."""
+
+
+def is_hit(hit, gold):
+    m = hit["meta"]
+    return m["source"] == gold["source"] and (gold.get("page") is None or m.get("page") == gold["page"])
+
+
+def parse_json(text):
+    m = re.search(r"\{.*\}", text, re.S)
+    try:
+        return json.loads(m.group(0)) if m else None
+    except json.JSONDecodeError:
+        return None
+
+
+def judge(client, row, result):
+    passages = "\n\n".join(f"[{n + 1}] {h['meta']['source']}: {h['text']}" for n, h in enumerate(result["hits"]))
+    msg = client.messages.create(
+        model=JUDGE_MODEL, max_tokens=400,
+        messages=[{"role": "user", "content": JUDGE_PROMPT.format(
+            q=row["q"], ref=row["ref"], passages=passages, ans=result["answer"])}])
+    return parse_json(msg.content[0].text) or {"faithful": False, "correct": False,
+                                               "unsupported_claims": ["judge returned invalid JSON"]}
+
+
+def pct(values):
+    return f"{100 * sum(values) / len(values):.0f}%" if values else "n/a"
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--qa", default="qa.jsonl")
+    ap.add_argument("--k", type=int, default=5)
+    ap.add_argument("--mode", default="hybrid", choices=["hybrid", "vector", "bm25"])
+    ap.add_argument("--rerank", action="store_true")
+    ap.add_argument("--no-judge", action="store_true")
+    args = ap.parse_args()
+
+    rows = [json.loads(line) for line in open(args.qa, encoding="utf-8") if line.strip()]
+    retriever, client = Retriever(), anthropic.Anthropic()
+    stats = defaultdict(lambda: defaultdict(list))
+    details = []
+
+    for row in rows:
+        lang = row.get("lang", "?")
+        hits = retriever.search(row["q"], k=args.k, mode=args.mode, rerank=args.rerank)
+        rec = {"q": row["q"], "lang": lang, "top": [f"{h['meta']['source']} p.{h['meta']['page']}" for h in hits]}
+        if row.get("source"):
+            rec["hit"] = any(is_hit(h, row) for h in hits)
+            for g in ("all", lang):
+                stats[g]["recall"].append(rec["hit"])
+        if not args.no_judge:
+            result = ask(row["q"], retriever, hits=hits)
+            verdict = judge(client, row, result)
+            rec.update(answer=result["answer"], faithful=bool(verdict.get("faithful")),
+                       correct=bool(verdict.get("correct")), unsupported=verdict.get("unsupported_claims", []))
+            for g in ("all", lang):
+                stats[g]["faithful"].append(rec["faithful"])
+                stats[g]["correct"].append(rec["correct"])
+                if row.get("source"):
+                    stats[g]["cited"].append(bool(result["citations"]))
+        details.append(rec)
+
+    print(f"\nmode={args.mode} k={args.k} rerank={args.rerank} questions={len(rows)}")
+    print(f"{'group':8} {'recall@k':&gt;9} {'faithful':&gt;9} {'correct':&gt;9} {'cited':&gt;7}")
+    for g in ["all"] + sorted(k for k in stats if k != "all"):
+        s = stats[g]
+        print(f"{g:8} {pct(s['recall']):&gt;9} {pct(s['faithful']):&gt;9} {pct(s['correct']):&gt;9} {pct(s['cited']):&gt;7}")
+
+    print("\nRetrieval misses:")
+    for d in details:
+        if d.get("hit") is False:
+            print(" -", d["q"], "-&gt;", d["top"][:3])
+    print("\nUnfaithful answers:")
+    for d in details:
+        if d.get("faithful") is False:
+            print(" -", d["q"], "-&gt;", d["unsupported"])
+
+    with open("eval_report.json", "w", encoding="utf-8") as f:
+        json.dump(details, f, ensure_ascii=False, indent=2)
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+
+<p><b>qa.jsonl</b> (30 lines in the real file; three shown, answers to be filled from your documents)</p>
+<pre><code>{"q": "כמה ימי חופשה שנתית מגיעים לעובד אחרי שלוש שנים?", "ref": "&lt;answer from your leave policy&gt;", "source": "leave_policy_he.pdf", "page": 3, "lang": "he"}
+{"q": "How do I claim travel expenses after a client visit?", "ref": "&lt;answer from your expenses procedure&gt;", "source": "expenses_en.docx", "lang": "en"}
+{"q": "מה מדיניות הבונוס על ביצועים ברבעון הרביעי?", "ref": "The documents do not say.", "source": null, "lang": "he"}</code></pre>
+
+<p><b>Steps</b></p>
+<ol>
+<li>Run <code>python ingest.py docs</code>. Check the chunk count. Open the index and read ten random chunks, including three Hebrew ones from PDFs. Is the text readable and in the right order?</li>
+<li>Run <code>python retrieve.py "ימי מחלה"</code> and then a query with an English term, such as a system name. Do the right files come back?</li>
+<li>Run <code>python answer.py "How many sick days can I carry over?"</code> and the same question in Hebrew. Check that every claim has a citation and the language matches the question.</li>
+<li>Write the 30 questions in <code>qa.jsonl</code> as described in 5.8. Do this from the documents, not from the retrieval output.</li>
+<li>Run <code>python eval.py --no-judge --mode vector</code>, then <code>--mode bm25</code>, then <code>--mode hybrid</code>. Record recall@5 for each, in total and per language.</li>
+<li>Run the full eval (<code>python eval.py</code>). Hand-check five judged answers. Fix what you find: chunking, tokenizer, prompt.</li>
+<li>Re-ingest with <code>--rebuild --contextualize</code> and rerun. Then try <code>--rerank</code>. Fill the table below.</li>
+<li>Edit one document, run <code>ingest.py</code> again, and confirm that only that file is re-processed and the old text is no longer returned.</li>
+</ol>
+
+<div class="tbl"><table>
+<thead><tr><th>Variant</th><th>recall@5 (all)</th><th>Hebrew</th><th>English</th><th>Faithful</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td>Vector only</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>BM25 only</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Hybrid</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Hybrid + contextual</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Hybrid + contextual + rerank</td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody></table></div>
+<p><b>Stretch:</b> turn off the prefix variants in <code>tokenize()</code> and see how BM25-only recall changes on Hebrew questions. That one experiment is your best client-facing proof of why Hebrew needs special handling.</p>
+</div>
+
+<!-- DELIVERABLE -->
+<h2>Deliverable: demo and the "Ask our documents" offer sheet</h2>
+<p>Two things, both reusable with every client.</p>
+<h3>1. A recorded or live demo (10 minutes)</h3>
+<ol>
+<li>One Hebrew question, one English question, and one Hebrew question answered from an English document, each with visible citations</li>
+<li>One question the documents cannot answer, showing a clean refusal</li>
+<li>An edited document picked up by the next ingest run</li>
+<li>Your eval table: recall@5 and faithfulness per language, and what you changed to improve it</li>
+</ol>
+<h3>2. A one-page offer sheet for clients</h3>
+<p>Plain language, no jargon, in English and in Hebrew. Suggested structure:</p>
+<ol>
+<li><b>The problem:</b> staff lose time searching policies and asking HR the same questions</li>
+<li><b>What they get:</b> a place to ask in Hebrew, Russian or English, with answers that show the source page</li>
+<li><b>How it stays honest:</b> answers only from your documents, citations on every claim, "not found" when it is not there</li>
+<li><b>How we prove it:</b> a test set of 30 real questions, with results shared before go-live</li>
+<li><b>Your data:</b> where documents and index live, who can see what, how updates are picked up</li>
+<li><b>Plan:</b> week 1 document audit and question set, weeks 2 to 3 build and tune, week 4 pilot with a small group. Costs: setup and monthly run, which you quote from your own calculation</li>
+<li><b>What we need from you:</b> the documents, an owner for them, ten pilot users</li>
+</ol>
+<p>Use the Help Center and Trust Center pages from Module 1 for any data-handling statements, and note the date you checked.</p>
+
+<!-- SELF CHECK -->
+<h2>Self-check</h2>
+<ol class="check">
+<li>A 25-person company has 60 pages of procedures that change twice a year and wants staff to ask questions in the Claude app. What do you build, and when would your answer change?
+<details><summary>Model answer</summary>A Claude Project with the files. It fits, it is stable, and the users are in the app. Move to retrieval when the set outgrows the context, when it changes constantly, when different people need different access, or when the answers must be embedded in the company's own app with citations and an eval.</details></li>
+<li>Anthropic offers no embedding model. How do you choose one for a Hebrew and English company?
+<details><summary>Model answer</summary>Shortlist a hosted option such as Voyage AI and a multilingual open model such as bge-m3 or multilingual-e5, depending on where the client allows text to go. Run your 30-question set on each and compare recall@5 per language, including cross-language questions. Record the model name in the index.</details></li>
+<li>BM25-only search for "חופשה" misses a paragraph that says "בחופשה השנתית". Why, and what are two fixes?
+<details><summary>Model answer</summary>The Hebrew prefix is attached, so BM25 sees a different token. Fixes: index prefix-stripped variants of tokens (and normalise spelling), and add vector search with fusion so meaning matches even when tokens do not. A morphological analyser is a heavier third option.</details></li>
+<li>What does contextual retrieval add, why does prompt caching make it practical, and what do you check before keeping it?
+<details><summary>Model answer</summary>For each chunk, Claude writes a short note placing it in its document, and the note is embedded and BM25-indexed with the chunk, so ambiguous chunks become findable. The whole-document prompt is the same for every chunk of a file, so caching it avoids paying full price repeatedly. Check on your own eval that recall improves, and read a sample of notes for invented details.</details></li>
+<li>Your eval shows recall@5 of 90% but faithfulness of 70%. Where do you look first, and what extra check would you add?
+<details><summary>Model answer</summary>Retrieval is mostly fine, so look at generation: the system prompt (only use documents, refuse otherwise), conflicting or superseded documents in the passages, and answers with no citations. Add a quote-verification check or require citations, and hand-check the judge on a sample of its verdicts.</details></li>
+</ol>
+
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://docs.claude.com/en/docs/build-with-claude/citations" target="_blank" rel="noopener">Claude citations documentation</a></li>
+<li><a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank" rel="noopener">Introducing Contextual Retrieval</a></li>
+<li><a href="https://docs.claude.com/en/docs/build-with-claude/embeddings" target="_blank" rel="noopener">Embeddings in the Claude docs</a></li>
+<li><a href="https://github.com/anthropics/anthropic-cookbook" target="_blank" rel="noopener">Anthropic Cookbook</a> (look for the retrieval and RAG notebooks)</li>
+</ul>
+
+<div class="nav"><span>← Module 4 · Claude API in Python</span><span>Next: Module 6 · Model Context Protocol (MCP) →</span></div>
+</div>
+
+</html>

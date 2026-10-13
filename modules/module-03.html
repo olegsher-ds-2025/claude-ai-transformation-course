@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Module 3 · Claude at Work</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column; lesson sections in order; flat SVG illustrations; warm boxes = things you do, teal = reference */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --ink:#14232b; --muted:#56666e; --line:#d5dfe1;
+  --accent:#0f7a72; --accent-soft:#dcefed; --warm:#c8642c; --warm-soft:#f6e6dc;
+  --code-bg:#eef3f4;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,5vw,2.8rem);font-weight:700}
+h2{font-size:1.55rem;font-weight:700;margin-top:52px;margin-bottom:12px}
+h3{font-size:1.15rem;font-weight:700;margin-top:24px;margin-bottom:8px}
+p{margin:0 0 12px;max-width:68ch}
+ul,ol{padding-left:20px;max-width:68ch}
+li{margin-bottom:6px}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:1.15rem;color:var(--muted);margin-top:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font-family:var(--mono);font-size:.78rem;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}
+.objectives{margin-top:28px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.objectives h3{margin-top:0}
+figure{margin:24px 0;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:10px}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .sm{font-size:12px;fill:var(--muted)}
+.s-acc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.s-warm{fill:var(--warm-soft);stroke:var(--warm);stroke-width:2}
+.s-plain{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.ln{stroke:var(--muted);stroke-width:2;fill:none}
+.dot{fill:var(--accent)}
+.dot-w{fill:var(--warm)}
+.tbl{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.5;margin:12px 0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:3px}
+pre code{background:none;padding:0}
+.lab{margin-top:20px;padding:18px 20px;background:var(--warm-soft);border-radius:10px}
+.lab h3{margin-top:0;color:var(--warm)}
+.tip{padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 6px 6px 0;margin:16px 0;font-size:.95rem}
+.check li{margin-bottom:10px}
+details{margin-top:6px}
+summary{cursor:pointer;color:var(--accent);font-size:.9rem}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+</style>
+
+<div class="wrap">
+
+<div class="eyebrow">AI Transformation with Claude · Part 1 · Week 3</div>
+<h1>Module 3. Claude apps for knowledge work</h1>
+<p class="lede">Most SMB clients start here. No code, no API key, a team of non-technical people. Your job is not to show them features. It is to get Claude used every day by most of the team, and to prove it with numbers.</p>
+<div class="meta"><span class="chip">≈ 8 h</span><span class="chip">reading 2 h</span><span class="chip">lab 4 h</span><span class="chip">deliverable 2 h</span></div>
+
+<div class="objectives">
+<h3>By the end of this module you can</h3>
+<ul>
+<li>Explain Projects, artifacts, connectors, skills and scheduled tasks to a non-technical manager in one sentence each</li>
+<li>Choose connectors using the principle of least privilege</li>
+<li>Match Claude in Chrome, Claude Tag and Claude for Microsoft 365 to the tools a client already lives in</li>
+<li>List the admin decisions to make before inviting a team, and where to read the current rules</li>
+<li>Run a 30-day rollout for a 30-person company and measure it with an adoption scorecard</li>
+<li>Build a demo company workspace and reproduce its sample data with a short Python script</li>
+</ul>
+</div>
+
+<!-- 3.1 -->
+<h2>3.1 The building blocks of the Claude app</h2>
+<p>A new user sees an empty chat box and does not know what to type. The building blocks below turn that empty box into a prepared workplace. Learn them in this order, because it is the order you will introduce them to a team.</p>
+
+<div class="tbl"><table>
+<thead><tr><th>Block</th><th>What it is</th><th>What it fixes for the team</th></tr></thead>
+<tbody>
+<tr><td>Project</td><td>A workspace with shared instructions and knowledge files. Every chat inside it starts with that context.</td><td>Nobody re-explains the company, the tone or the rules in every chat</td></tr>
+<tr><td>Artifact</td><td>A page, document or small app that Claude produces and publishes. Private by default; the owner can share it.</td><td>Output you can reopen, share and update instead of text lost in a chat</td></tr>
+<tr><td>Docs, Slides, Sheets</td><td>Artifact types for written documents, presentations and tables</td><td>First drafts of the files people already produce</td></tr>
+<tr><td>Dashboards and Designs</td><td>Artifact types for live-data pages and visual layouts</td><td>A weekly numbers page, a one-page layout, a quick mock-up</td></tr>
+<tr><td>Research</td><td>Claude works through many sources and returns a cited report</td><td>Market, supplier and competitor questions that used to take an afternoon</td></tr>
+<tr><td>Memory</td><td>Claude remembers stable facts and preferences across chats</td><td>Less repetition for each person. Explain what is kept, and where the user can see and edit it</td></tr>
+</tbody></table></div>
+
+<p>The Project is the most important block for a rollout. It is the unit you design, document and hand over. A good Project has three parts:</p>
+<ul>
+<li><b>Instructions:</b> who the users are, what the Project is for, the tone, the rules, what to do when information is missing</li>
+<li><b>Knowledge files:</b> the few documents Claude must rely on: price list, procedures, FAQ. Fewer and cleaner beats more</li>
+<li><b>Starter prompts:</b> three to five prompts people copy, written in the instructions or on a shared page</li>
+</ul>
+<div class="tip"><b>Rule of thumb:</b> one Project per job, not per person. "Sales desk" is a Project. "Dana's stuff" is not.</div>
+<p>Artifacts matter more than they look. A published page is private until someone shares it, so you can tell worried owners that sharing is an explicit act. Check the current sharing options in the help center before you promise anything specific.</p>
+
+<!-- 3.2 -->
+<h2>3.2 Connectors and least privilege</h2>
+<p>Without connectors, people paste data into chats. With connectors, Claude reads the source directly. That is more useful and more risky, so connect deliberately.</p>
+
+<figure>
+<svg viewBox="0 0 800 360" role="img" aria-label="Workspace map: the team in the center, Projects on the left, connectors on the right, scheduled tasks above, other surfaces below">
+  <rect class="s-acc" x="310" y="145" width="180" height="70" rx="10"/>
+  <text x="400" y="176" text-anchor="middle" font-weight="600">The team</text>
+  <text x="400" y="196" text-anchor="middle" class="sm">30 people, one workspace</text>
+
+  <rect class="s-plain" x="30" y="50" width="200" height="56" rx="8"/>
+  <text x="130" y="76" text-anchor="middle" font-weight="600">Project: Sales desk</text>
+  <text x="130" y="94" text-anchor="middle" class="sm">instructions + files</text>
+  <rect class="s-plain" x="30" y="152" width="200" height="56" rx="8"/>
+  <text x="130" y="178" text-anchor="middle" font-weight="600">Project: Ops SOPs</text>
+  <text x="130" y="196" text-anchor="middle" class="sm">instructions + files</text>
+  <rect class="s-plain" x="30" y="254" width="200" height="56" rx="8"/>
+  <text x="130" y="280" text-anchor="middle" font-weight="600">Project: Finance</text>
+  <text x="130" y="298" text-anchor="middle" class="sm">instructions + files</text>
+  <path class="ln" d="M230 78 L310 165"/><path class="ln" d="M230 180 H310"/><path class="ln" d="M230 282 L310 195"/>
+
+  <rect class="s-warm" x="570" y="50" width="200" height="56" rx="8"/>
+  <text x="670" y="76" text-anchor="middle" font-weight="600">Connector: Drive</text>
+  <text x="670" y="94" text-anchor="middle" class="sm">read what the team reads</text>
+  <rect class="s-warm" x="570" y="152" width="200" height="56" rx="8"/>
+  <text x="670" y="178" text-anchor="middle" font-weight="600">Connector: Calendar</text>
+  <text x="670" y="196" text-anchor="middle" class="sm">meetings and deadlines</text>
+  <rect class="s-plain" x="570" y="254" width="200" height="56" rx="8"/>
+  <text x="670" y="280" text-anchor="middle" font-weight="600">Custom MCP</text>
+  <text x="670" y="298" text-anchor="middle" class="sm">later, Module 6</text>
+  <path class="ln" d="M570 78 L490 165"/><path class="ln" d="M570 180 H490"/><path class="ln" d="M570 282 L490 195" stroke-dasharray="6 5"/>
+
+  <rect class="s-acc" x="290" y="14" width="220" height="50" rx="8"/>
+  <text x="400" y="36" text-anchor="middle" font-weight="600">Scheduled tasks</text>
+  <text x="400" y="54" text-anchor="middle" class="sm">Monday brief, weekly report</text>
+  <path class="ln" d="M400 64 V145"/>
+
+  <rect class="s-plain" x="250" y="290" width="300" height="52" rx="8"/>
+  <text x="400" y="312" text-anchor="middle" font-weight="600">Chrome · Slack (Tag) · Microsoft 365</text>
+  <text x="400" y="330" text-anchor="middle" class="sm">where the team already works</text>
+  <path class="ln" d="M400 290 V215"/>
+</svg>
+<figcaption>The workspace you will build in the lab. Projects hold the rules, connectors bring the data, scheduled tasks produce the routine output.</figcaption>
+</figure>
+
+<div class="tbl"><table>
+<thead><tr><th>Connector</th><th>Typical use in an SMB</th><th>Main risk to discuss</th></tr></thead>
+<tbody>
+<tr><td>Google Workspace: Gmail, Calendar, Drive</td><td>Summarise a customer thread, prepare for meetings, find the latest version of a document</td><td>Mailboxes and shared drives often hold far more than the task needs</td></tr>
+<tr><td>Microsoft 365</td><td>Same jobs for clients on Outlook, SharePoint, OneDrive, Teams</td><td>Old SharePoint permissions that nobody cleaned up</td></tr>
+<tr><td>Atlassian: Jira, Confluence</td><td>Ticket summaries, status reports, finding the procedure page</td><td>Write access to tickets and pages</td></tr>
+<tr><td>Slack</td><td>Catch up on channels, draft updates</td><td>Private channels and direct messages</td></tr>
+<tr><td>Custom connector via MCP</td><td>The client's own CRM, ERP or database</td><td>Everything above, plus you are now the author of the integration</td></tr>
+</tbody></table></div>
+
+<p>Custom connectors use MCP, the open protocol from Module 1. You will build servers in Module 6. For now, know that a client with an in-house system is not stuck: it can be connected later, once the basic habit exists.</p>
+
+<h3>Least privilege, in practice</h3>
+<p>A connector acts with the permissions of the person who connects it. So the safest design is to limit what that person can reach, and then limit what Claude is asked to do.</p>
+<ol>
+<li><b>Start with the smallest set.</b> Two connectors that serve the first use cases. Add more only when someone asks for a specific job.</li>
+<li><b>Prefer read access.</b> Where a connector gives a choice between read and write, choose read first. Where it does not, say in the Project instructions that Claude must draft and never send, delete or change.</li>
+<li><b>Clean the source.</b> If a shared drive is open to everyone, Claude can surface what everyone can already open. Fix permissions first. This is a real finding to bring to the client.</li>
+<li><b>Use a clear owner.</b> One named person decides which connectors are allowed and reviews them quarterly.</li>
+<li><b>Keep a record.</b> A one-line register: connector, who approved it, why, date.</li>
+</ol>
+<div class="tip">Connector availability and the exact permission options differ by plan and change over time. Read the current connector pages on <a href="https://support.claude.com" target="_blank" rel="noopener">support.claude.com</a> before you design, and note the date.</div>
+
+<!-- 3.3 -->
+<h2>3.3 Claude where the team already works</h2>
+<p>Adoption is easier when people do not have to open a new tool. Three surfaces bring Claude to tools the team uses already.</p>
+<div class="tbl"><table>
+<thead><tr><th>Surface</th><th>Fits when</th><th>Example at a 30-person firm</th><th>Check before you promise</th></tr></thead>
+<tbody>
+<tr><td>Claude in Chrome</td><td>The work happens in a web tool with no API or connector</td><td>Copying shipment status from a carrier portal into a customer reply</td><td>Which sites it may act on, and that a person reviews what it does in logged-in sites</td></tr>
+<tr><td>Claude Tag</td><td>The team already coordinates in Slack</td><td>A shared agent in the ops channel that answers questions and summarises threads</td><td>Which channels it joins, who can invoke it</td></tr>
+<tr><td>Claude for Microsoft 365</td><td>The team lives in Word, Excel and Outlook</td><td>Drafting a quote reply in Outlook, cleaning a table in Excel</td><td>Who installs it, and what the admin must allow</td></tr>
+</tbody></table></div>
+<p>Many Israeli SMBs use a mix: Gmail or Outlook for mail, WhatsApp for customers, and a few web portals (customs, carriers, banks, government) without APIs. Ask during discovery which tools people have open all day. That tells you which surface to put in front of them first.</p>
+<div class="tip"><b>Caution with browsers:</b> a browser agent works inside the user's own logged-in sessions. Agree a short rule list with the client: no payments, no deleting, no sending on behalf of someone, and a person confirms any step that changes data.</div>
+
+<!-- 3.4 -->
+<h2>3.4 Skills, plugins and scheduled tasks</h2>
+<h3>Packaging a repeated procedure</h3>
+<p>When the same procedure appears in every Project, in the same words, it deserves to be packaged. A <b>skill</b> is a procedure written down once (instructions plus any helper files) that Claude loads when the task calls for it. A <b>plugin</b> bundles related capabilities so a team can install them together. You will build both properly in Module 8. At user level, the habit to teach is simple:</p>
+<ol>
+<li>Notice a procedure someone repeats at least weekly</li>
+<li>Write it as numbered steps with the expected output</li>
+<li>Test it on three real cases</li>
+<li>Save it as a skill, or at least as a shared prompt in the Project</li>
+</ol>
+<p>Example: "How we write a quote reply" at Tzafon Logistics: check the price list, add the fuel surcharge line, state the validity date, reply in the customer's language, never promise delivery dates.</p>
+
+<h3>Scheduled tasks</h3>
+<p>A scheduled task runs a prompt at a set time and delivers the result, with no one starting it. It is the cheapest way to move from "assist" to "augment" because the habit forms by itself: the report is simply there on Monday morning.</p>
+<ul>
+<li>Good fits: Monday brief, weekly sales summary, a list of open items before a standing meeting</li>
+<li>Write the prompt as if for a new employee: sources, format, length, what to flag, what to leave out</li>
+<li>A scheduled run has nobody to answer questions. State what to do when data is missing, for example "say what is missing, do not guess"</li>
+<li>Review the first four outputs with the owner, then adjust the prompt</li>
+</ul>
+<p>Check the current availability of scheduled tasks and where results are delivered in the help center.</p>
+
+<!-- 3.5 -->
+<h2>3.5 Team and Enterprise admin basics</h2>
+<p>Before you invite 30 people, the owner or an IT contact must make a few decisions. Do not state details from memory. Walk through the current admin documentation with the client and record the answers.</p>
+<div class="tbl"><table>
+<thead><tr><th>Decision</th><th>Question to settle</th><th>Who decides</th></tr></thead>
+<tbody>
+<tr><td>Seats</td><td>Who gets a seat first? Who is added later? How are leavers removed?</td><td>Owner</td></tr>
+<tr><td>Roles</td><td>Who administers the workspace? Who can create shared Projects?</td><td>Owner, IT contact</td></tr>
+<tr><td>Connectors</td><td>Which connectors are allowed for everyone, which are blocked?</td><td>Owner, IT contact</td></tr>
+<tr><td>Data settings</td><td>What is retained, what can be exported, how are conversations handled under the plan's terms?</td><td>Owner, with legal or the accountant if the firm handles regulated data</td></tr>
+<tr><td>Sign-in</td><td>Do people sign in with the company identity provider? (More relevant on larger plans.)</td><td>IT contact</td></tr>
+<tr><td>Usage policy</td><td>One page: what may and may not be pasted in, who reviews external-facing text</td><td>Owner</td></tr>
+</tbody></table></div>
+<p>Start at <a href="https://support.claude.com" target="_blank" rel="noopener">support.claude.com</a> and search for the Team and Enterprise administration articles. Save the links in the client's rollout folder with the date checked. If a client needs capabilities such as single sign-on or audit logs, confirm which plan includes them in the current documentation.</p>
+
+<!-- 3.6 -->
+<h2>3.6 The rollout playbook for a 30-person company</h2>
+<p>Tools do not create adoption. People do. A rollout fails when 30 people get seats on Sunday and nobody mentions Claude again. The playbook below is built around one idea: a few visible wins, supported by named people, checked every week.</p>
+
+<figure>
+<svg viewBox="0 0 800 230" role="img" aria-label="30-day rollout timeline: week 0 prepare, week 1 train, weeks 2 and 3 coach and review, day 30 scorecard and decide">
+  <path class="ln" d="M40 90 H760"/>
+  <circle class="dot" cx="110" cy="90" r="9"/>
+  <circle class="dot" cx="300" cy="90" r="9"/>
+  <circle class="dot" cx="500" cy="90" r="9"/>
+  <circle class="dot-w" cx="690" cy="90" r="11"/>
+  <text x="110" y="50" text-anchor="middle" font-weight="600">Week 0</text>
+  <text x="110" y="125" text-anchor="middle">Prepare</text>
+  <text x="110" y="145" text-anchor="middle" class="sm">2–3 use cases, champions,</text>
+  <text x="110" y="162" text-anchor="middle" class="sm">admin settings, Projects</text>
+  <text x="300" y="50" text-anchor="middle" font-weight="600">Week 1</text>
+  <text x="300" y="125" text-anchor="middle">Train</text>
+  <text x="300" y="145" text-anchor="middle" class="sm">60-minute session,</text>
+  <text x="300" y="162" text-anchor="middle" class="sm">first real task each</text>
+  <text x="500" y="50" text-anchor="middle" font-weight="600">Weeks 2–3</text>
+  <text x="500" y="125" text-anchor="middle">Coach</text>
+  <text x="500" y="145" text-anchor="middle" class="sm">weekly usage review,</text>
+  <text x="500" y="162" text-anchor="middle" class="sm">fix prompts and Projects</text>
+  <text x="690" y="50" text-anchor="middle" font-weight="600">Day 30</text>
+  <text x="690" y="125" text-anchor="middle">Decide</text>
+  <text x="690" y="145" text-anchor="middle" class="sm">scorecard, keep, change,</text>
+  <text x="690" y="162" text-anchor="middle" class="sm">or add a use case</text>
+  <text x="400" y="210" text-anchor="middle" class="sm">a weekly 20-minute usage review runs from week 1 to day 30</text>
+</svg>
+<figcaption>Four stages, one rhythm. The weekly review is the part clients skip and the part that makes it work.</figcaption>
+</figure>
+
+<h3>Step 1. Pick two or three use cases</h3>
+<p>Use the screen from Module 1 (weekly, text-heavy, checkable, recoverable, digital, annoying). For a first rollout choose use cases in different departments, so that more people feel the benefit. Write each as "who does what, how often, how long it takes today".</p>
+<h3>Step 2. Name a champion per department</h3>
+<p>A champion is a regular colleague, not an IT person, who likes to try things. Their jobs: answer first questions in their team, collect good prompts, report problems to you, and attend the weekly review. Give them time on the calendar. Tell their manager it is part of their job for 30 days.</p>
+<h3>Step 3. Run one 60-minute training</h3>
+<div class="tbl"><table>
+<thead><tr><th>Minutes</th><th>Content</th></tr></thead>
+<tbody>
+<tr><td>0–10</td><td>Why we are doing this, what Claude is and is not, the one-page usage policy</td></tr>
+<tr><td>10–20</td><td>Live demo of one real task from this company, start to finish, in the department Project</td></tr>
+<tr><td>20–45</td><td>Hands-on: each person does their own real task from the use-case list, champions help</td></tr>
+<tr><td>45–55</td><td>How to check output: sources, numbers, names, language. "You sign it, so you read it."</td></tr>
+<tr><td>55–60</td><td>Next step: which task to do tomorrow, where templates live, when the weekly review is</td></tr>
+</tbody></table></div>
+<h3>Step 4. Hand over templates</h3>
+<p>Each Project has its instructions, its knowledge files and three to five starter prompts. Put a one-page "How we use Claude here" next to them. People copy templates far more than they write prompts.</p>
+<h3>Step 5. Hold a weekly usage review</h3>
+<p>Twenty minutes: you, the owner, the champions. Look at the scorecard numbers, read two or three good examples and one failure, and decide one change for next week. Examples of changes: edit a Project's instructions, add a knowledge file, retire a use case, retrain a team.</p>
+<h3>Step 6. Score day 30</h3>
+<p>Fill in the adoption scorecard (below). Then recommend one of three things: continue as is, fix a specific blocker, or add the next use case or connector.</p>
+
+<figure>
+<svg viewBox="0 0 800 270" role="img" aria-label="Adoption funnel with example numbers: 30 seats, 26 tried it, 20 weekly users, 12 daily users">
+  <rect class="s-plain" x="80" y="20" width="640" height="48" rx="6"/>
+  <text x="400" y="50" text-anchor="middle">Seats assigned: 30</text>
+  <rect class="s-acc" x="150" y="78" width="500" height="48" rx="6"/>
+  <text x="400" y="108" text-anchor="middle">Tried it at least once: 26</text>
+  <rect class="s-acc" x="220" y="136" width="360" height="48" rx="6"/>
+  <text x="400" y="166" text-anchor="middle">Active every week: 20</text>
+  <rect class="s-warm" x="290" y="194" width="220" height="48" rx="6"/>
+  <text x="400" y="224" text-anchor="middle">Daily habit: 12</text>
+  <text x="400" y="262" text-anchor="middle" class="sm">example numbers only; where users drop off tells you what to fix</text>
+</svg>
+<figcaption>An adoption funnel. A big gap between seats and "tried it" is a training problem. A gap between "tried it" and "weekly" is a use-case problem.</figcaption>
+</figure>
+
+<div class="tip"><b>Typical failure patterns:</b> the owner never uses it himself; no champions; use cases too vague ("use AI for productivity"); Projects with a dozen messy files; no weekly review. Name them in your kickoff.</div>
+
+<!-- LAB -->
+<div class="lab">
+<h3>Lab 3. Build the "Tzafon Logistics" company workspace</h3>
+<p>Goal: a complete demo workspace you can show to prospects. Tzafon Logistics is a fictional 30-person freight and warehousing company in Haifa. Everything below is invented. Use your own Claude account or a test Team workspace, never real client data.</p>
+
+<p><b>Step 1. Generate the sample knowledge files</b> (Python, anthropic SDK). It writes four files into <code>tzafon_sample/</code>. Review them yourself and fix anything odd before you upload.</p>
+<pre><code>"""make_tzafon_samples.py - generate fake knowledge files for the Tzafon Logistics demo."""
+import csv, io, pathlib
+import anthropic
+
+client = anthropic.Anthropic()          # reads ANTHROPIC_API_KEY
+MODEL = "claude-sonnet-5-5"             # check current IDs at docs.claude.com
+OUT = pathlib.Path("tzafon_sample")
+OUT.mkdir(exist_ok=True)
+
+SYSTEM = (
+    "You write realistic but entirely fictional sample documents for a demo. "
+    "Company: Tzafon Logistics, a 30-person freight and warehousing firm in Haifa, Israel. "
+    "Services: domestic trucking, port pickups from Haifa port, 3PL warehousing, same-day courier. "
+    "Use fake names, fake phone numbers and fake figures. Output only the file content, "
+    "with no commentary and no code fences."
+)
+
+PROMPTS = {
+    "price_list.csv": (
+        "Create a CSV price list with header exactly: service,zone,unit,price_ils,notes. "
+        "About 18 rows covering the services above, zones north/center/south/Eilat, "
+        "units like per pallet, per kg, per trip, per month. Include a fuel surcharge row "
+        "expressed as a percentage in the notes column. Values are invented for a demo."
+    ),
+    "sop_container_pickup.md": (
+        "Write a standard operating procedure in Markdown, in English, titled "
+        "'Container pickup from Haifa port'. Sections: Purpose, Before you leave, "
+        "Documents needed, Steps (numbered), Common problems and what to do, Who to call. "
+        "Around 500 words. Use invented role names, not real people."
+    ),
+    "customer_faq_en.md": (
+        "Write a customer FAQ in English in Markdown with 10 questions and short answers: "
+        "quotes, delivery windows, damaged goods, invoices, customs documents, tracking, "
+        "storage fees. Never promise an exact delivery time. Tell customers to contact "
+        "the operations desk (fake address ops@example.com)."
+    ),
+    "customer_faq_he.md": (
+        "Write the same kind of customer FAQ in natural business Hebrew in Markdown, "
+        "10 questions and short answers on quotes, delivery windows, damaged goods, "
+        "invoices, customs documents, tracking, storage fees. Do not translate word for "
+        "word; write it as an Israeli logistics company would. Use ops@example.com."
+    ),
+}
+
+def generate(prompt: str) -> str:
+    msg = client.messages.create(
+        model=MODEL,
+        max_tokens=3000,
+        system=SYSTEM,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return msg.content[0].text.strip()
+
+def check_csv(text: str) -> None:
+    rows = list(csv.reader(io.StringIO(text)))
+    assert rows[0] == ["service", "zone", "unit", "price_ils", "notes"], "bad header"
+    assert all(len(r) == 5 for r in rows), "row with wrong column count"
+
+if __name__ == "__main__":
+    for name, prompt in PROMPTS.items():
+        text = generate(prompt)
+        if name.endswith(".csv"):
+            check_csv(text)
+        (OUT / name).write_text(text + "\n", encoding="utf-8")
+        print(f"wrote {name}: {len(text)} characters")</code></pre>
+
+<p><b>Step 2. Create three Projects.</b> In each Project paste the instructions below, then upload the listed files. Keep the instructions as shown for the first version; improve them after testing.</p>
+
+<h3>Project A: Sales desk</h3>
+<p>Files: <code>price_list.csv</code>, <code>customer_faq_en.md</code>, <code>customer_faq_he.md</code></p>
+<pre><code>You are the sales desk assistant for Tzafon Logistics, a 30-person freight and
+warehousing company in Haifa. Users are sales reps and the sales manager.
+
+Purpose
+- Draft replies to customer quote requests and follow-ups.
+- Answer pricing questions using only the attached price list.
+- Answer service questions using only the attached FAQ files.
+
+Rules
+1. Reply in the language of the customer's message (Hebrew, Russian or English).
+2. Prices come only from price_list.csv. If a service or zone is not in the file,
+   say so and list what you need to quote. Never invent a price.
+3. Always show the calculation: line item, quantity, unit price, fuel surcharge, total.
+4. Never promise a delivery date or time. Offer a delivery window and say it is
+   subject to confirmation by the operations desk.
+5. Write drafts only. Do not state that anything has been sent or booked.
+6. Keep replies short: greeting, answer, next step, signature "Tzafon Logistics sales".
+
+Output for a quote request
+- Part 1: the draft reply, ready to paste.
+- Part 2: "Check before sending": assumptions you made and missing information.</code></pre>
+
+<h3>Project B: Ops SOPs</h3>
+<p>Files: <code>sop_container_pickup.md</code>, <code>customer_faq_en.md</code></p>
+<pre><code>You are the operations assistant for Tzafon Logistics. Users are dispatchers,
+warehouse staff and drivers' supervisors.
+
+Purpose
+- Answer "how do we do X" questions from the attached procedures.
+- Turn a rough description of a process into a clear SOP in our format.
+- Prepare short checklists for a shift or a task.
+
+Rules
+1. Base answers only on the attached documents. Quote the section name you used.
+2. If the documents do not cover the question, say "Not covered in our SOPs" and
+   suggest who should decide. Do not fill the gap with general logistics practice.
+3. Use short numbered steps. One action per step.
+4. For safety, customs or legal questions, add: "Confirm with the operations manager."
+5. When writing a new SOP use these sections: Purpose, Before you start,
+   Documents needed, Steps, Common problems, Who to call.
+6. Write in the language of the question. Keep technical terms (container, bill of
+   lading, pallet) in English if that is how staff say them.</code></pre>
+
+<h3>Project C: Finance month-end</h3>
+<p>Files: none at first. Add the month's trial balance or aging report as a text or CSV export only when you test.</p>
+<pre><code>You are a month-end assistant for the finance team at Tzafon Logistics.
+Users are the bookkeeper and the finance manager.
+
+Purpose
+- Help prepare the month-end checklist and track what is still open.
+- Draft variance commentary from numbers the user provides.
+- Draft polite payment reminders for overdue customer invoices.
+
+Rules
+1. Use only numbers the user has pasted or uploaded in this chat. Never estimate
+   or round silently. If a number is missing, ask for it.
+2. Show every calculation so a person can check it.
+3. Variance commentary: for each line state the amount, the percentage change versus
+   the comparison period, and a one-sentence factual reason only if the user supplied
+   one. Otherwise write "reason to be confirmed".
+4. Payment reminders: three tones (friendly, firm, final). Never threaten legal action;
+   write "we will need to review the account" instead.
+5. You do not give tax or legal advice. Flag questions for the accountant.
+6. Output tables as Markdown. Dates as DD/MM/YYYY. Amounts in ILS with thousands separators.</code></pre>
+
+<p><b>Step 3. Connect two connectors.</b> Connect Google Drive and Google Calendar, using a test Google account with only a "Tzafon demo" folder and a demo calendar in it. This is least privilege in practice. Write the one-line connector register entry for each: connector, owner, purpose, date.</p>
+
+<p><b>Step 4. Create one weekly scheduled task.</b> Name: "Monday brief". Day and time: Monday morning, before the week starts. Prompt:</p>
+<pre><code>You are preparing the Monday brief for the management team of Tzafon Logistics.
+
+Sources
+- Google Calendar: events for the coming 7 days (Monday to Sunday).
+- Google Drive: files in the "Tzafon demo" folder modified in the last 7 days.
+
+Write the brief with these sections, in this order
+1. The week at a glance: a table with date, time, event, who attends. Mark with
+   "(!)" any day with more than four meetings or any event with no named attendee.
+2. Documents that changed: file name, what changed in one sentence, who changed it.
+   If you cannot tell what changed, write "changed, details not visible".
+3. Items needing a decision this week: only things you can see in the calendar
+   entries or the changed files. Maximum five.
+4. What I could not check: any source that was empty, missing or not accessible.
+
+Rules
+- Use only what you can read from the two sources. Do not guess or fill gaps.
+- Maximum one page. Plain sentences, no marketing language.
+- Write in English. Keep Hebrew names and file names as they appear.
+- Do not send, edit, delete or create anything. This is a read-only report.
+- If both sources are empty, say so in one line and stop.</code></pre>
+
+<p><b>Step 5. Test like a user.</b></p>
+<ol>
+<li>In Sales desk: ask for a quote for 6 pallets from Haifa port to Beer Sheva, in Hebrew. Then ask for something not in the price list. Does it refuse to invent?</li>
+<li>In Ops SOPs: ask a question the SOP covers, and one it does not. Does it say "Not covered"?</li>
+<li>In Finance: paste a small made-up variance table and ask for commentary. Does it write "reason to be confirmed"?</li>
+<li>Add three fake calendar events and one changed file, then run the scheduled task once manually. Compare the output with section 4 of the prompt ("What I could not check").</li>
+<li>Edit one instruction in one Project, re-test, and write down what changed.</li>
+</ol>
+<p>Take screenshots of each Project's instructions and one good test output. You will use them in sales meetings.</p>
+</div>
+
+<!-- DELIVERABLE -->
+<h2>Deliverable: rollout playbook and adoption scorecard</h2>
+<p>Two files you reuse with every SMB client. Fill them in for Tzafon Logistics so you have a worked example.</p>
+
+<h3>1. One-page rollout playbook</h3>
+<ol>
+<li><b>Company and goal:</b> size, tools in use, one sentence on what success looks like in 30 days</li>
+<li><b>Use cases:</b> two or three, each as "who, what, how often, minutes today"</li>
+<li><b>Champions:</b> one name per department, with the hours per week they have</li>
+<li><b>Workspace setup:</b> Projects, connectors (with owner and date), admin decisions made, links to current documentation</li>
+<li><b>Calendar:</b> prepare, training date, weekly review slot, day-30 review</li>
+<li><b>Training:</b> the 60-minute agenda adapted to this company</li>
+<li><b>Templates:</b> where the instructions, starter prompts and usage policy live</li>
+<li><b>Risks and rules:</b> what must not be pasted, who reviews external text, who owns connectors</li>
+</ol>
+
+<h3>2. Adoption scorecard template</h3>
+<p>One row per metric. Fill the target in week 0 and the actual at each weekly review.</p>
+<div class="tbl"><table>
+<thead><tr><th>Metric</th><th>How to measure</th><th>Source</th><th>Target (set in week 0)</th><th>W1</th><th>W2</th><th>W3</th><th>Day 30</th></tr></thead>
+<tbody>
+<tr><td>Active users</td><td>People who used Claude at least once in the week, as a share of seats</td><td>Admin usage view if the plan offers one; otherwise a short weekly poll</td><td>_ % of seats</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Use cases live</td><td>Use cases where at least three people do the task with Claude every week</td><td>Champions' report</td><td>_ of _</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Hours saved (estimate)</td><td>Weekly uses × minutes saved per use ÷ 60. Take minutes saved from a sample of 5 timed tasks per use case, not from opinion.</td><td>Poll plus the timed sample</td><td>_ h per week</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Satisfaction</td><td>Average of a 1 to 5 question: "How useful is Claude for your work this week?" Add one free-text question.</td><td>Weekly poll</td><td>_ out of 5</td><td></td><td></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>Below the table add three lines: <b>What worked</b>, <b>What blocked us</b>, <b>Decision for next 30 days</b>. Label hours saved clearly as an estimate and show how you computed it. A modest, honest number is more convincing to an owner than a large one.</p>
+
+<!-- SELF CHECK -->
+<h2>Self-check</h2>
+<ol class="check">
+<li>The owner of a 30-person firm wants to connect Gmail, Drive, Slack and the CRM for everyone on day one. What do you recommend and why?
+<details><summary>Model answer</summary>Start with the one or two connectors that serve the first use cases, read access where possible, and clean up source permissions first. Add others when a specific job needs them. Each connector widens what can be reached by mistake, and a small start makes problems easy to find.</details></li>
+<li>A Project exists for every employee and answers vary wildly. What is the design fix?
+<details><summary>Model answer</summary>Move to one Project per job (Sales desk, Ops SOPs, Finance) with shared instructions and a small set of clean knowledge files. Then the whole team gets the same rules and the same sources, and improvements benefit everyone.</details></li>
+<li>Why does the playbook name a champion per department and hold a weekly review?
+<details><summary>Model answer</summary>Adoption depends on peer support and feedback, not on seats. Champions answer questions where people work and collect good prompts. The weekly review turns scorecard numbers into one concrete change per week, which keeps use from fading after the training.</details></li>
+<li>After 30 days: 30 seats, 27 tried it, 9 active weekly. Which problem is that and what do you do?
+<details><summary>Model answer</summary>Training worked, but the use cases do not fit enough people's routine, so use fades. Interview the 18 who stopped, pick use cases from their real weekly tasks, adjust the Projects and starter prompts, and ask champions to demonstrate them in team meetings.</details></li>
+<li>Write two rules you would put in the prompt of an unattended weekly scheduled task, and say why.
+<details><summary>Model answer</summary>"Use only what you can read from the listed sources; do not guess" and "Include a section listing what you could not check." Nobody is there to answer questions, so the prompt must stop invention and make gaps visible. A "read-only, do not send or change anything" rule is also a good answer.</details></li>
+</ol>
+
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://support.claude.com" target="_blank" rel="noopener">Claude Help Center</a> (Projects, connectors, scheduled tasks, Team and Enterprise administration)</li>
+<li><a href="https://docs.claude.com/en/docs/agents-and-tools/mcp" target="_blank" rel="noopener">Model Context Protocol in the Claude docs</a> (preview of Module 6)</li>
+<li><a href="https://www.anthropic.com/news" target="_blank" rel="noopener">Anthropic news</a> (product announcements; check before each client project)</li>
+<li><a href="https://anthropic.skilljar.com" target="_blank" rel="noopener">Anthropic Academy</a> (free courses)</li>
+</ul>
+
+<div class="nav"><span>← Module 2 · Prompt and context engineering</span><span>Next: Module 4 · Claude API in Python →</span></div>
+</div>
+
+</html>

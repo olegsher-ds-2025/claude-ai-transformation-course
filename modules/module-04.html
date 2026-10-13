@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Module 4 · Claude API</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column; lesson sections in order; flat SVG illustrations; warm boxes = things you do, teal = reference */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --ink:#14232b; --muted:#56666e; --line:#d5dfe1;
+  --accent:#0f7a72; --accent-soft:#dcefed; --warm:#c8642c; --warm-soft:#f6e6dc;
+  --code-bg:#eef3f4;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,5vw,2.8rem);font-weight:700}
+h2{font-size:1.55rem;font-weight:700;margin-top:52px;margin-bottom:12px}
+h3{font-size:1.15rem;font-weight:700;margin-top:24px;margin-bottom:8px}
+p{margin:0 0 12px;max-width:68ch}
+ul,ol{padding-left:20px;max-width:68ch}
+li{margin-bottom:6px}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:1.15rem;color:var(--muted);margin-top:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font-family:var(--mono);font-size:.78rem;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}
+.objectives{margin-top:28px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.objectives h3{margin-top:0}
+figure{margin:24px 0;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:10px}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .sm{font-size:12px;fill:var(--muted)}
+.s-acc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.s-warm{fill:var(--warm-soft);stroke:var(--warm);stroke-width:2}
+.s-plain{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.ln{stroke:var(--muted);stroke-width:2;fill:none}
+.dot{fill:var(--accent)}
+.dot-w{fill:var(--warm)}
+.tbl{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.5;margin:12px 0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:3px}
+pre code{background:none;padding:0}
+.lab{margin-top:20px;padding:18px 20px;background:var(--warm-soft);border-radius:10px}
+.lab h3{margin-top:0;color:var(--warm)}
+.tip{padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 6px 6px 0;margin:16px 0;font-size:.95rem}
+.check li{margin-bottom:10px}
+details{margin-top:6px}
+summary{cursor:pointer;color:var(--accent);font-size:.9rem}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+</style>
+
+<div class="wrap">
+
+<div class="eyebrow">AI Transformation with Claude · Part 2 · Week 4</div>
+<h1>Module 4. Claude API in Python</h1>
+<p class="lede">Chat tools get a team started. The API is how you build the pieces a client keeps: a document extractor, a triage service, a nightly job. This module takes you from one <code>messages.create</code> call to a validated, logged, costed pipeline you can wrap in a web service.</p>
+<div class="meta"><span class="chip">≈ 9 h</span><span class="chip">reading 2 h</span><span class="chip">lab 5 h</span><span class="chip">deliverable 2 h</span></div>
+
+<div class="objectives">
+<h3>By the end of this module you can</h3>
+<ul>
+<li>Call the Messages API with the <code>anthropic</code> SDK and read stop reasons and token usage</li>
+<li>Stream a response and send images and PDFs as input</li>
+<li>Get JSON you can trust: a schema, a forced tool call, and pydantic validation</li>
+<li>Write the manual tool loop, including parallel tool calls</li>
+<li>Decide when prompt caching or the Message Batches API pays off</li>
+<li>Handle rate limits, timeouts and retries, and log tokens and cost per call</li>
+<li>Wrap a pipeline in a FastAPI endpoint and structure a small service</li>
+</ul>
+</div>
+
+<!-- 4.1 -->
+<h2>4.1 Messages API basics</h2>
+<p>Everything in the API is one call: you send a model ID, a list of messages and a <code>max_tokens</code> cap, and you get a message back. Set <code>ANTHROPIC_API_KEY</code> in the environment and the client finds it.</p>
+<pre><code>import anthropic
+
+client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
+
+# Check current model IDs at docs.claude.com
+msg = client.messages.create(
+    model="claude-haiku-5-5",
+    max_tokens=300,                      # a hard cap on output tokens, always required
+    system="Answer in the language of the question. Be brief.",
+    messages=[{"role": "user", "content": "מה ההבדל בין חשבונית מס לקבלה?"}],
+)
+print(msg.content[0].text)
+print(msg.stop_reason, msg.usage.input_tokens, msg.usage.output_tokens)
+
+# The API is stateless: to continue a conversation, send the whole history again.
+history = [
+    {"role": "user", "content": "Name one risk of automating invoice approval."},
+    {"role": "assistant", "content": msg.content[0].text},
+    {"role": "user", "content": "And one control that reduces it?"},
+]
+follow_up = client.messages.create(model="claude-haiku-5-5", max_tokens=300, messages=history)</code></pre>
+<p>Five things to know:</p>
+<ul>
+<li><b>Roles.</b> Messages alternate <code>user</code> and <code>assistant</code>. The <code>system</code> parameter is separate and holds standing instructions: role, rules, output format.</li>
+<li><b>Stateless.</b> The API remembers nothing. Your code keeps the history and sends it each time.</li>
+<li><b>Content.</b> A message's content is a string or a list of blocks (text, image, document, tool use, tool result). The reply is also a list of blocks, so read <code>msg.content[0].text</code> only after you know block 0 is text.</li>
+<li><b>max_tokens.</b> It is a ceiling, not a target. If the answer is longer, it is cut off and the stop reason says so.</li>
+<li><b>usage.</b> Every response reports input and output tokens. That is the raw material for cost control (4.8).</li>
+</ul>
+
+<div class="tbl"><table>
+<thead><tr><th>stop_reason</th><th>Meaning</th><th>What your code does</th></tr></thead>
+<tbody>
+<tr><td><code>end_turn</code></td><td>Claude finished naturally</td><td>Use the answer</td></tr>
+<tr><td><code>max_tokens</code></td><td>Hit your cap mid-answer</td><td>Raise the cap or shorten the task; never parse the output as complete</td></tr>
+<tr><td><code>stop_sequence</code></td><td>A stop string you set was produced</td><td>Use the text before it</td></tr>
+<tr><td><code>tool_use</code></td><td>Claude wants you to run a tool</td><td>Run it and send back a result (4.5)</td></tr>
+<tr><td>others (for example a refusal)</td><td>Newer or special cases</td><td>Handle unknown values explicitly; see the API reference for the current list</td></tr>
+</tbody></table></div>
+
+<div class="tip"><b>Habit:</b> always check <code>stop_reason</code> before trusting output. A silent <code>max_tokens</code> cut-off is the most common cause of broken JSON.</div>
+
+<!-- 4.2 -->
+<h2>4.2 Streaming</h2>
+<p>Streaming sends text as it is generated. Use it when a person watches the answer appear (a chat box, a drafting tool). For back-office pipelines it adds code and no benefit, so use plain <code>create</code> there. The SDK's helper also handles long outputs that would otherwise risk a request timeout.</p>
+<pre><code>import anthropic
+
+client = anthropic.Anthropic()
+
+with client.messages.stream(
+    model="claude-sonnet-5-5",  # check current IDs
+    max_tokens=800,
+    messages=[{"role": "user", "content": "Summarise the benefits of e-invoicing for a 30-person firm."}],
+) as stream:
+    for text in stream.text_stream:       # print tokens as they arrive
+        print(text, end="", flush=True)
+    final = stream.get_final_message()    # the same Message object create() returns
+
+print("\n", final.stop_reason, final.usage.output_tokens)</code></pre>
+<p>In a web service you forward each chunk to the browser (server-sent events or a websocket). That is a UI concern; the API side is just the loop above.</p>
+
+<!-- 4.3 -->
+<h2>4.3 Vision and PDF input</h2>
+<p>Claude reads images and PDFs directly. For a PDF you send a <code>document</code> block; for a photo you send an <code>image</code> block. Both take base64 data (or a URL or a file reference in some cases; check the docs for what is current). The model sees the layout and any scanned text, so you often skip OCR entirely, which matters for Hebrew and mixed-language invoices.</p>
+<pre><code>import base64
+from pathlib import Path
+
+
+def file_block(path: str) -&gt; dict:
+    data = base64.standard_b64encode(Path(path).read_bytes()).decode("ascii")
+    suffix = Path(path).suffix.lower()
+    if suffix == ".pdf":
+        return {"type": "document",
+                "source": {"type": "base64", "media_type": "application/pdf", "data": data}}
+    media = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png"}[suffix]
+    return {"type": "image", "source": {"type": "base64", "media_type": media, "data": data}}
+
+
+content = [file_block("receipt.jpg"), {"type": "text", "text": "What is the total and the currency?"}]
+# messages=[{"role": "user", "content": content}]</code></pre>
+<p>Practical notes for client work:</p>
+<ul>
+<li>Put the file block before your text instruction in the same user message.</li>
+<li>Large or many-page PDFs cost many input tokens, because pages are processed as text and as images. Measure on a sample before you quote a price.</li>
+<li>There are limits on file size and page count. Read them on the <a href="https://docs.claude.com/en/api/overview" target="_blank" rel="noopener">API docs</a>; do not rely on memory.</li>
+<li>Phone photos of receipts: ask the client to photograph flat and in good light. It improves accuracy more than any prompt change.</li>
+</ul>
+
+<!-- 4.4 -->
+<h2>4.4 Structured outputs</h2>
+<p>Downstream code needs data, not prose. Three layers make JSON dependable, and you should use all three:</p>
+<ol>
+<li><b>Schema.</b> Describe the shape once. With pydantic, <code>Invoice.model_json_schema()</code> produces a JSON schema, and field descriptions double as instructions to the model.</li>
+<li><b>Force the format.</b> The portable way is a tool whose <code>input_schema</code> is your schema, plus <code>tool_choice</code> set to that tool. Claude must answer by calling it, and the arguments arrive as a parsed dict. Anthropic also documents native structured-output options; check the current docs for what exists, which models support it and the exact parameters before you switch to it.</li>
+<li><b>Validate.</b> <code>Invoice.model_validate(block.input)</code> rejects wrong types, bad enums and missing fields. Add business checks (does the sum of lines match the total? is the VAT number nine digits?) and route failures to a person.</li>
+</ol>
+<p>On failure, retry once with the error message appended; if it fails again, put the document on a review list. Never drop it silently.</p>
+<div class="tip">Schema valid does not mean content correct. A model can return a perfectly shaped invoice with the customer's VAT number instead of the supplier's. Test on real documents and measure field-level accuracy.</div>
+
+<!-- 4.5 -->
+<h2>4.5 Tool use and the manual loop</h2>
+<p>A tool is a function you describe to Claude. Claude never runs it. It replies with a request to call it (<code>stop_reason = "tool_use"</code>), your code runs it, and you send the result back. Repeat until Claude answers in plain text.</p>
+
+<figure>
+<svg viewBox="0 0 800 285" role="img" aria-label="The tool-use loop between your code, the Claude API and your tool function">
+  <rect class="s-plain" x="30" y="50" width="210" height="80" rx="8"/>
+  <text x="135" y="85" text-anchor="middle" font-weight="600">Your code</text>
+  <text x="135" y="106" text-anchor="middle" class="sm">the loop</text>
+  <rect class="s-acc" x="560" y="50" width="210" height="80" rx="8"/>
+  <text x="665" y="85" text-anchor="middle" font-weight="600">Claude API</text>
+  <text x="665" y="106" text-anchor="middle" class="sm">decides, never executes</text>
+  <path class="ln" d="M240 70 H550"/><path class="ln" d="M542 64 L554 70 L542 76"/>
+  <text x="395" y="62" text-anchor="middle" class="sm">1  messages + tools</text>
+  <path class="ln" d="M560 112 H250"/><path class="ln" d="M258 106 L246 112 L258 118"/>
+  <text x="395" y="132" text-anchor="middle" class="sm">2  stop_reason = tool_use, with tool_use blocks</text>
+  <rect class="s-warm" x="30" y="190" width="210" height="60" rx="8"/>
+  <text x="135" y="216" text-anchor="middle" font-weight="600">Your tool function</text>
+  <text x="135" y="236" text-anchor="middle" class="sm">get_order_status(...)</text>
+  <path class="ln" d="M135 130 V182"/><path class="ln" d="M129 174 L135 186 L141 174"/>
+  <text x="147" y="162" class="sm">3  run it</text>
+  <path class="ln" d="M240 220 H665 V138"/><path class="ln" d="M659 150 L665 138 L671 150"/>
+  <text x="450" y="212" text-anchor="middle" class="sm">4  append tool_result, call again (back to 1)</text>
+  <text x="400" y="274" text-anchor="middle" class="sm">When stop_reason is end_turn, the loop stops and you read the final text.</text>
+</svg>
+<figcaption>Claude asks, your code acts. You own the loop, so you own the limits: turn cap, timeouts, permissions.</figcaption>
+</figure>
+
+<pre><code>import json
+import anthropic
+
+client = anthropic.Anthropic()
+MODEL = "claude-sonnet-5-5"  # check current IDs
+
+TOOLS = [{
+    "name": "get_order_status",
+    "description": "Look up the shipping status of one order by its ID. "
+                   "Use it whenever the customer asks where an order is.",
+    "input_schema": {
+        "type": "object",
+        "properties": {"order_id": {"type": "string", "description": "e.g. A-10442"}},
+        "required": ["order_id"],
+    },
+}]
+
+
+def get_order_status(order_id: str) -&gt; dict:
+    return {"order_id": order_id, "status": "shipped", "eta": "Thursday"}  # stub
+
+
+HANDLERS = {"get_order_status": get_order_status}
+
+messages = [{"role": "user", "content": "Where are orders A-10442 and A-10443?"}]
+for _ in range(8):                                  # hard cap on loop turns
+    resp = client.messages.create(model=MODEL, max_tokens=1000, tools=TOOLS, messages=messages)
+    messages.append({"role": "assistant", "content": resp.content})
+    if resp.stop_reason != "tool_use":              # end_turn: Claude is done
+        break
+    results = []
+    for block in resp.content:                      # may hold several tool_use blocks
+        if block.type != "tool_use":
+            continue
+        try:
+            out, is_error = json.dumps(HANDLERS[block.name](**block.input)), False
+        except Exception as e:                      # tell Claude; it can recover
+            out, is_error = f"{type(e).__name__}: {e}", True
+        results.append({"type": "tool_result", "tool_use_id": block.id,
+                        "content": out, "is_error": is_error})
+    messages.append({"role": "user", "content": results})   # all results in ONE message
+
+print("".join(b.text for b in resp.content if b.type == "text"))</code></pre>
+
+<h3>Writing good tools</h3>
+<ul>
+<li>The <b>description</b> is the most important field. Say what the tool does, when to use it and when not to.</li>
+<li>Keep schemas small: few parameters, enums where values are fixed, a description on each property.</li>
+<li><code>tool_choice</code> can be left to Claude (auto), require some tool (any), or force one named tool, which is what the extractor uses.</li>
+<li>Return errors as a result with <code>is_error</code> set, in plain words. Claude often recovers by fixing its arguments.</li>
+</ul>
+
+<h3>Parallel tool calls</h3>
+<p>When Claude needs several independent lookups, one assistant message can contain several <code>tool_use</code> blocks (the example asks about two orders). Run all of them, optionally in a thread pool, and return all the results together in a single user message, each with the matching <code>tool_use_id</code>. Do not split results across several user messages, and do not forget one: every <code>tool_use</code> needs a <code>tool_result</code>.</p>
+<p>Anthropic also offers server-side tools (such as web search) that run on Anthropic's side; see the <a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview" target="_blank" rel="noopener">tool use overview</a>. Module 6 covers MCP, which standardises how tools are shared.</p>
+
+<!-- 4.6 -->
+<h2>4.6 Prompt caching</h2>
+<p>Many calls repeat a large identical prefix: a long system prompt, a policy manual, the same contract asked ten questions. Mark the end of that stable prefix with <code>cache_control</code>. Later requests that start with exactly the same prefix read it from cache at a lower price and often faster. Writing the cache costs somewhat more than a normal read, so it only pays when the prefix is reused.</p>
+<pre><code>import anthropic
+
+client = anthropic.Anthropic()
+policy = open("supplier_policy.txt", encoding="utf-8").read()   # long, stable text
+
+
+def ask(question: str):
+    resp = client.messages.create(
+        model="claude-haiku-5-5",  # check current IDs
+        max_tokens=400,
+        system=[
+            {"type": "text", "text": "You answer questions about our supplier payment policy."},
+            # everything up to and including this block becomes the cached prefix
+            {"type": "text", "text": policy, "cache_control": {"type": "ephemeral"}},
+        ],
+        messages=[{"role": "user", "content": question}],
+    )
+    u = resp.usage
+    print("written:", u.cache_creation_input_tokens, "read:", u.cache_read_input_tokens,
+          "uncached input:", u.input_tokens)
+    return resp
+
+
+ask("When must invoices over the approval limit be signed off?")  # first call writes the cache
+ask("Who approves foreign-currency suppliers?")                   # soon after: should read it</code></pre>
+<ul>
+<li><b>Prefix match.</b> The order is tools, then system, then messages. Any change before the marker, even one character, misses the cache. Put stable content first and the per-request part last.</li>
+<li><b>Minimum length.</b> Prefixes below a model-specific minimum are not cached, with no error. That is why a short extraction prompt shows zero cache tokens.</li>
+<li><b>Lifetime.</b> Cache entries expire after a short period unless refreshed by use. The docs list the lifetime options.</li>
+<li><b>Verify with usage.</b> <code>cache_creation_input_tokens</code> and <code>cache_read_input_tokens</code> tell you what happened. Do not assume.</li>
+</ul>
+<p>Rules and prices change, so read the <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-caching" target="_blank" rel="noopener">prompt caching page</a> before designing around it.</p>
+
+<!-- 4.7 -->
+<h2>4.7 Message Batches API</h2>
+<p>If nobody is waiting for the answer, batch it. You submit many requests at once, they are processed asynchronously at a discount, and you collect results later. The flow is always the same:</p>
+<ol>
+<li><b>Create:</b> <code>client.messages.batches.create(requests=[...])</code>, each request with a <code>custom_id</code> and the same <code>params</code> you would pass to <code>messages.create</code>.</li>
+<li><b>Poll:</b> <code>client.messages.batches.retrieve(id)</code> until <code>processing_status</code> is <code>ended</code>.</li>
+<li><b>Retrieve:</b> <code>client.messages.batches.results(id)</code>. Results are not in your submission order, so join on <code>custom_id</code>. Each is succeeded, errored, canceled or expired.</li>
+</ol>
+<p>Good fits: nightly classification of tickets, back-catalogue extraction, evaluation runs over a test set. Bad fits: anything interactive. Batch size limits, turnaround window and the discount are in the <a href="https://docs.claude.com/en/docs/build-with-claude/batch-processing" target="_blank" rel="noopener">batch processing docs</a>. The lab uses it for 500 documents.</p>
+
+<figure>
+<svg viewBox="0 0 800 250" role="img" aria-label="Three cost levers: realtime calls, the Batch API and prompt caching, and when to use each">
+  <text x="400" y="24" text-anchor="middle" class="sm">Choose by who is waiting and what repeats</text>
+  <rect class="s-plain" x="20" y="50" width="240" height="150" rx="8"/>
+  <text x="140" y="85" text-anchor="middle" font-weight="600">Realtime call</text>
+  <text x="140" y="115" text-anchor="middle" class="sm">a person or API caller waits</text>
+  <text x="140" y="135" text-anchor="middle" class="sm">seconds matter</text>
+  <text x="140" y="155" text-anchor="middle" class="sm">stream it for chat screens</text>
+  <rect class="s-warm" x="280" y="50" width="240" height="150" rx="8"/>
+  <text x="400" y="85" text-anchor="middle" font-weight="600">Message Batches</text>
+  <text x="400" y="115" text-anchor="middle" class="sm">nobody waits</text>
+  <text x="400" y="135" text-anchor="middle" class="sm">hundreds or thousands of items</text>
+  <text x="400" y="155" text-anchor="middle" class="sm">join results by custom_id</text>
+  <rect class="s-acc" x="540" y="50" width="240" height="150" rx="8"/>
+  <text x="660" y="85" text-anchor="middle" font-weight="600">Prompt caching</text>
+  <text x="660" y="115" text-anchor="middle" class="sm">same long prefix every call</text>
+  <text x="660" y="135" text-anchor="middle" class="sm">many calls close together</text>
+  <text x="660" y="155" text-anchor="middle" class="sm">verify with usage fields</text>
+  <text x="400" y="232" text-anchor="middle" class="sm">Caching and batching address different costs. Check the docs on combining them.</text>
+</svg>
+<figcaption>Realtime is about latency, batch is about volume, caching is about repetition.</figcaption>
+</figure>
+
+<div class="tbl"><table>
+<thead><tr><th>Situation</th><th>Use</th></tr></thead>
+<tbody>
+<tr><td>Clerk uploads one invoice and waits for the form to fill</td><td>Realtime, small model</td></tr>
+<tr><td>Accountant's year-end folder of 500 PDFs, needed tomorrow</td><td>Batch</td></tr>
+<tr><td>Internal policy bot, 30 questions an hour against a 40-page manual</td><td>Realtime plus caching of the manual</td></tr>
+<tr><td>Nightly tagging of 20,000 product descriptions</td><td>Batch; cache only if a long shared prefix exists</td></tr>
+</tbody></table></div>
+
+<!-- 4.8 -->
+<h2>4.8 Errors, retries and cost logging</h2>
+<p>Production code fails in ordinary ways. Plan for each:</p>
+<div class="tbl"><table>
+<thead><tr><th>Problem</th><th>SDK exception</th><th>Response</th></tr></thead>
+<tbody>
+<tr><td>Rate limit (HTTP 429)</td><td><code>RateLimitError</code></td><td>Back off and retry; honour the <code>retry-after</code> header; lower concurrency</td></tr>
+<tr><td>Server or overload error (5xx)</td><td><code>InternalServerError</code>, <code>APIStatusError</code></td><td>Retry with backoff</td></tr>
+<tr><td>Network or timeout</td><td><code>APIConnectionError</code>, <code>APITimeoutError</code></td><td>Retry; set an explicit timeout</td></tr>
+<tr><td>Bad request, auth, not found (4xx)</td><td><code>BadRequestError</code>, <code>AuthenticationError</code>, <code>NotFoundError</code></td><td>Do not retry; fix the request, key or model ID</td></tr>
+</tbody></table></div>
+<p>The SDK retries the retryable cases by itself (<code>max_retries</code> on the client, default is small). Tune <code>max_retries</code> and <code>timeout</code> there first. Write your own wrapper only when you need custom logging or limits:</p>
+<pre><code>import logging
+import random
+import time
+
+import anthropic
+
+log = logging.getLogger("llm")
+RETRY_STATUS = {429, 500, 502, 503, 529}
+
+
+def call_with_backoff(fn, tries: int = 5, base: float = 1.0):
+    """The SDK retries by itself; use this when you want your own logging or limits."""
+    for n in range(tries):
+        last = n == tries - 1
+        try:
+            return fn()
+        except anthropic.APIStatusError as e:
+            if e.status_code not in RETRY_STATUS or last:
+                raise                       # 400/401/403/404: retrying cannot help
+            wait = float(e.response.headers.get("retry-after", base * 2 ** n))
+        except anthropic.APIConnectionError:  # includes APITimeoutError
+            if last:
+                raise
+            wait = base * 2 ** n
+        wait += random.uniform(0, 1)         # jitter so parallel workers do not sync up
+        log.warning("retry %d/%d in %.1fs", n + 1, tries, wait)
+        time.sleep(wait)</code></pre>
+
+<h3>Log tokens and cost per call</h3>
+<p>This is what turns a demo into something you can quote. For every call, log the request ID (needed if you ever open a support case), model, latency, stop reason and all four usage counters. Compute cost from those counters and a price table you keep in config, copied from the pricing page with the date. The lab does exactly this, and sums it into a cost-per-document figure. Clients ask for that number first.</p>
+<div class="tip">Set a spend limit in the Console, use separate keys per client or project, and never put keys in the repo. A leaked key is a billing incident.</div>
+
+<!-- 4.9 -->
+<h2>4.9 A small service: project structure and FastAPI</h2>
+<p>Keep the pipeline in plain functions that know nothing about HTTP. Then a CLI, a batch script and a web endpoint are thin wrappers around the same code:</p>
+<pre><code>invoice-extractor/
+  README.md
+  requirements.txt      # anthropic, pydantic, fastapi, uvicorn, python-multipart
+  .env.example          # ANTHROPIC_API_KEY=, PRICE_IN=, PRICE_OUT=, ...
+  .gitignore            # .env, out/, real invoices
+  models.py             # pydantic schema, review flags, cost helper
+  extract.py            # prompt, tool, extract_bytes(), CLI for a folder
+  batch_extract.py      # submit / collect for large jobs
+  app.py                # FastAPI wrapper
+  samples/              # synthetic PDFs only
+  sample_output/        # CSVs and cost report from the samples</code></pre>
+<p>The endpoint, run with <code>uvicorn app:app --reload</code>:</p>
+<pre><code># app.py - run with: uvicorn app:app --reload
+from fastapi import FastAPI, HTTPException, UploadFile
+
+from extract import ExtractionError, extract_bytes
+from models import cost_usd
+
+app = FastAPI(title="invoice-extractor")
+
+
+@app.get("/health")
+def health() -&gt; dict:
+    return {"ok": True}
+
+
+@app.post("/extract")
+def extract(file: UploadFile) -&gt; dict:  # plain def: FastAPI runs it in a worker thread
+    if file.content_type != "application/pdf":
+        raise HTTPException(status_code=415, detail="send a PDF")
+    data = file.file.read()
+    try:
+        invoice, usage = extract_bytes(data)
+    except ExtractionError as e:
+        raise HTTPException(status_code=422, detail=str(e)[:300])
+    return {"invoice": invoice.model_dump(mode="json"),
+            "review_flags": invoice.review_flags(),
+            "usage": usage, "cost_usd": cost_usd(usage)}</code></pre>
+<ul>
+<li>Declare it with plain <code>def</code>, not <code>async def</code>, because the SDK call here is blocking. FastAPI runs it in a worker thread. (The SDK also has an async client if you prefer.)</li>
+<li>Return 4xx for bad input and 422 for an extraction the model could not complete; do not return 200 with an error inside.</li>
+<li>Add authentication before any client can reach it. Uploaded invoices are personal and financial data.</li>
+</ul>
+
+<!-- LAB -->
+<div class="lab">
+<h3>Lab 4. Invoice and receipt extractor</h3>
+<p>Goal: a folder of PDFs becomes pydantic-validated data and CSV files, first with realtime calls, then through the Batch API for 500 documents with a cost-per-document report.</p>
+
+<p><b>Setup</b></p>
+<pre><code>mkdir invoice-extractor &amp;&amp; cd invoice-extractor
+git init
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install anthropic pydantic fastapi uvicorn python-multipart
+pip freeze | grep -iE "anthropic|pydantic|fastapi|uvicorn|multipart" &gt; requirements.txt
+mkdir samples out
+# .env.example, copy the values yourself from the current pricing page (USD per million tokens)
+export ANTHROPIC_API_KEY=sk-ant-...
+export PRICE_IN=...  PRICE_OUT=...  PRICE_CACHE_WRITE=...  PRICE_CACHE_READ=...  BATCH_FACTOR=...</code></pre>
+<p><b>Sample data.</b> Do not use a client's real invoices in the repo. Ask Claude to write a small script (reportlab or an HTML-to-PDF tool) that generates 20 to 30 synthetic invoices: Hebrew, English and mixed, ILS, USD and EUR, 1 to 15 lines, a few with no VAT number, one credit note, two blurry "scans". Keep the generator's known answers in a JSON file so you can score accuracy. For the 500-document run, repeat the generated set with new numbers.</p>
+<p><b>Before you run:</b> check current model IDs, the PDF input rules and the batch limits in the docs. The code below uses IDs and parameters that were right when this page was written.</p>
+
+<p><b>models.py</b></p>
+<pre><code>"""Pydantic models and cost helper for the invoice extractor."""
+import os
+from datetime import date
+from decimal import Decimal
+from enum import Enum
+
+from pydantic import BaseModel, Field, field_validator
+
+
+class Currency(str, Enum):
+    ILS = "ILS"
+    USD = "USD"
+    EUR = "EUR"
+
+
+class LineItem(BaseModel):
+    description: str
+    quantity: Decimal | None = None
+    unit_price: Decimal | None = None
+    amount: Decimal = Field(description="Line amount exactly as printed on the document")
+
+
+class Invoice(BaseModel):
+    supplier: str = Field(description="Legal name of the issuing supplier")
+    invoice_number: str | None = None
+    invoice_date: date = Field(description="Issue date as ISO YYYY-MM-DD")
+    vat_number: str | None = Field(
+        default=None,
+        description="Supplier VAT / company / osek morshe number, digits only",
+    )
+    lines: list[LineItem] = Field(min_length=1)
+    total: Decimal = Field(description="Grand total payable, as printed")
+    currency: Currency
+
+    @field_validator("vat_number")
+    @classmethod
+    def clean_vat(cls, v: str | None) -&gt; str | None:
+        if v is None:
+            return None
+        digits = "".join(ch for ch in v if ch.isdigit())
+        return digits or None
+
+    def lines_sum(self) -&gt; Decimal:
+        return sum((line.amount for line in self.lines), Decimal("0"))
+
+    def review_flags(self) -&gt; list[str]:
+        """Soft checks: a flag means 'a person should look', not 'wrong'."""
+        flags = []
+        if abs(self.lines_sum() - self.total) &gt; Decimal("0.05"):
+            flags.append("lines_do_not_sum_to_total")  # may be normal if lines exclude VAT
+        if self.vat_number is None or len(self.vat_number) != 9:
+            flags.append("vat_number_missing_or_not_9_digits")
+        return flags
+
+
+def _rate(name: str, default: str = "0") -&gt; float:
+    return float(os.environ.get(name, default))
+
+
+def cost_usd(usage: dict, batch: bool = False) -&gt; float:
+    """Prices live in env vars (USD per million tokens), copied from the pricing page.
+    PRICE_IN, PRICE_OUT, PRICE_CACHE_WRITE, PRICE_CACHE_READ, and BATCH_FACTOR
+    (the batch multiplier from the batch docs). Nothing is hard-coded here."""
+    per_million = {
+        "input_tokens": _rate("PRICE_IN"),
+        "output_tokens": _rate("PRICE_OUT"),
+        "cache_creation_input_tokens": _rate("PRICE_CACHE_WRITE"),
+        "cache_read_input_tokens": _rate("PRICE_CACHE_READ"),
+    }
+    total = sum(usage.get(k, 0) * p for k, p in per_million.items()) / 1_000_000
+    return total * _rate("BATCH_FACTOR", "1") if batch else total</code></pre>
+<p><b>extract.py</b></p>
+<pre><code>"""Realtime extraction: folder of PDFs -&gt; validated Invoice -&gt; CSV.
+Usage: python extract.py invoices/"""
+import base64
+import csv
+import logging
+import sys
+import time
+from pathlib import Path
+
+import anthropic
+from pydantic import ValidationError
+
+from models import Invoice, cost_usd
+
+# Check current model IDs and parameters at docs.claude.com before running
+MODEL = "claude-haiku-5-5"
+MAX_TOKENS = 2000
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+log = logging.getLogger("extract")
+
+# The SDK already retries 429/5xx/connection errors with backoff; we set the budget.
+client = anthropic.Anthropic(max_retries=5, timeout=120.0)
+
+SYSTEM_PROMPT = """You extract data from supplier invoices and receipts for an Israeli SMB.
+Documents may be Hebrew, Russian or English, and may be scans.
+Rules:
+- Always answer by calling the record_invoice tool. Never invent a value.
+- Israeli documents write dates day first (DD/MM/YYYY). Output ISO YYYY-MM-DD.
+- The symbol or word for shekel (NIS, ILS) means ILS. Use only ILS, USD or EUR.
+- vat_number is the SUPPLIER's number (osek morshe / company number), not the customer's.
+  If you cannot find it, use null.
+- Amounts are plain numbers: no currency symbol, no thousands separator.
+- A credit note has negative amounts.
+- lines: one entry per printed line item. Do not add a line for VAT or totals."""
+
+TOOL = {
+    "name": "record_invoice",
+    "description": "Record the fields extracted from one invoice or receipt.",
+    "input_schema": Invoice.model_json_schema(),
+}
+
+INVOICE_FIELDS = ["file", "supplier", "invoice_number", "invoice_date", "vat_number",
+                  "currency", "total", "lines_sum", "review_flags", "cost_usd"]
+LINE_FIELDS = ["file", "description", "quantity", "unit_price", "amount"]
+FAIL_FIELDS = ["file", "error"]
+
+
+class ExtractionError(Exception):
+    pass
+
+
+def build_params(pdf_bytes: bytes, note: str = "") -&gt; dict:
+    """Request parameters, shared by the realtime and the batch scripts."""
+    b64 = base64.standard_b64encode(pdf_bytes).decode("ascii")
+    return {
+        "model": MODEL,
+        "max_tokens": MAX_TOKENS,
+        # cache_control only helps once the prefix is long enough; check usage to see.
+        "system": [{"type": "text", "text": SYSTEM_PROMPT,
+                    "cache_control": {"type": "ephemeral"}}],
+        "tools": [TOOL],
+        "tool_choice": {"type": "tool", "name": "record_invoice"},
+        "messages": [{"role": "user", "content": [
+            {"type": "document",
+             "source": {"type": "base64", "media_type": "application/pdf", "data": b64}},
+            {"type": "text", "text": "Extract this document." + note},
+        ]}],
+    }
+
+
+def usage_dict(u) -&gt; dict:
+    keys = ("input_tokens", "output_tokens",
+            "cache_creation_input_tokens", "cache_read_input_tokens")
+    return {k: getattr(u, k, 0) or 0 for k in keys}
+
+
+def parse_message(msg) -&gt; Invoice:
+    if msg.stop_reason == "max_tokens":
+        raise ExtractionError("output cut off at max_tokens")
+    block = next((b for b in msg.content if b.type == "tool_use"), None)
+    if block is None:
+        raise ExtractionError(f"no tool call, stop_reason={msg.stop_reason}")
+    try:
+        return Invoice.model_validate(block.input)
+    except ValidationError as e:
+        raise ExtractionError(f"validation failed: {e}") from e
+
+
+def extract_bytes(pdf_bytes: bytes, attempts: int = 2) -&gt; tuple[Invoice, dict]:
+    note, totals, last = "", {}, None
+    for attempt in range(1, attempts + 1):
+        started = time.perf_counter()
+        try:
+            msg = client.messages.create(**build_params(pdf_bytes, note))
+        except anthropic.APIStatusError as e:
+            raise ExtractionError(f"API error {e.status_code}: {e.message}") from e
+        except anthropic.APIConnectionError as e:  # includes timeouts
+            raise ExtractionError(f"connection problem: {e}") from e
+        usage = usage_dict(msg.usage)
+        for k, v in usage.items():
+            totals[k] = totals.get(k, 0) + v
+        log.info("request_id=%s attempt=%d stop=%s seconds=%.1f usage=%s cost_usd=%.5f",
+                 getattr(msg, "_request_id", None), attempt, msg.stop_reason,
+                 time.perf_counter() - started, usage, cost_usd(usage))
+        try:
+            return parse_message(msg), totals
+        except ExtractionError as e:
+            last = e
+            note = f"\nYour previous answer was rejected: {e}. Fix it."
+    raise last
+
+
+def invoice_row(name: str, inv: Invoice, cost: float) -&gt; dict:
+    return {"file": name, "supplier": inv.supplier, "invoice_number": inv.invoice_number,
+            "invoice_date": inv.invoice_date.isoformat(), "vat_number": inv.vat_number,
+            "currency": inv.currency.value, "total": str(inv.total),
+            "lines_sum": str(inv.lines_sum()), "review_flags": ";".join(inv.review_flags()),
+            "cost_usd": f"{cost:.5f}"}
+
+
+def line_rows(name: str, inv: Invoice) -&gt; list[dict]:
+    return [{"file": name, "description": ln.description, "quantity": ln.quantity,
+             "unit_price": ln.unit_price, "amount": ln.amount} for ln in inv.lines]
+
+
+def write_csv(path: Path, rows: list[dict], fields: list[str]) -&gt; None:
+    # utf-8-sig so Excel opens Hebrew text correctly
+    with path.open("w", newline="", encoding="utf-8-sig") as f:
+        w = csv.DictWriter(f, fieldnames=fields)
+        w.writeheader()
+        w.writerows(rows)
+
+
+def run(folder: Path, out_dir: Path) -&gt; None:
+    out_dir.mkdir(exist_ok=True)
+    inv_rows, ln_rows, failures, total_cost = [], [], [], 0.0
+    for pdf in sorted(folder.glob("*.pdf")):
+        try:
+            inv, usage = extract_bytes(pdf.read_bytes())
+        except ExtractionError as e:
+            log.error("%s failed: %s", pdf.name, e)
+            failures.append({"file": pdf.name, "error": str(e)[:300]})
+            continue
+        cost = cost_usd(usage)
+        total_cost += cost
+        inv_rows.append(invoice_row(pdf.name, inv, cost))
+        ln_rows.extend(line_rows(pdf.name, inv))
+    write_csv(out_dir / "invoices.csv", inv_rows, INVOICE_FIELDS)
+    write_csv(out_dir / "lines.csv", ln_rows, LINE_FIELDS)
+    write_csv(out_dir / "failures.csv", failures, FAIL_FIELDS)
+    done = len(inv_rows)
+    flagged = sum(1 for r in inv_rows if r["review_flags"])
+    log.info("done=%d failed=%d flagged_for_review=%d total_cost_usd=%.4f per_doc=%.5f",
+             done, len(failures), flagged, total_cost, total_cost / max(done, 1))
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        sys.exit("usage: python extract.py &lt;folder-with-pdfs&gt;")
+    run(Path(sys.argv[1]), Path("out"))</code></pre>
+<p><b>batch_extract.py</b></p>
+<pre><code>"""Batch extraction for many documents.
+  python batch_extract.py submit invoices/    # create batches, save ids
+  python batch_extract.py collect             # poll, download, write CSVs and cost report"""
+import json
+import sys
+import time
+from pathlib import Path
+
+from extract import (FAIL_FIELDS, INVOICE_FIELDS, LINE_FIELDS, ExtractionError, build_params,
+                     client, invoice_row, line_rows, parse_message, usage_dict, write_csv)
+from models import cost_usd
+
+OUT = Path("out")
+STATE = OUT / "batch_state.json"
+CHUNK = 100  # documents per batch; check the docs for request size limits with base64 PDFs
+
+
+def submit(folder: Path) -&gt; None:
+    OUT.mkdir(exist_ok=True)
+    pdfs = sorted(folder.glob("*.pdf"))
+    manifest, batch_ids = {}, []
+    for start in range(0, len(pdfs), CHUNK):
+        requests = []
+        for i, pdf in enumerate(pdfs[start:start + CHUNK], start=start):
+            custom_id = f"doc-{i:05d}"  # results come back unordered; this is the join key
+            manifest[custom_id] = pdf.name
+            requests.append({"custom_id": custom_id, "params": build_params(pdf.read_bytes())})
+        batch = client.messages.batches.create(requests=requests)
+        batch_ids.append(batch.id)
+        print(f"submitted {batch.id} with {len(requests)} documents")
+    STATE.write_text(json.dumps({"batch_ids": batch_ids, "manifest": manifest}, indent=2))
+
+
+def wait(batch_id: str) -&gt; None:
+    while True:
+        b = client.messages.batches.retrieve(batch_id)
+        c = b.request_counts
+        print(f"{batch_id}: {b.processing_status} processing={c.processing} "
+              f"succeeded={c.succeeded} errored={c.errored}")
+        if b.processing_status == "ended":
+            return
+        time.sleep(60)
+
+
+def collect() -&gt; None:
+    state = json.loads(STATE.read_text())
+    manifest = state["manifest"]
+    inv_rows, ln_rows, failures = [], [], []
+    cost_batch = cost_realtime = 0.0
+    tokens = {"input_tokens": 0, "output_tokens": 0,
+              "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0}
+    billed_docs = 0
+    for batch_id in state["batch_ids"]:
+        wait(batch_id)
+        for entry in client.messages.batches.results(batch_id):
+            name = manifest[entry.custom_id]
+            if entry.result.type != "succeeded":  # errored, canceled or expired
+                failures.append({"file": name, "error": entry.result.type})
+                continue
+            msg = entry.result.message
+            usage = usage_dict(msg.usage)
+            for k, v in usage.items():
+                tokens[k] += v
+            billed_docs += 1
+            c_batch = cost_usd(usage, batch=True)
+            cost_batch += c_batch
+            cost_realtime += cost_usd(usage, batch=False)
+            try:
+                inv = parse_message(msg)
+            except ExtractionError as e:
+                failures.append({"file": name, "error": str(e)[:300]})
+                continue
+            inv_rows.append(invoice_row(name, inv, c_batch))
+            ln_rows.extend(line_rows(name, inv))
+    inv_rows.sort(key=lambda r: r["file"])
+    write_csv(OUT / "invoices_batch.csv", inv_rows, INVOICE_FIELDS)
+    write_csv(OUT / "lines_batch.csv", ln_rows, LINE_FIELDS)
+    write_csv(OUT / "failures_batch.csv", failures, FAIL_FIELDS)
+    n = max(billed_docs, 1)
+    report = {
+        "documents_total": len(manifest), "extracted_ok": len(inv_rows),
+        "failed": len(failures),
+        "flagged_for_review": sum(1 for r in inv_rows if r["review_flags"]),
+        "tokens": tokens,
+        "cost_usd_batch_total": round(cost_batch, 4),
+        "cost_usd_per_doc_batch": round(cost_batch / n, 5),
+        "cost_usd_per_doc_if_realtime": round(cost_realtime / n, 5),
+        "note": "prices come from environment variables; see models.cost_usd",
+    }
+    (OUT / "cost_report.json").write_text(json.dumps(report, indent=2))
+    print(json.dumps(report, indent=2))
+
+
+if __name__ == "__main__":
+    if len(sys.argv) == 3 and sys.argv[1] == "submit":
+        submit(Path(sys.argv[2]))
+    elif len(sys.argv) == 2 and sys.argv[1] == "collect":
+        collect()
+    else:
+        sys.exit(__doc__)</code></pre>
+
+<p><b>Steps</b></p>
+<ol>
+<li>Run <code>python extract.py samples/</code>. Open <code>out/invoices.csv</code> in Excel and check that Hebrew displays correctly.</li>
+<li>Score it: compare supplier, date, VAT number, total and currency with your known answers. Record field-level accuracy and which documents were flagged for review.</li>
+<li>Read the log lines. What is the average latency and cost per document? Did the system prompt ever produce cache reads? (Probably not: it is short. Say why in the README.)</li>
+<li>Swap <code>MODEL</code> to a larger model and rerun on the documents it got wrong. Is the gain worth the cost? Write down the numbers.</li>
+<li>Generate or copy up to 500 documents into <code>samples_500/</code>. Run <code>python batch_extract.py submit samples_500/</code>, then <code>python batch_extract.py collect</code>. Collect can be stopped and re-run later because batch IDs are saved.</li>
+<li>Open <code>out/cost_report.json</code>. Compare cost per document for batch against the realtime-equivalent figure, and note the turnaround time.</li>
+<li>Re-run <code>failures_batch.csv</code> documents through <code>extract.py</code>. How many still need a human?</li>
+<li>Add <code>app.py</code>, start it with uvicorn, and test with <code>curl -F file=@samples/some.pdf http://127.0.0.1:8000/extract</code>.</li>
+</ol>
+<p><b>Stretch:</b> add a <code>pytest</code> test that builds an <code>Invoice</code> from a known-good dict and checks the review flags; add a second tool <code>lookup_supplier</code> and let Claude call it using the loop from 4.5.</p>
+</div>
+
+<!-- DELIVERABLE -->
+<h2>Deliverable: GitHub repo "invoice-extractor"</h2>
+<p>A public or private repo you can show a prospect. It must contain:</p>
+<ol>
+<li><b>Code:</b> the files above, runnable from a clean clone using only the README.</li>
+<li><b>README.md:</b> what it does, setup, how to run realtime, batch and API modes, the schema, how review flags work, known limits, and the model and date you tested with.</li>
+<li><b>Sample outputs:</b> <code>sample_output/</code> with the CSVs, <code>cost_report.json</code> and a short accuracy table from your test set. Synthetic documents only.</li>
+<li><b>Results section in the README:</b> field-level accuracy, share flagged for review, cost per document for realtime and batch, with the prices' source and the date.</li>
+<li><b>Client-facing paragraph</b> at the top of the README, in plain business language. Example to adapt:</li>
+</ol>
+<div class="tip">"We built a service that reads supplier invoices and receipts in Hebrew, English and Russian, from PDF or photo, and returns the supplier, date, VAT number, line items, total and currency as clean data ready for your accounting software. Anything that does not add up is flagged for a clerk instead of passed through, so your team reviews exceptions, not every document. In testing on [N] documents it filled [X]% of fields correctly and flagged [Y]% for review, at about [Z] per document. Large back-catalogues run overnight at a lower cost, and your documents are processed under your agreed data terms."</div>
+<p>Fill the brackets only with your measured numbers. Remove any claim you cannot back up.</p>
+
+<!-- SELF CHECK -->
+<h2>Self-check</h2>
+<ol class="check">
+<li>Your extractor sometimes returns truncated JSON that fails to parse. What do you check first, and what are two fixes?
+<details><summary>Model answer</summary>Check <code>stop_reason</code>: <code>max_tokens</code> means the output was cut off. Fixes: raise <code>max_tokens</code>, or reduce the output (fewer fields, shorter descriptions). Also force the format with a tool and validate, so a broken result is detected and retried instead of passed on.</details></li>
+<li>In a tool loop, Claude returns three <code>tool_use</code> blocks in one reply. What exactly do you send back?
+<details><summary>Model answer</summary>Append the assistant message as it came, then send one user message whose content is a list of three <code>tool_result</code> blocks, each with the matching <code>tool_use_id</code>. Run the tools in any order or in parallel. Report failures with <code>is_error</code> rather than skipping a result.</details></li>
+<li>A client asks Claude 30 questions an hour about the same 40-page manual. Would you use caching, batch, both or neither, and how do you confirm it worked?
+<details><summary>Model answer</summary>Caching, with the manual placed first in the system prompt and the marker after it, because the prefix repeats and calls are close together. Not batch: people are waiting. Confirm in <code>usage</code>: cache creation tokens on the first call, cache read tokens on later calls. If reads stay at zero, the prefix changed or is below the minimum length.</details></li>
+<li>Which errors do you retry with backoff, which do you never retry, and who handles the retrying in the SDK?
+<details><summary>Model answer</summary>Retry 429 rate limits, 5xx and overload errors, and connection errors or timeouts, with exponential backoff and jitter, respecting <code>retry-after</code>. Never retry 400, 401, 403 or 404 style errors; fix the request, key or model ID. The SDK retries the retryable cases itself, controlled by <code>max_retries</code> and <code>timeout</code> on the client.</details></li>
+<li>You need to extract 500 old invoices by tomorrow morning. Describe the Batch API steps and how you match results to files.
+<details><summary>Model answer</summary>Build one request per file with a unique <code>custom_id</code> (kept in a manifest mapping id to filename), create the batch (in chunks if size limits require), poll until <code>processing_status</code> is <code>ended</code>, then iterate the results. Results are unordered, so join on <code>custom_id</code>. Handle succeeded, errored, canceled and expired separately, validate each success with pydantic, and re-run the failures.</details></li>
+</ol>
+
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://docs.claude.com/en/api/overview" target="_blank" rel="noopener">Claude API overview</a></li>
+<li><a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview" target="_blank" rel="noopener">Tool use overview</a></li>
+<li><a href="https://docs.claude.com/en/docs/build-with-claude/prompt-caching" target="_blank" rel="noopener">Prompt caching</a></li>
+<li><a href="https://docs.claude.com/en/docs/build-with-claude/batch-processing" target="_blank" rel="noopener">Batch processing</a></li>
+<li><a href="https://github.com/anthropics/anthropic-cookbook" target="_blank" rel="noopener">Anthropic Cookbook</a> (worked examples)</li>
+</ul>
+
+<div class="nav"><span>← Module 3 · Claude apps for knowledge work</span><span>Next: Module 5 · Knowledge retrieval (RAG) →</span></div>
+</div>
+
+</html>

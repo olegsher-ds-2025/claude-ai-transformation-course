@@ -1,0 +1,923 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Module 12 · Capstone</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column; lesson sections in order; flat SVG illustrations; warm boxes = things you do, teal = reference */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --ink:#14232b; --muted:#56666e; --line:#d5dfe1;
+  --accent:#0f7a72; --accent-soft:#dcefed; --warm:#c8642c; --warm-soft:#f6e6dc;
+  --code-bg:#eef3f4;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,5vw,2.8rem);font-weight:700}
+h2{font-size:1.55rem;font-weight:700;margin-top:52px;margin-bottom:12px}
+h3{font-size:1.15rem;font-weight:700;margin-top:24px;margin-bottom:8px}
+p{margin:0 0 12px;max-width:68ch}
+ul,ol{padding-left:20px;max-width:68ch}
+li{margin-bottom:6px}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:1.15rem;color:var(--muted);margin-top:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font-family:var(--mono);font-size:.78rem;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}
+.objectives{margin-top:28px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.objectives h3{margin-top:0}
+figure{margin:24px 0;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:10px}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .sm{font-size:12px;fill:var(--muted)}
+.s-acc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.s-warm{fill:var(--warm-soft);stroke:var(--warm);stroke-width:2}
+.s-plain{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.ln{stroke:var(--muted);stroke-width:2;fill:none}
+.dot{fill:var(--accent)}
+.dot-w{fill:var(--warm)}
+.tbl{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.5;margin:12px 0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:3px}
+pre code{background:none;padding:0}
+.lab{margin-top:20px;padding:18px 20px;background:var(--warm-soft);border-radius:10px}
+.lab h3{margin-top:0;color:var(--warm)}
+.tip{padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 6px 6px 0;margin:16px 0;font-size:.95rem}
+.check li{margin-bottom:10px}
+details{margin-top:6px}
+summary{cursor:pointer;color:var(--accent);font-size:.9rem}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+</style>
+
+<div class="wrap">
+
+<div class="eyebrow">AI Transformation with Claude · Part 4 · Week 12</div>
+<h1>Module 12. Capstone engagement and positioning</h1>
+<p class="lede">You have the skills. This module turns them into proof and a business: one real engagement, measured honestly and written up, and a plan to sell the next ten.</p>
+<div class="meta"><span class="chip">≈ 12 h</span><span class="chip">reading 2 h</span><span class="chip">lab 6 h</span><span class="chip">deliverables 4 h</span><span class="chip">+ the engagement itself over the following weeks</span></div>
+
+<div class="objectives">
+<h3>By the end of this module you can</h3>
+<ul>
+<li>Choose a capstone client with four tests: access to the owner, a measurable process, data you can use, low risk</li>
+<li>Run a week-by-week engagement: audit, architecture, two-week pilot, handover, measurement</li>
+<li>Record the main design choice in an architecture decision record (ADR)</li>
+<li>Hand over a pack the client can run without you: runbook, admin guide, training video, support terms</li>
+<li>Report baseline against after with honest caveats, and write a case study that uses only approved facts and quotes</li>
+<li>State your positioning in one sentence, list a service menu, and plan website, LinkedIn and outreach for 90 days</li>
+<li>Generate a case study draft from structured data with the Claude API, and track a go-to-market pipeline in a CSV</li>
+</ul>
+</div>
+
+<!-- 12.1 -->
+<h2>12.1 Choosing the capstone client</h2>
+<p>The capstone is your first public proof. Pick the client for what it lets you show, not for how exciting the technology is. A friendly client is fine. A client you cannot measure is not.</p>
+
+<div class="tbl"><table>
+<thead><tr><th>Criterion</th><th>Test question</th><th>Red flag</th></tr></thead>
+<tbody>
+<tr><td>Access to the owner</td><td>Can the owner give you 30 minutes a week and approve decisions the same week?</td><td>Everything goes through someone who cannot decide</td></tr>
+<tr><td>Measurable process</td><td>Can you count something today (minutes, tickets, errors, response time) without new tools?</td><td>"It should feel better" is the only goal</td></tr>
+<tr><td>Data available</td><td>Can you read real examples (emails, orders, forms) legally and without a long IT project?</td><td>Data sits in one person's head or on paper</td></tr>
+<tr><td>Low risk</td><td>If Claude is wrong, is the output a draft that a person checks, not a payment or a legal notice?</td><td>The first idea is to auto-send to customers</td></tr>
+</tbody></table></div>
+
+<p>Your three friendly candidates, as hypotheses to check in a first call. None of this is known yet; it is what you need to find out.</p>
+<div class="tbl"><table>
+<thead><tr><th>Candidate</th><th>Likely process to improve</th><th>Likely measure</th><th>Watch out for</th></tr></thead>
+<tbody>
+<tr><td>Bat Yam garage (fuel injector cleaning)</td><td>Enquiries by phone and message in Hebrew and Russian; quote and booking follow-up; explaining test results to customers</td><td>Time to reply to an enquiry, enquiries that become bookings</td><td>Low volume: a small sample can show nothing. Enquiries may not be logged anywhere</td></tr>
+<tr><td>Ceramics studio</td><td>Replying to enquiries, workshop sign-ups, product texts in several languages</td><td>Admin hours per week, time to reply</td><td>Seasonal sales; very small data; hard to prove business impact</td></tr>
+<tr><td>Small logistics firm</td><td>Shipment-status emails, customer updates, exception handling</td><td>Time to first reply, emails per clerk per day, errors found in review</td><td>Customer data privacy; a busy owner. Best match to your target niche</td></tr>
+</tbody></table></div>
+<div class="tip"><b>Rule of thumb:</b> if the logistics firm passes all four tests, choose it, because its case study is the one your future clients will recognise. If it fails on access or data, use the garage or the studio and be open that the sample is small.</div>
+
+<!-- 12.2 -->
+<h2>12.2 The engagement plan, week by week</h2>
+<p>Plan eight weeks. The pilot itself is two weeks; the rest is what makes it a proper engagement. Collect the baseline during the audit, before the pilot starts, using the same method you will use later.</p>
+
+<figure>
+<svg viewBox="0 0 800 230" role="img" aria-label="Capstone timeline over eight weeks: audit, architecture, two-week pilot build, handover, three weeks of measurement">
+  <text x="400" y="22" text-anchor="middle" class="sm">eight-week capstone; baseline is collected in weeks 1 and 2</text>
+  <rect class="s-plain" x="40" y="40" width="88" height="56" rx="8"/>
+  <text x="84" y="64" text-anchor="middle" font-weight="600">Audit</text>
+  <text x="84" y="82" text-anchor="middle" class="sm">+ baseline</text>
+  <rect class="s-plain" x="132" y="40" width="88" height="56" rx="8"/>
+  <text x="176" y="64" text-anchor="middle" font-weight="600">Architect</text>
+  <text x="176" y="82" text-anchor="middle" class="sm">ADR</text>
+  <rect class="s-warm" x="224" y="40" width="176" height="56" rx="8"/>
+  <text x="312" y="64" text-anchor="middle" font-weight="600">Pilot build</text>
+  <text x="312" y="82" text-anchor="middle" class="sm">two weeks, human review on</text>
+  <rect class="s-plain" x="404" y="40" width="88" height="56" rx="8"/>
+  <text x="448" y="64" text-anchor="middle" font-weight="600">Handover</text>
+  <text x="448" y="82" text-anchor="middle" class="sm">pack + training</text>
+  <rect class="s-acc" x="496" y="40" width="264" height="56" rx="8"/>
+  <text x="628" y="64" text-anchor="middle" font-weight="600">Measurement</text>
+  <text x="628" y="82" text-anchor="middle" class="sm">same method as baseline</text>
+  <path class="ln" d="M40 125 H760"/>
+  <circle class="dot" cx="84" cy="125" r="6"/><circle class="dot" cx="176" cy="125" r="6"/><circle class="dot" cx="268" cy="125" r="6"/><circle class="dot" cx="360" cy="125" r="6"/><circle class="dot" cx="452" cy="125" r="6"/><circle class="dot" cx="544" cy="125" r="6"/><circle class="dot" cx="636" cy="125" r="6"/><circle class="dot-w" cx="728" cy="125" r="6"/>
+  <text x="84" y="150" text-anchor="middle" class="sm">W1</text><text x="176" y="150" text-anchor="middle" class="sm">W2</text><text x="268" y="150" text-anchor="middle" class="sm">W3</text><text x="360" y="150" text-anchor="middle" class="sm">W4</text><text x="452" y="150" text-anchor="middle" class="sm">W5</text><text x="544" y="150" text-anchor="middle" class="sm">W6</text><text x="636" y="150" text-anchor="middle" class="sm">W7</text><text x="728" y="150" text-anchor="middle" class="sm">W8</text>
+  <text x="176" y="190" text-anchor="middle" class="sm">ADR signed</text>
+  <text x="360" y="190" text-anchor="middle" class="sm">pilot ends</text>
+  <text x="452" y="210" text-anchor="middle" class="sm">handover done</text>
+  <text x="728" y="190" text-anchor="middle" class="sm">results review</text>
+</svg>
+<figcaption>Gates are decisions, not dates: the owner signs the ADR before you build, and approves the numbers before you publish.</figcaption>
+</figure>
+
+<div class="tbl"><table>
+<thead><tr><th>Week</th><th>Phase</th><th>What you do</th><th>Output</th><th>Gate</th></tr></thead>
+<tbody>
+<tr><td>Before W1</td><td>Agreement</td><td>One-page scope: goal, metric, data you may use, who approves, what may be published, end date</td><td>Signed scope (use the Module 11 proposal template)</td><td>Owner signs</td></tr>
+<tr><td>W1</td><td>Audit</td><td>Shadow the process, collect 20 to 50 real examples, start logging the baseline, check data and privacy terms</td><td>Process map, baseline log started, risk list</td><td>Metric and method agreed</td></tr>
+<tr><td>W2</td><td>Architecture</td><td>Compare options, pick one, build a small test set with correct answers, set the pass mark</td><td>ADR, test set, pilot plan</td><td>Owner signs the ADR</td></tr>
+<tr><td>W3 to W4</td><td>Pilot build and run</td><td>Build the smallest working version, test against the test set, run with real work and a person reviewing every output</td><td>Working pilot, daily log of corrections</td><td>Pass mark met before real use; stop rule agreed</td></tr>
+<tr><td>W5</td><td>Handover</td><td>Write the pack, record the training video, train two people, agree support terms</td><td>Handover pack</td><td>Client staff run it without you once</td></tr>
+<tr><td>W6 to W8</td><td>Measurement</td><td>Keep logging with the same method, review errors weekly, compare with baseline</td><td>Results sheet with n, period, caveats</td><td>Owner approves numbers for publication</td></tr>
+</tbody></table></div>
+<p>After W8, write the case study (12.6) and decide with the owner whether to move to a retainer.</p>
+
+<!-- 12.3 -->
+<h2>12.3 The architecture decision record</h2>
+<p>An ADR is a one-to-two page note that records one decision, the options you rejected and why. It protects the client (they know what they bought), you (you can show the reasoning) and the next engineer. Write one per major choice. For the pilot you usually need only one or two.</p>
+<pre><code># ADR-001: [Decision title, e.g. "Draft shipment-status replies with Claude via API, human sends"]
+
+Status: Proposed | Accepted | Superseded by ADR-00X
+Date: YYYY-MM-DD
+Deciders: [client owner], [your name, Vastama]
+
+## Context
+Process, current steps, volumes per week, languages, systems involved,
+data sensitivity, constraints (budget, staff, deadline).
+
+## Decision drivers
+- [e.g. replies checked by a person before sending]
+- [e.g. Hebrew, Russian and English]
+- [e.g. no customer data stored outside the client's accounts]
+
+## Options considered
+| Option | Pros | Cons |
+|---|---|---|
+| 0. Do nothing | No risk, no cost | Problem stays |
+| 1. Claude app with a Project, no code | Fast, no build | Manual copy and paste, no logging |
+| 2. API plus small Python service, human review | Logging, control | Needs hosting and maintenance |
+| 3. Agent with MCP into the client's system | Least manual work | Highest risk and effort |
+
+## Decision
+We will [option], because [two or three reasons tied to the drivers].
+
+## Consequences
+- Good: ...
+- Bad or costly: ...
+- Risks and mitigations: ...
+
+## Data and privacy
+What data goes to Claude, plan and terms checked on [date] (link),
+retention setting, who has access, what is never sent.
+
+## Model choice and cost tracking
+Model tier and why (see docs.claude.com for current models and pricing).
+How cost per task will be logged and who reviews it monthly.
+
+## Evaluation
+Test set size and source, pass mark, who judges, when it is re-run.
+
+## Human oversight and rollback
+Who approves outputs, what happens when Claude is wrong,
+how to switch the system off in one step.
+
+## Review date
+[date to revisit this decision]</code></pre>
+<div class="tip">Keep the options table honest. Always include "do nothing" and "Claude app with a Project, no code" as options. If the no-code option is good enough, say so: it is a better engagement than a custom build the client does not need.</div>
+
+<!-- 12.4 -->
+<h2>12.4 The handover pack</h2>
+<p>A pilot that only you can run is a dependency, not a result. The pack lets the client run, check and switch off the system without calling you.</p>
+<div class="tbl"><table>
+<thead><tr><th>Item</th><th>Contents</th><th>Test it with</th></tr></thead>
+<tbody>
+<tr><td>Runbook</td><td>What the system does, daily steps, how to review outputs, what to do when Claude is wrong, how to switch off and roll back, where logs live</td><td>A clerk follows it with you silent</td></tr>
+<tr><td>Admin guide</td><td>Accounts and who owns them, API key handling and rotation, spend limit, user access, where prompts and config are stored, how to change a prompt safely</td><td>The owner or IT contact adds and removes a user</td></tr>
+<tr><td>Training video</td><td>10 minutes or less, screen recording of one real task from start to finish, in the language the staff work in. Use captions. Hide customer data</td><td>A new employee watches it and completes a task</td></tr>
+<tr><td>Support terms</td><td>What is covered (bugs, prompt fixes), what is not (new features), response times in working days, how to report a problem, how to end support, who owns the code and prompts</td><td>The owner reads it and can say it back in one sentence</td></tr>
+<tr><td>Source and config</td><td>Repository or folder with code, prompts, test set and the ADR; no secrets inside</td><td>Another developer can run the tests</td></tr>
+</tbody></table></div>
+
+<!-- 12.5 -->
+<h2>12.5 Measuring results honestly</h2>
+<p>Your credibility depends on numbers that survive a sceptical question. Use one primary metric and up to two supporting ones. Measure the baseline and the after period the same way, written down before the pilot.</p>
+<div class="tbl"><table>
+<thead><tr><th>Metric</th><th>Baseline</th><th>After</th><th>n and period</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>[primary metric, with unit]</td><td>[value]</td><td>[value]</td><td>[n baseline / n after, dates]</td><td>[mail log, CRM export, stopwatch sample]</td></tr>
+<tr><td>[supporting metric]</td><td>[value]</td><td>[value]</td><td>[n, dates]</td><td>[source]</td></tr>
+<tr><td>[quality metric: errors found in review]</td><td>[value]</td><td>[value]</td><td>[n, dates]</td><td>[source]</td></tr>
+</tbody></table></div>
+<p>Caveats you should check against every pilot, and state the ones that apply:</p>
+<ul>
+<li><b>Small sample.</b> Say n. Prefer medians to averages when a few cases are extreme.</li>
+<li><b>No control group.</b> Anything else that changed in the period (season, staff, prices) may explain part of the difference.</li>
+<li><b>Novelty and learning effects.</b> Staff may try harder with a new tool, or get better with practice. Two more weeks of data shows which.</li>
+<li><b>Self-reported time.</b> Logs and timestamps beat memories. If you used estimates, say so.</li>
+<li><b>Task selection.</b> If only the easy cases went through the pilot, say that.</li>
+<li><b>Cost of your time.</b> Include setup effort and running cost, or state that you did not.</li>
+<li><b>Quality.</b> Faster is not a result if corrections went up. Report both.</li>
+</ul>
+<div class="tip">Write "in this pilot, at this company, over these weeks" next to every figure. Never turn one pilot into a rule such as "Claude cuts reply time in half".</div>
+
+<!-- 12.6 -->
+<h2>12.6 Writing the case study</h2>
+<p>One page, one client, plain language. Five parts:</p>
+<ol>
+<li><b>Problem:</b> what was slow, costly or error-prone, in the owner's own terms</li>
+<li><b>Approach:</b> audit, decision, pilot, handover, with the dates</li>
+<li><b>Solution:</b> what was built, which Claude surface, where a person reviews</li>
+<li><b>Results:</b> the baseline-versus-after table, n, period, and the caveats</li>
+<li><b>Quote:</b> one or two sentences from the client, in their words</li>
+</ol>
+<p>Rules for approval, kept in writing:</p>
+<ul>
+<li>A quote is real only if the person said or wrote it and approved the exact wording for publication. Keep the approval message. Until then, leave <code>[QUOTE PENDING APPROVAL]</code> in the draft.</li>
+<li>The client approves the numbers and whether to use their name, logo or an anonymous label such as "a logistics company in central Israel".</li>
+<li>Remove anything that identifies their customers, prices or internal systems.</li>
+<li>Publish the Hebrew and English versions together. Add a Russian one if the client's market uses it.</li>
+</ul>
+
+<!-- 12.7 -->
+<h2>12.7 Positioning: niche and statement</h2>
+<p>"AI for everyone" sells to no one. A niche lets you reuse your work, speak the client's language and be the obvious name for one kind of problem.</p>
+<div class="tbl"><table>
+<thead><tr><th>Niche option</th><th>Why it can work for you</th><th>Check before you commit</th></tr></thead>
+<tbody>
+<tr><td>Israeli logistics and distribution SMBs</td><td>Heavy email and document load, multi-language customers, clear time metrics, repeatable pilots</td><td>Can you reach 30 such companies in 90 days?</td></tr>
+<tr><td>Service businesses (garages, studios, clinics, agencies)</td><td>Many small owners, quick decisions, enquiry and booking work</td><td>Is the volume large enough to measure?</td></tr>
+<tr><td>Hebrew and Russian-speaking businesses</td><td>You work natively in both; fewer consultants do; clear language advantage</td><td>Is it a market or only a language? Combine it with an industry</td></tr>
+</tbody></table></div>
+<p>Pick one primary niche and one secondary. Your pipeline does not have to be exclusive; your message does.</p>
+
+<h3>The positioning formula</h3>
+<pre><code>I help [type of company, size, place]
+[achieve a specific outcome]
+by [your method, in plain words],
+so that [measurable result they can check].
+Unlike [the usual alternative], I [one real difference].</code></pre>
+<p>Draft for you to edit, not a claim of past results:</p>
+<pre><code>I help Israeli logistics and distribution companies with 10 to 100 staff
+cut manual email and document work
+with Claude, in Hebrew, Russian and English, using a two-week pilot,
+so that the time saved is measured against a baseline before they decide to scale.
+Unlike a general AI course or a tool reseller, I audit first, build the pilot myself,
+and hand over a pack your team can run.</code></pre>
+<p>Test it: read it to someone in the niche. If they cannot repeat what you do, shorten it.</p>
+
+<!-- 12.8 -->
+<h2>12.8 The service menu</h2>
+<p>A ladder lets a client start small and climb as trust grows. Each step has a clear output and an end.</p>
+
+<figure>
+<svg viewBox="0 0 800 260" role="img" aria-label="Service ladder: workshop, then audit, then pilot, then retainer, each step higher">
+  <rect class="s-plain" x="30" y="170" width="170" height="70" rx="8"/>
+  <text x="115" y="198" text-anchor="middle" font-weight="600">Workshop</text>
+  <text x="115" y="218" text-anchor="middle" class="sm">half day, whole team</text>
+  <rect class="s-acc" x="215" y="130" width="170" height="110" rx="8"/>
+  <text x="300" y="168" text-anchor="middle" font-weight="600">Audit</text>
+  <text x="300" y="190" text-anchor="middle" class="sm">find 2 to 3 use cases</text>
+  <text x="300" y="208" text-anchor="middle" class="sm">and a baseline</text>
+  <rect class="s-acc" x="400" y="90" width="170" height="150" rx="8"/>
+  <text x="485" y="140" text-anchor="middle" font-weight="600">Pilot</text>
+  <text x="485" y="162" text-anchor="middle" class="sm">two-week build,</text>
+  <text x="485" y="180" text-anchor="middle" class="sm">measured, handed over</text>
+  <rect class="s-warm" x="585" y="50" width="170" height="190" rx="8"/>
+  <text x="670" y="112" text-anchor="middle" font-weight="600">Retainer</text>
+  <text x="670" y="134" text-anchor="middle" class="sm">monitor, fix, extend,</text>
+  <text x="670" y="152" text-anchor="middle" class="sm">review each month</text>
+  <path class="ln" d="M60 30 H740"/><path class="ln" d="M730 24 L742 30 L730 36"/>
+  <text x="400" y="22" text-anchor="middle" class="sm">more trust, more commitment, more value →</text>
+</svg>
+<figcaption>Every step ends with a decision for the client: stop here, or go one step up.</figcaption>
+</figure>
+
+<div class="tbl"><table>
+<thead><tr><th>Offer</th><th>What the client gets</th><th>Typical length</th><th>Entry point for</th></tr></thead>
+<tbody>
+<tr><td>Workshop: "Claude for your team"</td><td>Hands-on half day, team's own tasks, a prompt starter pack</td><td>Half a day</td><td>Owners who want to see it before they commit</td></tr>
+<tr><td>AI readiness audit</td><td>Process review, 2 to 3 ranked use cases, baseline, risk and data notes, a pilot proposal</td><td>1 to 2 weeks</td><td>Clients who know they have a problem but not which one</td></tr>
+<tr><td>Pilot</td><td>One use case built, run for two weeks with review, measured, handover pack</td><td>Under 8 weeks including measurement</td><td>Clients with a chosen process and data</td></tr>
+<tr><td>Retainer</td><td>Monthly monitoring, fixes, prompt and model updates, one improvement per month, short report</td><td>Rolling, with notice</td><td>Clients with a pilot that worked</td></tr>
+</tbody></table></div>
+<p>Set your fees in the proposal template from Module 11. This course gives no price list, because the right figure depends on your costs and the client's scope.</p>
+<div class="tip"><b>It maps to Vastama's pipeline:</b> the audit is design, the pilot is build, the measurement is test, the retainer is monitor. Say that on the website; it makes the AI service feel like part of what Vastama already does.</div>
+
+<!-- 12.9 -->
+<h2>12.9 The Vastama AI service page</h2>
+<p>One page, in English and Hebrew (and Russian if you target it), on your existing GitHub Pages site. Suggested structure:</p>
+<ol>
+<li><b>Headline and positioning statement</b> (12.7), with one button: "Book a 20-minute call"</li>
+<li><b>Who it is for:</b> your niche, in three lines</li>
+<li><b>What we do:</b> the four-step service menu</li>
+<li><b>How an engagement runs:</b> audit, architecture, pilot, handover, measurement, using the timeline from 12.2</li>
+<li><b>Case study:</b> the capstone, with before/after table. Until it is approved, show "Case study coming" and nothing invented</li>
+<li><b>Proof:</b> certificates you have earned, public MCP servers, open-source repositories, talks</li>
+<li><b>Workshop:</b> agenda and how to book</li>
+<li><b>Questions owners ask:</b> data privacy (link to the Anthropic Trust Center pages with the date you checked), languages, what happens if Claude is wrong, who owns the work</li>
+<li><b>Contact:</b> email, LinkedIn link, company details</li>
+</ol>
+<p>Technical points: separate files per language (for example <code>/ai/</code> and <code>/he/ai/</code>), <code>lang</code> and <code>dir="rtl"</code> on the Hebrew page, <code>hreflang</code> links between versions, a readable title and description for search, and no testimonials or logos you do not have approval for.</p>
+
+<!-- 12.10 -->
+<h2>12.10 LinkedIn profile and content plan</h2>
+<p>Your profile at <a href="https://www.linkedin.com/in/sheroleg" target="_blank" rel="noopener">linkedin.com/in/sheroleg</a> is the page a prospect checks after your message. Make it say the same thing as your website.</p>
+<ul>
+<li><b>Headline:</b> your positioning in under 120 characters, not a list of technologies</li>
+<li><b>About:</b> who you help, how an engagement works, one proof point (the case study when approved), how to book a call</li>
+<li><b>Featured:</b> the AI service page, the case study, the workshop agenda</li>
+<li><b>Experience:</b> add the capstone as a project with a link; keep Vastama's description consistent</li>
+<li><b>Language:</b> post mainly in the language of the buyers you are targeting; a Hebrew post and its English version a day later works well</li>
+</ul>
+<p>Two posts a week for eight weeks. Each post should teach one thing, show one thing you built, or answer one question an owner asks. Do not name a client without written approval.</p>
+<div class="tbl"><table>
+<thead><tr><th>Week</th><th>Post A</th><th>Post B</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Who I help and why this niche</td><td>What a two-week pilot looks like (the timeline)</td></tr>
+<tr><td>2</td><td>Three office tasks Claude handles well, with a synthetic example</td><td>One email in Hebrew, one in Russian, one in English: triage demo on made-up data</td></tr>
+<tr><td>3</td><td>The four tests I use before taking on any pilot</td><td>Data privacy: the questions owners ask and the sources I show them</td></tr>
+<tr><td>4</td><td>An ADR explained: how I record a design decision (template, no client data)</td><td>Why every output has a human reviewer at first</td></tr>
+<tr><td>5</td><td>A public repo or MCP server I built, and what it does</td><td>How I measure a pilot honestly: baseline, n, caveats</td></tr>
+<tr><td>6</td><td>A mistake or surprise from the build (only what the client allows)</td><td>Cost tracking: how I watch spend per task</td></tr>
+<tr><td>7</td><td>The case study, with approved numbers and quote</td><td>What I would do differently next time</td></tr>
+<tr><td>8</td><td>The half-day workshop: agenda and who it is for</td><td>Answers to the five questions owners asked me this month</td></tr>
+</tbody></table></div>
+
+<!-- 12.11 -->
+<h2>12.11 The outreach plan</h2>
+<h3>The 30-company list</h3>
+<p>Build a list of 30 target companies in your primary niche: 10 reached through a warm introduction, 10 through a shared connection or meetup, 10 researched cold. For each, record the reason it might need help (a trigger such as hiring a customer service clerk, growth in shipments, a new branch) and the person who decides. The tracker in the lab holds the list.</p>
+
+<h3>Warm introductions first</h3>
+<p>Ask people who already trust you (former colleagues, suppliers, the capstone client) for introductions. Make it easy: send a two-line blurb they can forward.</p>
+<pre><code>Hi [name], I'm offering a free 20-minute call to Israeli logistics owners about
+cutting email and document work with Claude. If anyone comes to mind,
+could you forward this to them? Happy to write the intro for you.</code></pre>
+
+<h3>Follow-up cadence</h3>
+<div class="tbl"><table>
+<thead><tr><th>Day</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>First message, short, one specific reason, one clear ask</td></tr>
+<tr><td>4</td><td>Follow-up that adds something useful (a one-page example from their sector), not "just checking in"</td></tr>
+<tr><td>10</td><td>Different channel if you have a legitimate one (LinkedIn note, phone call to a published business number)</td></tr>
+<tr><td>24</td><td>Last note: you will not write again unless they ask; leave the door open</td></tr>
+<tr><td>After</td><td>Mark as paused for 90 days. Do not keep chasing</td></tr>
+</tbody></table></div>
+<div class="tip">Israeli law restricts unsolicited advertising messages sent in bulk (see the spam provision of the Communications Law). Ask a lawyer before you email lists. Warm introductions, personal LinkedIn notes and phone calls to a business are the safer starting channels.</div>
+
+<h3>A short outreach message</h3>
+<p>Hebrew (replace the bracketed parts with something true and specific about the company):</p>
+<pre dir="rtl"><code>שלום [שם],
+
+קוראים לי אולג, אני מנהל את Vastama, חברת שירותי IT. אנחנו עוזרים לחברות קטנות
+בתחום הלוגיסטיקה לחסוך עבודה ידנית במיילים ובמסמכים בעזרת Claude, בעברית,
+ברוסית ובאנגלית.
+
+ראיתי ש[פרט אמיתי על החברה]. אשמח לשיחה של 20 דקות ולהראות דוגמה אחת
+מהתחום שלכם, בלי התחייבות.
+
+מתאים לך [יום] בשעה [שעה]?
+
+אולג
+Vastama | [טלפון]</code></pre>
+<p>English:</p>
+<pre><code>Hi [name],
+
+I'm Oleg, I run Vastama, an IT services company. We help small logistics
+companies cut manual email and document work with Claude, in Hebrew,
+Russian and English.
+
+I saw that [a real detail about the company]. I'd like to talk for 20 minutes
+and show one example from your sector. No commitment.
+
+Would [day] at [time] work?
+
+Oleg
+Vastama | [phone]</code></pre>
+
+<!-- 12.12 -->
+<h2>12.12 The workshop offer: "Claude for your team"</h2>
+<p>A half-day workshop is your lowest-risk first sale and your best source of audit leads. Run it on the client's real tasks, with their data rules.</p>
+<div class="tbl"><table>
+<thead><tr><th>Time</th><th>Block</th><th>Outcome</th></tr></thead>
+<tbody>
+<tr><td>0:00 to 0:30</td><td>What Claude is and is not; data and privacy rules for this company</td><td>Shared rules the team can follow</td></tr>
+<tr><td>0:30 to 1:30</td><td>Hands-on: each person brings two real tasks; prompts with context and examples</td><td>Each person has one working prompt</td></tr>
+<tr><td>1:30 to 1:45</td><td>Break</td><td></td></tr>
+<tr><td>1:45 to 2:45</td><td>Projects, files and connectors for the team's work; checking Claude's answers</td><td>A shared Project set up for one team task</td></tr>
+<tr><td>2:45 to 3:30</td><td>Find use cases worth a pilot; rank by the six-point screen from Module 1</td><td>A shortlist of 2 to 3 candidates</td></tr>
+<tr><td>3:30 to 4:00</td><td>Next steps, questions</td><td>A written follow-up plan within two days</td></tr>
+</tbody></table></div>
+<p>Pre-work: a 15-minute call with the owner, accounts ready, a list of sample tasks with sensitive details removed. After the workshop, send a one-page summary and the audit offer. Run the first one for a friendly client and ask for feedback you may quote only after approval.</p>
+
+<!-- 12.13 -->
+<h2>12.13 Building credibility</h2>
+<p>Credibility is evidence a stranger can check in two minutes. List only what you have actually done.</p>
+<div class="tbl"><table>
+<thead><tr><th>Source</th><th>How to use it</th></tr></thead>
+<tbody>
+<tr><td>Anthropic Academy certificates</td><td>Finish the courses relevant to your offer on <a href="https://anthropic.skilljar.com" target="_blank" rel="noopener">anthropic.skilljar.com</a>; add earned certificates to LinkedIn and the website with the date</td></tr>
+<tr><td>Public MCP servers</td><td>Your servers for Israeli and EU public data are a strong demonstration. Give each a clear README, an example, and a short post</td></tr>
+<tr><td>Open-source repositories</td><td>The prompt library (Module 2), project template (Module 7) and your lab code, with no client data or keys. Pin the best three</td></tr>
+<tr><td>Talks at local meetups</td><td>Offer a 20-minute talk built on the capstone, with approved numbers. Record it if allowed and link it from the website</td></tr>
+<tr><td>Published case study</td><td>The strongest item. Everything else supports it</td></tr>
+</tbody></table></div>
+
+<figure>
+<svg viewBox="0 0 800 240" role="img" aria-label="Go-to-market flywheel: build, publish, outreach, deliver, case study, then back to build">
+  <rect class="s-acc" x="325" y="10" width="150" height="44" rx="8"/>
+  <text x="400" y="38" text-anchor="middle" font-weight="600">Build</text>
+  <rect class="s-acc" x="555" y="68" width="150" height="44" rx="8"/>
+  <text x="630" y="96" text-anchor="middle" font-weight="600">Publish</text>
+  <rect class="s-warm" x="465" y="178" width="150" height="44" rx="8"/>
+  <text x="540" y="206" text-anchor="middle" font-weight="600">Outreach</text>
+  <rect class="s-warm" x="185" y="178" width="150" height="44" rx="8"/>
+  <text x="260" y="206" text-anchor="middle" font-weight="600">Deliver</text>
+  <rect class="s-plain" x="95" y="68" width="150" height="44" rx="8"/>
+  <text x="170" y="96" text-anchor="middle" font-weight="600">Case study</text>
+  <path class="ln" d="M475 32 Q630 32 630 66"/><path class="ln" d="M624 56 L630 68 L636 56"/>
+  <path class="ln" d="M630 112 Q630 200 617 200"/><path class="ln" d="M627 194 L615 200 L627 206"/>
+  <path class="ln" d="M465 200 H337"/><path class="ln" d="M347 194 L335 200 L347 206"/>
+  <path class="ln" d="M185 200 Q170 200 170 114"/><path class="ln" d="M164 124 L170 112 L176 124"/>
+  <path class="ln" d="M170 68 Q170 32 323 32"/><path class="ln" d="M313 26 L325 32 L313 38"/>
+  <text x="400" y="118" text-anchor="middle" class="sm">each turn gives you</text>
+  <text x="400" y="136" text-anchor="middle" class="sm">something new to show</text>
+</svg>
+<figcaption>The 90-day loop: build something public, publish it, reach out with it, deliver, and turn the delivery into the next thing to publish.</figcaption>
+</figure>
+
+<!-- LAB -->
+<div class="lab">
+<h3>Lab 12. Plan, case study generator, go-to-market tracker</h3>
+<p>Goal: three working tools you will use for the next 90 days. Everything runs locally; only the case study script calls the API, and it has a dry-run mode that does not.</p>
+
+<p><b>Part 1 (about 2 h). Engagement plan and ADR for your chosen client</b></p>
+<ol>
+<li>Score your three candidates against the four tests in 12.1. Choose one and write two lines on why.</li>
+<li>Copy the table from 12.2 into a document and fill in real dates, the named owner contact and the primary metric.</li>
+<li>Copy the ADR template above into <code>adr/ADR-001.md</code> and fill it in after the audit. Include "do nothing" and "Claude app with a Project" as options.</li>
+<li>Write the one-page scope with the owner: goal, metric, data, who approves, what may be published.</li>
+</ol>
+
+<p><b>Part 2 (about 2 h). Case study draft generator</b></p>
+<p>Setup (same repository as the earlier labs):</p>
+<pre><code>cd claude-transformation
+source .venv/bin/activate
+pip install anthropic python-dotenv
+mkdir module12 &amp;&amp; cd module12</code></pre>
+<p><b>engagement.json</b> (all values are placeholders; fill them from your real logs)</p>
+<pre><code>{
+  "client_label": "A small logistics company in central Israel",
+  "client_name": "[client name]",
+  "client_name_approved": false,
+  "sector": "logistics",
+  "problem": "[What was slow or error-prone, in the owner's words. Facts only.]",
+  "approach": "[Audit, architecture decision, two-week pilot. Add real dates.]",
+  "solution": "[What was built: model, tools, the human review step.]",
+  "metrics": [
+    {
+      "name": "Median time to first reply to a shipment-status email",
+      "unit": "minutes",
+      "better_when": "lower",
+      "baseline": null,
+      "after": null,
+      "n_baseline": null,
+      "n_after": null,
+      "period": "[baseline dates] vs [pilot dates]",
+      "method": "[how it was measured, by whom]"
+    },
+    {
+      "name": "Status emails handled per clerk per day",
+      "unit": "emails",
+      "better_when": "higher",
+      "baseline": null,
+      "after": null,
+      "n_baseline": null,
+      "n_after": null,
+      "period": "[baseline dates] vs [pilot dates]",
+      "method": "[how it was measured, by whom]"
+    }
+  ],
+  "caveats": [
+    "[confirm] One company, one pilot, short period.",
+    "[confirm] No control group; other changes in the period are possible.",
+    "[confirm] Time figures come from the mail log, not from self-reports."
+  ],
+  "quote": {
+    "text": null,
+    "speaker": null,
+    "role": null,
+    "approved": false,
+    "approval_date": null
+  }
+}</code></pre>
+<p><b>case_study.py</b></p>
+<pre><code>#!/usr/bin/env python3
+"""case_study.py - turn engagement.json into draft case studies (English + Hebrew).
+
+The output is a DRAFT for you to edit. Facts come only from the JSON.
+Percent changes are computed here in Python, not by the model.
+
+Usage:
+    python case_study.py engagement.json --dry-run --allow-missing   # no API call
+    python case_study.py engagement.json --out drafts                # real run
+"""
+import argparse
+import copy
+import json
+import sys
+from pathlib import Path
+
+MODEL = "claude-sonnet-5-5"  # check current IDs at docs.claude.com
+
+REQUIRED_TOP = ["client_label", "problem", "approach", "solution", "metrics", "caveats"]
+REQUIRED_METRIC = ["name", "unit", "baseline", "after", "n_baseline", "n_after", "period"]
+
+SYSTEM = """You draft case studies for a small IT consultancy.
+Rules:
+- Use only facts and numbers that appear in the JSON. Never invent numbers, names, dates or quotes.
+- If a value is null, empty or a [bracketed placeholder], keep it visible as [MISSING: field name].
+- Use change_pct exactly as given. Do not recalculate. If it is null, say the change cannot be stated yet.
+- Next to every result, state the sample sizes (n_baseline, n_after) and the period.
+- If quote.approved is not true, write [QUOTE PENDING APPROVAL] and no quote text.
+- If client_name is absent, use client_label. Do not guess the client's identity.
+- Include every caveat from the JSON in a Caveats section.
+- Plain, direct language. No hype, no superlatives.
+- Sections, in order: Problem, Approach, Solution, Results, Caveats, Quote.
+- Output Markdown only."""
+
+LANG_NOTES = {
+    "en": "Write in English.",
+    "he": (
+        "Write in natural business Hebrew, not a literal translation. "
+        "Translate the section headings into Hebrew. Keep numbers, units and "
+        "product names (Claude, MCP, Python) in Latin characters."
+    ),
+}
+
+
+def pct_change(baseline, after):
+    """Percent change from baseline to after, or None if it cannot be computed."""
+    nums = (int, float)
+    if not isinstance(baseline, nums) or not isinstance(after, nums) or baseline == 0:
+        return None
+    return round((after - baseline) / baseline * 100, 1)
+
+
+def find_missing(data):
+    """Return a list of required fields that are empty."""
+    missing = []
+    for key in REQUIRED_TOP:
+        if data.get(key) in (None, "", []):
+            missing.append(key)
+    for i, metric in enumerate(data.get("metrics") or []):
+        for key in REQUIRED_METRIC:
+            if metric.get(key) is None:
+                missing.append(f"metrics[{i}].{key}")
+    return missing
+
+
+def prepare(data):
+    """Copy the data, add computed changes, strip anything not approved."""
+    d = copy.deepcopy(data)
+    for metric in d.get("metrics", []):
+        metric["change_pct"] = pct_change(metric.get("baseline"), metric.get("after"))
+    quote = d.get("quote") or {}
+    if quote.get("approved") is not True:
+        d["quote"] = {"approved": False}  # quote text never reaches the model
+    if d.get("client_name_approved") is not True:
+        d.pop("client_name", None)
+    return d
+
+
+def build_prompt(prepared, lang):
+    return (
+        f"{LANG_NOTES[lang]}\n\n"
+        "Draft the case study from this engagement data:\n\n"
+        + json.dumps(prepared, ensure_ascii=False, indent=2)
+    )
+
+
+def draft(client, prepared, lang):
+    msg = client.messages.create(
+        model=MODEL,
+        max_tokens=2000,
+        system=SYSTEM,
+        messages=[{"role": "user", "content": build_prompt(prepared, lang)}],
+    )
+    return "".join(b.text for b in msg.content if b.type == "text")
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("path", help="engagement JSON file")
+    ap.add_argument("--langs", default="en,he", help="comma list: en,he")
+    ap.add_argument("--out", default=".", help="output folder")
+    ap.add_argument("--dry-run", action="store_true", help="print prompts, no API call")
+    ap.add_argument("--allow-missing", action="store_true", help="continue with gaps")
+    args = ap.parse_args()
+
+    data = json.loads(Path(args.path).read_text(encoding="utf-8"))
+    missing = find_missing(data)
+    if missing:
+        print("Missing fields:", ", ".join(missing), file=sys.stderr)
+        if not args.allow_missing:
+            print("Fill them in, or pass --allow-missing for a gap-marked draft.", file=sys.stderr)
+            return 2
+
+    prepared = prepare(data)
+    langs = [x.strip() for x in args.langs.split(",") if x.strip()]
+    bad = [x for x in langs if x not in LANG_NOTES]
+    if bad:
+        print("Unsupported language:", ", ".join(bad), file=sys.stderr)
+        return 2
+
+    if args.dry_run:
+        for lang in langs:
+            print(f"--- PROMPT ({lang}) ---")
+            print(build_prompt(prepared, lang))
+        return 0
+
+    import anthropic  # imported here so --dry-run works without the package
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    client = anthropic.Anthropic()
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for lang in langs:
+        text = draft(client, prepared, lang)
+        header = (
+            "&lt;!-- DRAFT for Oleg to edit. Not approved by the client. "
+            "Check every number against the source data. --&gt;\n\n"
+        )
+        target = out_dir / f"case_study_{lang}.md"
+        target.write_text(header + text + "\n", encoding="utf-8")
+        print("Wrote", target)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())</code></pre>
+<p>Run it:</p>
+<pre><code>python case_study.py engagement.json --dry-run --allow-missing   # see the prompts, no API call
+python case_study.py engagement.json                             # stops and lists missing fields
+python case_study.py engagement.json --out drafts                # after you fill in real data</code></pre>
+<p>What to notice: the percent change is calculated in Python, the quote text never reaches the model unless <code>approved</code> is true, and missing values stay visible as <code>[MISSING: ...]</code>. Edit both drafts by hand. The model's Hebrew is a first draft; your version is the one you publish.</p>
+
+<p><b>Part 3 (about 2 h). 90-day go-to-market tracker</b></p>
+<p><b>gtm_tracker.csv</b> (sample rows with placeholder names; replace them with your 30 companies)</p>
+<pre><code>company,segment,source,contact_role,stage,status,first_contact,last_contact,next_action,next_action_date,notes
+[Company 01],logistics,warm_intro,owner,contacted,open,2026-10-19,2026-10-19,follow-up message,2026-10-23,[who introduced]
+[Company 02],logistics,linkedin,operations manager,replied,open,2026-10-19,2026-10-21,book 20-min call,2026-10-26,
+[Company 03],services,cold,owner,target,open,,,first message,2026-10-22,
+[Company 04],garage,warm_intro,owner,call_held,open,2026-10-12,2026-10-20,send audit scope,2026-10-27,[friendly capstone candidate]
+[Company 05],ceramics,warm_intro,owner,contacted,lost,2026-10-12,2026-10-14,,,[reason in one line]</code></pre>
+<p><b>gtm_summary.py</b></p>
+<pre><code>#!/usr/bin/env python3
+"""gtm_summary.py - weekly summary of a 90-day go-to-market tracker CSV.
+
+Usage:
+    python gtm_summary.py gtm_tracker.csv
+    python gtm_summary.py gtm_tracker.csv --today 2026-10-26
+Weeks run Sunday to Saturday (Israeli work week).
+"""
+import argparse
+import csv
+import sys
+from collections import Counter
+from datetime import date, datetime, timedelta
+from pathlib import Path
+
+STAGES = [
+    "target",
+    "contacted",
+    "replied",
+    "call_held",
+    "audit_proposed",
+    "audit_won",
+    "pilot_won",
+    "retainer_won",
+]
+STATUSES = {"open", "lost", "paused"}
+STALE_DAYS = 21
+
+
+def parse_date(text, row_no, column):
+    text = (text or "").strip()
+    if not text:
+        return None
+    try:
+        return datetime.strptime(text, "%Y-%m-%d").date()
+    except ValueError:
+        raise SystemExit(f"Row {row_no}: {column} '{text}' is not YYYY-MM-DD")
+
+
+def load(path):
+    rows = []
+    with open(path, newline="", encoding="utf-8") as f:
+        for n, row in enumerate(csv.DictReader(f), start=2):  # row 1 is the header
+            stage = (row.get("stage") or "").strip()
+            status = (row.get("status") or "open").strip()
+            if stage not in STAGES:
+                raise SystemExit(f"Row {n}: unknown stage '{stage}'. Use one of: {', '.join(STAGES)}")
+            if status not in STATUSES:
+                raise SystemExit(f"Row {n}: unknown status '{status}'. Use one of: {', '.join(sorted(STATUSES))}")
+            row["stage"], row["status"] = stage, status
+            for col in ("first_contact", "last_contact", "next_action_date"):
+                row[col] = parse_date(row.get(col), n, col)
+            rows.append(row)
+    return rows
+
+
+def week_start(day):
+    """Sunday of the week containing `day`."""
+    return day - timedelta(days=(day.weekday() + 1) % 7)
+
+
+def reached(row, stage):
+    return STAGES.index(row["stage"]) &gt;= STAGES.index(stage)
+
+
+def rate(part, whole):
+    return f"{part / whole * 100:.0f}%" if whole else "n/a"
+
+
+def summarise(rows, today):
+    start = week_start(today)
+    end = start + timedelta(days=6)
+    out = []
+    out.append(f"GTM summary for week {start} to {end} (today {today})")
+    out.append(f"Rows: {len(rows)}  open: {sum(r['status'] == 'open' for r in rows)}")
+
+    out.append("\nFunnel (companies that reached each stage)")
+    previous = None
+    for stage in STAGES:
+        count = sum(reached(r, stage) for r in rows)
+        step = f"  ({rate(count, previous)} of previous)" if previous is not None else ""
+        out.append(f"  {stage:&lt;15}{count:&gt;4}{step}")
+        previous = count
+
+    new_this_week = [r for r in rows if r["first_contact"] and start &lt;= r["first_contact"] &lt;= end]
+    touched = [r for r in rows if r["last_contact"] and start &lt;= r["last_contact"] &lt;= end]
+    out.append("\nThis week")
+    out.append(f"  new first contacts: {len(new_this_week)}")
+    out.append(f"  companies touched:  {len(touched)}")
+
+    out.append("\nReply rate by source (replied or further / contacted or further)")
+    contacted_by, replied_by = Counter(), Counter()
+    for r in rows:
+        if reached(r, "contacted"):
+            contacted_by[r["source"]] += 1
+            if reached(r, "replied"):
+                replied_by[r["source"]] += 1
+    for source in sorted(contacted_by):
+        c, p = contacted_by[source], replied_by[source]
+        out.append(f"  {source:&lt;12}{p}/{c}  {rate(p, c)}")
+    if not contacted_by:
+        out.append("  no contacts yet")
+
+    open_rows = [r for r in rows if r["status"] == "open"]
+    due = sorted(
+        (r for r in open_rows if r["next_action_date"] and r["next_action_date"] &lt;= end),
+        key=lambda r: r["next_action_date"],
+    )
+    out.append("\nActions due by end of this week")
+    for r in due:
+        flag = "OVERDUE " if r["next_action_date"] &lt; today else ""
+        out.append(f"  {r['next_action_date']}  {flag}{r['company']}: {r['next_action']}")
+    if not due:
+        out.append("  none")
+
+    stale = [
+        r for r in open_rows
+        if r["stage"] == "contacted" and r["last_contact"]
+        and (today - r["last_contact"]).days &gt; STALE_DAYS
+    ]
+    out.append(f"\nStale: contacted, no reply, last touch over {STALE_DAYS} days ago")
+    for r in stale:
+        out.append(f"  {r['company']} (last touch {r['last_contact']}): pause or close")
+    if not stale:
+        out.append("  none")
+
+    no_action = [r for r in open_rows if not r["next_action_date"] and r["stage"] != "retainer_won"]
+    out.append("\nOpen rows with no next action date")
+    for r in no_action:
+        out.append(f"  {r['company']}")
+    if not no_action:
+        out.append("  none")
+    return "\n".join(out)
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("csv_path")
+    ap.add_argument("--today", help="override today, YYYY-MM-DD")
+    args = ap.parse_args()
+    if not Path(args.csv_path).exists():
+        print(f"File not found: {args.csv_path}", file=sys.stderr)
+        return 2
+    today = datetime.strptime(args.today, "%Y-%m-%d").date() if args.today else date.today()
+    print(summarise(load(args.csv_path), today))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())</code></pre>
+<p>Run it every Sunday morning:</p>
+<pre><code>python gtm_summary.py gtm_tracker.csv
+python gtm_summary.py gtm_tracker.csv --today 2026-10-22   # test with a chosen date</code></pre>
+<ol>
+<li>Replace the sample rows with your 30 targets (stage <code>target</code>, a first action and date for each).</li>
+<li>Update the CSV after every contact. Stages are in order: <code>target</code>, <code>contacted</code>, <code>replied</code>, <code>call_held</code>, <code>audit_proposed</code>, <code>audit_won</code>, <code>pilot_won</code>, <code>retainer_won</code>. A lost or paused company keeps its furthest stage and gets a different <code>status</code>.</li>
+<li>After four weeks, read the reply rate by source and decide where to put your time.</li>
+</ol>
+</div>
+
+<!-- DELIVERABLES -->
+<h2>Deliverables</h2>
+<p>Six items. The first needs the engagement to finish; the others you can complete in this module.</p>
+<ol>
+<li><b>Published case study with before/after numbers.</b> English and Hebrew. Client-approved numbers, quote and naming. Pass check: every figure traces to a log, and n, period and caveats appear next to it.</li>
+<li><b>5-minute demo video script</b> (below). Pass check: a stranger understands the problem and the result without a call.</li>
+<li><b>Positioning statement.</b> One sentence from the formula in 12.7. Pass check: someone in the niche can repeat it.</li>
+<li><b>Service menu.</b> The four-step ladder with outputs and lengths for your own offer, fees left to your proposal template.</li>
+<li><b>Website page outline.</b> The nine sections in 12.9 with your real text for each, and "coming" where the case study is not yet approved.</li>
+<li><b>30-company outreach list template.</b> The <code>gtm_tracker.csv</code> from the lab, filled with 30 real targets, each with a trigger and a named role. Add columns <code>website</code>, <code>size_estimate</code> and <code>trigger</code> if you need them; the script ignores extra columns.</li>
+</ol>
+
+<h3>5-minute demo video script</h3>
+<div class="tbl"><table>
+<thead><tr><th>Time</th><th>On screen</th><th>You say</th></tr></thead>
+<tbody>
+<tr><td>0:00 to 0:30</td><td>Title and your face or logo</td><td>Who you are, who you help, the problem in the client's words (if approved)</td></tr>
+<tr><td>0:30 to 1:15</td><td>The old process, screen recording with data hidden</td><td>What the work looked like before, and what was counted</td></tr>
+<tr><td>1:15 to 3:00</td><td>The pilot handling one real example from start to finish, including the human review</td><td>What Claude does, what the person checks, what happens when it is wrong</td></tr>
+<tr><td>3:00 to 4:00</td><td>The before/after table, with n, period and caveats on screen</td><td>The numbers as written in the case study, nothing added</td></tr>
+<tr><td>4:00 to 4:40</td><td>The handover pack</td><td>How the client runs, checks and stops it without you</td></tr>
+<tr><td>4:40 to 5:00</td><td>Contact slide</td><td>The next step: a 20-minute call or a readiness audit</td></tr>
+</tbody></table></div>
+<p>Record in the language of your audience, add captions in the other language, and show no customer data you do not own.</p>
+
+<!-- SELF CHECK -->
+<h2>Self-check</h2>
+<ol class="check">
+<li>The owner of your capstone client says "just try it" but nobody has ever measured how long the task takes. What do you do?
+<details><summary>Model answer</summary>Create the baseline yourself in the audit: log the same measure for one to two weeks before the pilot, with a method both of you agree. If that is impossible, choose a different process. If you go ahead anyway, report the result as qualitative and say so.</details></li>
+<li>The owner sends "great job, really helped!" on WhatsApp. Can it go on the website as a quote?
+<details><summary>Model answer</summary>Not as it stands. Send the exact wording, name and role you plan to publish, ask for written approval, and keep the reply. Until then use <code>[QUOTE PENDING APPROVAL]</code>. Never edit the words to make them stronger.</details></li>
+<li>Your pilot shows a lower reply time on a small sample over two weeks. How do you write it?
+<details><summary>Model answer</summary>"In this pilot, at this company, over these weeks, the median reply time fell from X to Y (n = ... before, ... after)." Add the caveats that apply, such as no control group and a short period. Do not generalise to other companies.</details></li>
+<li>Critique this positioning: "We help all businesses succeed with AI."
+<details><summary>Model answer</summary>It names no customer, no method and no measurable result, so nobody can repeat or check it. Rewrite with the formula: a specific company type and place, a concrete outcome, your method, a result they can verify, and one real difference.</details></li>
+<li>You sent a first outreach message and heard nothing for four days. What next?
+<details><summary>Model answer</summary>Send one follow-up that adds something useful, such as a one-page example from their sector. Try another legitimate channel around day 10, send a last note around day 24, then pause for 90 days. Record each step in the tracker.</details></li>
+</ol>
+
+<h3>Course completion checklist</h3>
+<p>One deliverable per module. Tick each one when it is finished and saved in your portfolio folder.</p>
+<ul class="check">
+<li>[ ] Module 1: "Claude for SMBs" one-page briefing</li>
+<li>[ ] Module 2: prompt library repo and a one-page standards guide</li>
+<li>[ ] Module 3: rollout playbook and adoption scorecard</li>
+<li>[ ] Module 4: invoice-extractor repo with README, sample outputs and client description</li>
+<li>[ ] Module 5: bilingual "ask our documents" demo and one-page offer sheet</li>
+<li>[ ] Module 6: public MCP server repo (data.gov.il) with README and demo script</li>
+<li>[ ] Module 7: template repo and "How we build with Claude Code"</li>
+<li>[ ] Module 8: lead-to-proposal agent repo and vastama-proposal Skill packaged as a plugin</li>
+<li>[ ] Module 9: eval harness, cost dashboard and monthly eval and cost report template</li>
+<li>[ ] Module 10: AI acceptable-use policy, 25-point security checklist and risk register</li>
+<li>[ ] Module 11: audit questionnaire, use-case scoring sheet, ROI calculator and SOW template</li>
+<li>[ ] Module 12: case study, demo video script, positioning statement, service menu, website outline, 30-company outreach list</li>
+</ul>
+
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://www.anthropic.com/customers" target="_blank" rel="noopener">Anthropic customer stories</a> (study how real case studies are structured)</li>
+<li><a href="https://anthropic.skilljar.com" target="_blank" rel="noopener">Anthropic Academy</a> (free courses)</li>
+<li><a href="https://www.anthropic.com/economic-index" target="_blank" rel="noopener">Anthropic Economic Index</a></li>
+<li><a href="https://docs.claude.com" target="_blank" rel="noopener">Claude developer documentation</a></li>
+</ul>
+
+<div class="nav"><span>← Module 11 · Discovery, ROI and proposals</span><span>Back to the syllabus</span></div>
+</div>
+
+</html>

@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claude Transformation Practitioner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column, module cards in a numbered sequence (the order is the learning path), flat line illustrations between parts */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --ink:#14232b; --muted:#56666e; --line:#d5dfe1;
+  --accent:#0f7a72; --accent-soft:#dcefed; --warm:#c8642c; --warm-soft:#f6e6dc;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,5vw,3rem);font-weight:700}
+h2{font-size:1.6rem;font-weight:700;margin-top:56px;margin-bottom:12px}
+h3{font-size:1.2rem;font-weight:700}
+p{margin:0 0 12px;max-width:68ch}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:1.15rem;color:var(--muted);margin-top:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chip{font-family:var(--mono);font-size:.78rem;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}
+figure{margin:28px 0;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:10px}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .sm{font-size:12px;fill:var(--muted)}
+.s-acc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.s-warm{fill:var(--warm-soft);stroke:var(--warm);stroke-width:2}
+.s-plain{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.ln{stroke:var(--muted);stroke-width:2;fill:none}
+.ln-acc{stroke:var(--accent);stroke-width:2.5;fill:none}
+.dot{fill:var(--accent)}
+.part{display:flex;align-items:baseline;gap:12px;margin-top:56px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.part span{font-family:var(--mono);color:var(--warm);font-size:.85rem}
+.module{display:grid;grid-template-columns:56px 1fr;gap:16px;padding:22px 0;border-bottom:1px solid var(--line)}
+.num{font-family:var(--display);font-size:2rem;font-weight:700;color:var(--accent);line-height:1}
+.module > div{min-width:0}
+.module .wk{font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+.module ul{margin:8px 0 0;padding-left:18px}
+.module li{margin-bottom:4px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.tag{font-family:var(--mono);font-size:.72rem;padding:2px 8px;border-radius:4px;background:var(--accent-soft);color:var(--accent)}
+.lab{margin-top:10px;padding:10px 14px;background:var(--warm-soft);border-radius:6px;font-size:.92rem}
+.lab b{color:var(--warm)}
+.tbl{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:520px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:16px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0}
+.box h3{font-size:1.05rem;margin-bottom:6px}
+.box ul{margin:0;padding-left:18px;font-size:.93rem}
+code{font-family:var(--mono);font-size:.88em;background:var(--accent-soft);padding:1px 5px;border-radius:3px}
+.note{font-size:.85rem;color:var(--muted);margin-top:40px;border-top:1px solid var(--line);padding-top:16px}
+</style>
+
+<div class="wrap">
+
+<div class="eyebrow">Self-study course · Syllabus v1 · October 2026</div>
+<h1>AI Transformation with Claude</h1>
+<p class="lede">A technical, hands-on path from Claude power user to independent AI transformation consultant for small and mid-size companies. Every module ends with something you build and can show to a client.</p>
+<div class="meta">
+  <span class="chip">12 weeks</span><span class="chip">8–10 h / week</span><span class="chip">Python-first</span><span class="chip">12 portfolio deliverables</span><span class="chip">1 capstone engagement</span>
+</div>
+
+<figure>
+<svg viewBox="0 0 800 170" role="img" aria-label="Consulting pipeline: discover, design, build, deploy, measure">
+  <path class="ln-acc" d="M70 80 H730" stroke-dasharray="6 6"/>
+  <g>
+    <circle class="s-acc" cx="80" cy="80" r="38"/><text x="80" y="76" text-anchor="middle" font-weight="600">Discover</text><text x="80" y="94" text-anchor="middle" class="sm">audit</text>
+    <circle class="s-acc" cx="240" cy="80" r="38"/><text x="240" y="76" text-anchor="middle" font-weight="600">Design</text><text x="240" y="94" text-anchor="middle" class="sm">architecture</text>
+    <circle class="s-warm" cx="400" cy="80" r="44"/><text x="400" y="76" text-anchor="middle" font-weight="600">Build</text><text x="400" y="94" text-anchor="middle" class="sm">Claude + MCP</text>
+    <circle class="s-acc" cx="560" cy="80" r="38"/><text x="560" y="76" text-anchor="middle" font-weight="600">Deploy</text><text x="560" y="94" text-anchor="middle" class="sm">governance</text>
+    <circle class="s-acc" cx="720" cy="80" r="38"/><text x="720" y="76" text-anchor="middle" font-weight="600">Measure</text><text x="720" y="94" text-anchor="middle" class="sm">ROI, evals</text>
+  </g>
+  <text x="400" y="155" text-anchor="middle" class="sm">The engagement loop this course teaches. It mirrors the Vastama design → build → test → monitor pipeline.</text>
+</svg>
+</figure>
+
+<h2>Who this is for and what you leave with</h2>
+<p>Written for one learner: a data scientist and Python developer who already runs an IT services company and wants to sell AI transformation work. The course skips ML fundamentals and spends the time on three things clients actually pay for: <b>finding the right use cases</b>, <b>building reliable Claude-based systems quickly</b>, and <b>proving the value afterwards</b>.</p>
+<div class="cols">
+  <div class="box"><h3>Technical outcomes</h3><ul>
+    <li>Design Claude solutions across apps, Claude Code, the API and the Agent SDK</li>
+    <li>Build and ship MCP servers that connect Claude to client systems</li>
+    <li>Write Skills and plugins that package a company's know-how</li>
+    <li>Run evals, cost routing and guardrails in production</li></ul></div>
+  <div class="box"><h3>Business outcomes</h3><ul>
+    <li>A repeatable AI readiness audit you can sell as a fixed-price entry offer</li>
+    <li>Proposal, SOW and ROI templates</li>
+    <li>A public portfolio of 12 working demos plus a case study</li>
+    <li>A positioning statement and outreach plan for Israeli SMBs</li></ul></div>
+</div>
+
+<h2>The Claude product map</h2>
+<p>Most SMB work is picking the lowest layer that solves the problem. Start at the top; go down only when you need more control.</p>
+<figure>
+<svg viewBox="0 0 800 330" role="img" aria-label="Four layers of Claude products from no-code apps down to API and MCP">
+  <rect class="s-acc" x="40" y="20" width="560" height="56" rx="8"/>
+  <text x="60" y="44" font-weight="600">Claude apps</text><text x="60" y="64" class="sm">Projects · Artifacts · Docs/Slides/Sheets · Research · Memory · Chrome · Slack</text>
+  <rect class="s-acc" x="40" y="94" width="560" height="56" rx="8"/>
+  <text x="60" y="118" font-weight="600">Packaged know-how</text><text x="60" y="138" class="sm">Skills · Plugins · Connectors directory · Scheduled tasks</text>
+  <rect class="s-warm" x="40" y="168" width="560" height="56" rx="8"/>
+  <text x="60" y="192" font-weight="600">Agentic building</text><text x="60" y="212" class="sm">Claude Code · Claude Agent SDK · Managed Agents · subagents · hooks</text>
+  <rect class="s-plain" x="40" y="242" width="560" height="56" rx="8"/>
+  <text x="60" y="266" font-weight="600">Platform</text><text x="60" y="286" class="sm">Messages API · tool use · prompt caching · batches · MCP servers</text>
+  <path class="ln" d="M650 40 V290"/><path class="ln" d="M642 282 L650 296 L658 282"/>
+  <text x="665" y="50" class="sm">faster to deliver</text><text x="665" y="66" class="sm">lower cost</text>
+  <text x="665" y="268" class="sm">more control</text><text x="665" y="284" class="sm">more engineering</text>
+</svg>
+<figcaption>Rule of thumb for proposals: a quick win lives in the top two layers; a durable system usually needs the bottom two.</figcaption>
+</figure>
+
+<!-- PART 1 -->
+<div class="part"><h2 style="margin:0">Part 1 · Foundations</h2><span>weeks 1–3</span></div>
+
+<div class="module"><div class="num">1</div><div>
+  <div class="wk">Week 1</div>
+  <h3>The AI transformation landscape</h3>
+  <p>What "AI transformation" means for a 10–200 person company, where the money is, and how Anthropic's products are positioned against the alternatives.</p>
+  <ul><li>Model families (Opus, Sonnet, Haiku) and how to choose by task, latency and cost</li>
+    <li>Augmentation versus automation; reading the Anthropic Economic Index for task-level evidence</li>
+    <li>Data privacy, retention and plan types (Pro, Team, Enterprise, API) as they matter to a client</li></ul>
+  <div class="tags"><span class="tag">Claude apps</span><span class="tag">Economic Index</span><span class="tag">model selection</span></div>
+  <div class="lab"><b>Deliverable:</b> a one-page "Claude for SMBs" briefing you can send to prospects.</div>
+</div></div>
+
+<div class="module"><div class="num">2</div><div>
+  <div class="wk">Week 2</div>
+  <h3>Prompt and context engineering</h3>
+  <p>The core craft. Structured prompts, examples, XML tags, system prompts, long context, and how Projects and memory change what you put in each message.</p>
+  <ul><li>Prompt patterns: role, task, constraints, examples, output format</li>
+    <li>Context engineering: what goes in the Project, the Skill, the prompt, or a tool</li>
+    <li>Extended thinking and when it pays off</li></ul>
+  <div class="tags"><span class="tag">Projects</span><span class="tag">system prompts</span><span class="tag">prompt library</span></div>
+  <div class="lab"><b>Lab:</b> build a prompt library of 15 reusable business prompts (sales, finance, HR, ops) with test inputs and expected outputs.</div>
+</div></div>
+
+<div class="module"><div class="num">3</div><div>
+  <div class="wk">Week 3</div>
+  <h3>Claude apps for knowledge work</h3>
+  <p>Most clients start here. Learn to deploy Claude to a team so it is used daily, not tried once.</p>
+  <ul><li>Projects as team knowledge bases; artifacts, Docs, Slides, Sheets and dashboards</li>
+    <li>Connectors (Google Workspace, Microsoft 365, Atlassian, Slack) and research</li>
+    <li>Claude in Chrome and scheduled tasks for recurring work</li>
+    <li>Rollout playbook: champions, training, usage reviews</li></ul>
+  <div class="tags"><span class="tag">Team plan</span><span class="tag">connectors</span><span class="tag">Chrome</span><span class="tag">scheduled tasks</span></div>
+  <div class="lab"><b>Lab:</b> set up a demo "company workspace" for a fictional 30-person logistics firm with three Projects, two connectors and one weekly scheduled report.</div>
+</div></div>
+
+<!-- PART 2 -->
+<div class="part"><h2 style="margin:0">Part 2 · Building with Claude</h2><span>weeks 4–8</span></div>
+
+<figure>
+<svg viewBox="0 0 800 220" role="img" aria-label="Agent architecture: user, Claude agent loop, tools via MCP, client systems">
+  <rect class="s-plain" x="20" y="80" width="120" height="60" rx="8"/><text x="80" y="115" text-anchor="middle" font-weight="600">User / trigger</text>
+  <path class="ln" d="M140 110 H210"/><path class="ln" d="M200 104 L212 110 L200 116"/>
+  <rect class="s-warm" x="215" y="50" width="220" height="120" rx="10"/>
+  <text x="325" y="80" text-anchor="middle" font-weight="600">Claude agent loop</text>
+  <text x="325" y="104" text-anchor="middle" class="sm">plan → call tool → read result</text>
+  <text x="325" y="122" text-anchor="middle" class="sm">→ decide → answer</text>
+  <text x="325" y="150" text-anchor="middle" class="sm">Skills + system prompt</text>
+  <path class="ln" d="M435 110 H505"/><path class="ln" d="M495 104 L507 110 L495 116"/>
+  <rect class="s-acc" x="510" y="80" width="100" height="60" rx="8"/><text x="560" y="115" text-anchor="middle" font-weight="600">MCP</text>
+  <path class="ln" d="M610 100 L660 40"/><path class="ln" d="M610 110 H660"/><path class="ln" d="M610 120 L660 180"/>
+  <rect class="s-plain" x="665" y="20" width="120" height="40" rx="6"/><text x="725" y="45" text-anchor="middle" class="sm">CRM / ERP</text>
+  <rect class="s-plain" x="665" y="90" width="120" height="40" rx="6"/><text x="725" y="115" text-anchor="middle" class="sm">Docs / Drive</text>
+  <rect class="s-plain" x="665" y="160" width="120" height="40" rx="6"/><text x="725" y="185" text-anchor="middle" class="sm">Database / API</text>
+</svg>
+<figcaption>The reference architecture behind modules 4–8. Each module builds one box.</figcaption>
+</figure>
+
+<div class="module"><div class="num">4</div><div>
+  <div class="wk">Week 4</div>
+  <h3>Claude API in Python</h3>
+  <p>The platform layer. Everything later is built on these calls.</p>
+  <ul><li>Messages API, streaming, structured outputs, vision and PDF input</li>
+    <li>Tool use (function calling) and the manual tool loop</li>
+    <li>Prompt caching and the Batch API for cost control</li>
+    <li>Error handling, retries, rate limits, logging</li></ul>
+  <div class="tags"><span class="tag">anthropic SDK</span><span class="tag">tool use</span><span class="tag">prompt caching</span><span class="tag">batches</span></div>
+  <div class="lab"><b>Lab:</b> an invoice and receipt extractor (PDF → validated JSON → CSV) that runs 500 documents through the Batch API and reports cost per document.</div>
+</div></div>
+
+<div class="module"><div class="num">5</div><div>
+  <div class="wk">Week 5</div>
+  <h3>Knowledge retrieval (RAG) for company documents</h3>
+  <p>The most requested SMB use case: "ask our documents". Learn when long context is enough and when you need retrieval.</p>
+  <ul><li>Chunking, embeddings, hybrid search, contextual retrieval</li>
+    <li>Citations and grounding to cut hallucinations</li>
+    <li>Hebrew and Russian documents: tokenisation and search quality</li></ul>
+  <div class="tags"><span class="tag">API</span><span class="tag">citations</span><span class="tag">vector DB</span></div>
+  <div class="lab"><b>Lab:</b> a bilingual (Hebrew/English) policy assistant over 200 pages of HR and procedures, with cited answers.</div>
+</div></div>
+
+<div class="module"><div class="num">6</div><div>
+  <div class="wk">Week 6</div>
+  <h3>Model Context Protocol (MCP)</h3>
+  <p>MCP is how you plug Claude into a client's systems once, and reuse that connection across apps, Claude Code and agents. This is a strong consulting differentiator.</p>
+  <ul><li>MCP concepts: servers, tools, resources, prompts; local versus remote servers</li>
+    <li>Writing a Python MCP server (FastMCP), auth, permissions, read versus write tools</li>
+    <li>Publishing as a custom connector; security review checklist</li></ul>
+  <div class="tags"><span class="tag">MCP</span><span class="tag">FastMCP</span><span class="tag">custom connectors</span></div>
+  <div class="lab"><b>Lab:</b> an MCP server for a public Israeli data source or a small CRM, used from the Claude app and from Claude Code.</div>
+</div></div>
+
+<div class="module"><div class="num">7</div><div>
+  <div class="wk">Week 7</div>
+  <h3>Claude Code as a delivery engine</h3>
+  <p>Use Claude Code to build client solutions several times faster, and teach clients' developers to do the same.</p>
+  <ul><li>CLAUDE.md, project memory, slash commands, hooks, subagents</li>
+    <li>Plan → implement → test loops; orchestrating cheaper models for sub-tasks</li>
+    <li>GitHub workflows, code review, CI integration</li></ul>
+  <div class="tags"><span class="tag">Claude Code</span><span class="tag">subagents</span><span class="tag">hooks</span><span class="tag">GitHub</span></div>
+  <div class="lab"><b>Lab:</b> a reusable project template (CLAUDE.md, skills, MCP config, tests) that you start every client engagement from.</div>
+</div></div>
+
+<div class="module"><div class="num">8</div><div>
+  <div class="wk">Week 8</div>
+  <h3>Agents, Skills and plugins</h3>
+  <p>From assistants to systems that complete multi-step work on their own, packaged so the client can keep using them after you leave.</p>
+  <ul><li>Claude Agent SDK and Managed Agents; when an agent is the wrong answer</li>
+    <li>Writing Skills that capture a company's procedures; bundling them as plugins</li>
+    <li>Human-in-the-loop approvals for anything that sends, pays or deletes</li></ul>
+  <div class="tags"><span class="tag">Agent SDK</span><span class="tag">Skills</span><span class="tag">plugins</span><span class="tag">approvals</span></div>
+  <div class="lab"><b>Lab:</b> a lead-to-proposal agent: reads an inbound email, researches the company, drafts a proposal from a template, and waits for approval.</div>
+</div></div>
+
+<!-- PART 3 -->
+<div class="part"><h2 style="margin:0">Part 3 · Running it in production</h2><span>weeks 9–10</span></div>
+
+<div class="module"><div class="num">9</div><div>
+  <div class="wk">Week 9</div>
+  <h3>Evaluation, cost and reliability</h3>
+  <p>What separates a demo from a system a client will pay for every month.</p>
+  <ul><li>Building eval sets from real client data; LLM-as-judge with care</li>
+    <li>Model routing (Haiku for triage, Sonnet for work, Opus for hard reasoning); caching; batching</li>
+    <li>Monitoring: logs, token dashboards, drift, alerting</li></ul>
+  <div class="tags"><span class="tag">evals</span><span class="tag">routing</span><span class="tag">observability</span></div>
+  <div class="lab"><b>Lab:</b> add an eval suite and a cost dashboard to your module 4 or 5 project; cut cost by 40% without losing accuracy.</div>
+</div></div>
+
+<div class="module"><div class="num">10</div><div>
+  <div class="wk">Week 10</div>
+  <h3>Security, governance and compliance</h3>
+  <p>Clients ask about this before they sign. Have clear answers.</p>
+  <ul><li>Prompt injection, tool permissions, least privilege for MCP</li>
+    <li>Data handling, PII, retention; Israeli Privacy Protection Law and GDPR basics; EU AI Act overview</li>
+    <li>An AI acceptable-use policy and approval matrix for SMBs</li></ul>
+  <div class="tags"><span class="tag">security</span><span class="tag">policy</span><span class="tag">risk register</span></div>
+  <div class="lab"><b>Deliverable:</b> an AI usage policy template and a 25-point security checklist for Claude deployments.</div>
+</div></div>
+
+<!-- PART 4 -->
+<div class="part"><h2 style="margin:0">Part 4 · The consulting practice</h2><span>weeks 11–12</span></div>
+
+<figure>
+<svg viewBox="0 0 800 210" role="img" aria-label="Five-step AI maturity ladder">
+  <rect class="s-plain" x="30"  y="150" width="140" height="40" rx="6"/><text x="100" y="175" text-anchor="middle" class="sm">1 · Ad hoc chat</text>
+  <rect class="s-plain" x="180" y="120" width="140" height="70" rx="6"/><text x="250" y="160" text-anchor="middle" class="sm">2 · Team workspace</text>
+  <rect class="s-acc"   x="330" y="90"  width="140" height="100" rx="6"/><text x="400" y="145" text-anchor="middle" class="sm">3 · Connected data</text>
+  <rect class="s-acc"   x="480" y="60"  width="140" height="130" rx="6"/><text x="550" y="130" text-anchor="middle" class="sm">4 · Automated flows</text>
+  <rect class="s-warm"  x="630" y="30"  width="140" height="160" rx="6"/><text x="700" y="115" text-anchor="middle" class="sm">5 · AI-native ops</text>
+  <circle class="dot" cx="100" cy="135" r="6"/><text x="115" y="128" class="sm">most SMBs today</text>
+</svg>
+<figcaption>The maturity ladder you score clients against in the audit. Each step maps to one layer of the product map.</figcaption>
+</figure>
+
+<div class="module"><div class="num">11</div><div>
+  <div class="wk">Week 11</div>
+  <h3>Discovery, ROI and proposals</h3>
+  <p>Turn technical skill into a sellable offer.</p>
+  <ul><li>The AI readiness audit: interviews, process mapping, use-case scoring (value × feasibility × risk)</li>
+    <li>ROI model: hours saved, error reduction, revenue lift; baseline before you build</li>
+    <li>Packaging: audit → pilot → retainer; pricing fixed-scope versus time-based</li>
+    <li>Change management: training, champions, adoption metrics</li></ul>
+  <div class="tags"><span class="tag">audit</span><span class="tag">ROI model</span><span class="tag">SOW</span></div>
+  <div class="lab"><b>Deliverable:</b> audit questionnaire, use-case scoring sheet, ROI calculator, and a proposal template.</div>
+</div></div>
+
+<div class="module"><div class="num">12</div><div>
+  <div class="wk">Week 12</div>
+  <h3>Capstone engagement and positioning</h3>
+  <p>Run a full engagement for a real or friendly company (a garage, a ceramics studio, a logistics firm), then publish it.</p>
+  <ul><li>Audit → architecture → 2-week pilot build → handover → measured results</li>
+    <li>Write the case study; update website and LinkedIn; record a 5-minute demo</li>
+    <li>Outreach plan: 30 target companies, two content pieces a week, one workshop offer</li></ul>
+  <div class="tags"><span class="tag">capstone</span><span class="tag">case study</span><span class="tag">go-to-market</span></div>
+  <div class="lab"><b>Deliverable:</b> a published case study with before/after numbers and a live demo.</div>
+</div></div>
+
+<h2>Weekly rhythm</h2>
+<div class="tbl"><table>
+<thead><tr><th>Block</th><th>Time</th><th>What you do</th></tr></thead>
+<tbody>
+<tr><td>Learn</td><td>2 h</td><td>Anthropic docs, Anthropic Academy courses, cookbook notebooks</td></tr>
+<tr><td>Build</td><td>4–5 h</td><td>The module lab, in a dedicated repo, built with Claude Code</td></tr>
+<tr><td>Package</td><td>1 h</td><td>README, 2-minute demo video, one-page summary for clients</td></tr>
+<tr><td>Publish</td><td>1 h</td><td>One LinkedIn post or short article on what you built and learned</td></tr>
+</tbody></table></div>
+
+<h2>Assessment</h2>
+<div class="tbl"><table>
+<thead><tr><th>Component</th><th>Weight</th><th>Pass criterion</th></tr></thead>
+<tbody>
+<tr><td>Module labs (12)</td><td>40%</td><td>Runs from a clean clone; README explains the business problem</td></tr>
+<tr><td>Eval and cost report</td><td>15%</td><td>Accuracy measured on 50+ cases; cost per task stated</td></tr>
+<tr><td>Consulting toolkit</td><td>15%</td><td>Audit, ROI, policy and proposal templates ready to send</td></tr>
+<tr><td>Capstone</td><td>30%</td><td>Real users, measured baseline and result, published case study</td></tr>
+</tbody></table></div>
+
+<h2>Toolkit and resources</h2>
+<div class="cols">
+  <div class="box"><h3>Accounts</h3><ul>
+    <li>Claude Team or Max plan</li><li>Claude Console with API key and spend limit</li><li>Claude Code</li><li>GitHub</li></ul></div>
+  <div class="box"><h3>Python stack</h3><ul>
+    <li><code>anthropic</code>, <code>claude-agent-sdk</code></li><li><code>mcp</code> / FastMCP</li><li>pydantic, FastAPI, pandas</li><li>a vector store (pgvector or Chroma)</li></ul></div>
+  <div class="box"><h3>Learning sources</h3><ul>
+    <li>docs.claude.com</li><li>Anthropic Academy</li><li>Anthropic cookbook (GitHub)</li><li>modelcontextprotocol.io</li><li>Anthropic Economic Index</li></ul></div>
+  <div class="box"><h3>Credentials to aim for</h3><ul>
+    <li>Anthropic Academy course completions</li><li>A public MCP server with real users</li><li>Two client case studies</li></ul></div>
+</div>
+
+<p class="note">Product names and features change quickly. Check each module's topics against docs.claude.com before you start it, and update this syllabus where something has moved.</p>
+</div>
+
+</html>

@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Module 7 · Claude Code Delivery</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column; lesson sections in order; flat SVG illustrations; warm boxes = things you do, teal = reference */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --ink:#14232b; --muted:#56666e; --line:#d5dfe1;
+  --accent:#0f7a72; --accent-soft:#dcefed; --warm:#c8642c; --warm-soft:#f6e6dc;
+  --code-bg:#eef3f4;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,5vw,2.8rem);font-weight:700}
+h2{font-size:1.55rem;font-weight:700;margin-top:52px;margin-bottom:12px}
+h3{font-size:1.15rem;font-weight:700;margin-top:24px;margin-bottom:8px}
+p{margin:0 0 12px;max-width:68ch}
+ul,ol{padding-left:20px;max-width:68ch}
+li{margin-bottom:6px}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:1.15rem;color:var(--muted);margin-top:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font-family:var(--mono);font-size:.78rem;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}
+.objectives{margin-top:28px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.objectives h3{margin-top:0}
+figure{margin:24px 0;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:10px}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .sm{font-size:12px;fill:var(--muted)}
+.s-acc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.s-warm{fill:var(--warm-soft);stroke:var(--warm);stroke-width:2}
+.s-plain{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.ln{stroke:var(--muted);stroke-width:2;fill:none}
+.dot{fill:var(--accent)}
+.dot-w{fill:var(--warm)}
+.tbl{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.5;margin:12px 0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:3px}
+pre code{background:none;padding:0}
+.lab{margin-top:20px;padding:18px 20px;background:var(--warm-soft);border-radius:10px}
+.lab h3{margin-top:0;color:var(--warm)}
+.tip{padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 6px 6px 0;margin:16px 0;font-size:.95rem}
+.check li{margin-bottom:10px}
+details{margin-top:6px}
+summary{cursor:pointer;color:var(--accent);font-size:.9rem}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+</style>
+
+<div class="wrap">
+
+<div class="eyebrow">AI Transformation with Claude · Part 2 · Week 7</div>
+<h1>Module 7. Claude Code as a delivery engine</h1>
+<p class="lede">Claude Code is how you build client work faster and more safely. This module turns it from a chat in a terminal into a repeatable setup: project memory, permissions, hooks, subagents on cheaper models, and a template repo you reuse on every engagement.</p>
+<div class="meta"><span class="chip">≈ 9 h</span><span class="chip">reading 2 h</span><span class="chip">lab 5 h</span><span class="chip">deliverable 2 h</span></div>
+
+<div class="objectives">
+<h3>By the end of this module you can</h3>
+<ul>
+<li>Explain what Claude Code is and which surface (terminal, IDE, desktop, web) fits which job</li>
+<li>Write a CLAUDE.md that gives Claude the right project memory, and know the user, project and subfolder levels</li>
+<li>Configure permissions and hooks so formatting and tests run without you asking</li>
+<li>Define custom slash commands and subagents with their own model and tools</li>
+<li>Run the plan, implement, test, review loop and use git and GitHub with it</li>
+<li>Use headless mode in CI and keep cost under control with per-subagent models and small context</li>
+<li>Ship a reusable "client-engagement" template repo and teach a client developer to use it</li>
+</ul>
+</div>
+
+<!-- 7.1 -->
+<h2>7.1 What Claude Code is</h2>
+<p>Claude Code is an agentic coding tool. You describe a goal; it reads the repository, edits files, runs commands, and shows you what it did. It works with your real tools (git, pytest, ruff, docker, the <code>gh</code> CLI) instead of working in a sandbox of its own. For you it has two uses: building client deliveries faster, and being something you teach the client's developers to use.</p>
+<div class="tbl"><table>
+<thead><tr><th>Surface</th><th>What it is</th><th>Use it for</th></tr></thead>
+<tbody>
+<tr><td>Terminal (CLI)</td><td>The <code>claude</code> command inside a project folder. The most complete surface and the one this module uses.</td><td>Daily delivery work, scripting, CI</td></tr>
+<tr><td>IDE extensions</td><td>Claude Code inside VS Code and JetBrains editors, with diffs shown in the editor</td><td>Client developers who live in their editor</td></tr>
+<tr><td>Desktop app</td><td>Claude Code sessions in the Claude desktop app</td><td>Running several sessions side by side, reviewing changes visually</td></tr>
+<tr><td>Web</td><td>Sessions run in the cloud against a connected GitHub repository, from a browser or phone</td><td>Starting a task away from your machine, longer background jobs</td></tr>
+</tbody></table></div>
+<p>The surfaces share the same ideas: CLAUDE.md, settings, slash commands, subagents, MCP. Feature coverage differs between them and changes often, so check the <a href="https://docs.claude.com/en/docs/claude-code/overview" target="_blank" rel="noopener">overview page</a> for the current list and the install steps. Do not write install commands from memory into a client handover.</p>
+
+<!-- 7.2 -->
+<h2>7.2 The orchestration idea, applied to coding</h2>
+<p>You already like this pattern: a strong model plans, cheaper models do the legwork. Claude Code supports it directly. The main session runs on the model you picked (Opus or Sonnet). It hands bounded jobs to subagents. Each subagent runs in its own context window, so a long file search does not fill the main conversation, and each can use a cheaper model.</p>
+
+<figure>
+<svg viewBox="0 0 800 300" role="img" aria-label="Orchestrator session delegating to explorer, test-runner and reviewer subagents; a local llama.cpp box handles tiny tasks">
+  <rect class="s-acc" x="270" y="20" width="260" height="76" rx="8"/>
+  <text x="400" y="52" text-anchor="middle" font-weight="600">Main session (orchestrator)</text>
+  <text x="400" y="74" text-anchor="middle" class="sm">plans, decides, edits; Opus or Sonnet</text>
+  <rect class="s-plain" x="30" y="170" width="220" height="86" rx="8"/>
+  <text x="140" y="202" text-anchor="middle" font-weight="600">explorer</text>
+  <text x="140" y="223" text-anchor="middle" class="sm">Haiku, read-only tools</text>
+  <text x="140" y="241" text-anchor="middle" class="sm">finds files, summarizes</text>
+  <rect class="s-plain" x="290" y="170" width="220" height="86" rx="8"/>
+  <text x="400" y="202" text-anchor="middle" font-weight="600">test-runner</text>
+  <text x="400" y="223" text-anchor="middle" class="sm">Haiku, bash + read</text>
+  <text x="400" y="241" text-anchor="middle" class="sm">runs pytest, reports failures</text>
+  <rect class="s-warm" x="550" y="170" width="220" height="86" rx="8"/>
+  <text x="660" y="202" text-anchor="middle" font-weight="600">reviewer</text>
+  <text x="660" y="223" text-anchor="middle" class="sm">Sonnet, read-only tools</text>
+  <text x="660" y="241" text-anchor="middle" class="sm">checks the diff, lists risks</text>
+  <path class="ln" d="M400 96 V135 M140 135 H660 M140 135 V170 M400 135 V170 M660 135 V170"/>
+  <circle class="dot" cx="400" cy="135" r="5"/>
+  <text x="400" y="285" text-anchor="middle" class="sm">summaries flow back up; the main context stays small</text>
+  <text x="30" y="30" class="sm">Optional: a local llama.cpp box</text>
+  <text x="30" y="48" class="sm">for tiny tasks via a script or MCP tool</text>
+</svg>
+<figcaption>The main session keeps the plan and the decisions. Subagents return short summaries, not whole transcripts.</figcaption>
+</figure>
+
+<p>A local llama.cpp box does not plug into Claude Code as a subagent model. Subagent models are Claude models. If you want the local box in the loop, expose it as a small script or MCP tool (for example "classify this log line", "extract the invoice number") and let a subagent call it. Keep it for tiny, low-risk tasks.</p>
+
+<!-- 7.3 -->
+<h2>7.3 CLAUDE.md: project memory</h2>
+<p>CLAUDE.md is a Markdown file that Claude Code loads at the start of a session. It is the cheapest way to improve results: you write the rules once instead of repeating them in every prompt. Put in it what a new developer would need on day one.</p>
+<ul>
+<li><b>What the project is</b> in two or three lines, and who the client is</li>
+<li><b>Commands:</b> how to install, run, test, lint. Exact commands.</li>
+<li><b>Layout:</b> where code, tests and config live</li>
+<li><b>Conventions:</b> typing, naming, error handling, logging, language of comments</li>
+<li><b>Hard rules:</b> never touch <code>.env</code>, never send real client data to an API in tests, ask before adding dependencies</li>
+<li><b>Definition of done:</b> tests pass, ruff clean, README updated</li>
+</ul>
+<p>Keep it short and specific. Every line is read on every session, so every line costs context. Vague advice ("write clean code") adds cost and no value.</p>
+
+<div class="tbl"><table>
+<thead><tr><th>Level</th><th>Where</th><th>Shared with</th><th>Put here</th></tr></thead>
+<tbody>
+<tr><td>User</td><td><code>~/.claude/CLAUDE.md</code></td><td>Only you, all projects</td><td>Your own habits: "reply concisely", "I use uv", your preferred test style</td></tr>
+<tr><td>Project</td><td><code>./CLAUDE.md</code> (committed)</td><td>The whole team</td><td>Commands, layout, conventions, hard rules</td></tr>
+<tr><td>Local project</td><td><code>./CLAUDE.local.md</code> (git-ignored)</td><td>Only you, this project</td><td>Your sandbox URLs, personal notes. Check the memory docs for whether your version still supports this file.</td></tr>
+<tr><td>Subfolder</td><td><code>./src/api/CLAUDE.md</code></td><td>The team</td><td>Rules for one area. Loaded when Claude works on files there.</td></tr>
+</tbody></table></div>
+<p>CLAUDE.md files can also import other files. The syntax and the exact loading order are in the <a href="https://docs.claude.com/en/docs/claude-code/memory" target="_blank" rel="noopener">memory docs</a>; read them before you build a deep hierarchy. In session, <code>/memory</code> lets you see and edit what is loaded, and <code>/init</code> drafts a first CLAUDE.md from the codebase. Treat the draft as a starting point and trim it.</p>
+
+<!-- 7.4 -->
+<h2>7.4 Permissions and settings.json</h2>
+<p>By default Claude Code asks before it edits files or runs commands. Permissions let you pre-approve the safe things and block the dangerous ones, so the sessions run smoothly without you giving up control.</p>
+<div class="tbl"><table>
+<thead><tr><th>File</th><th>Scope</th><th>Committed?</th></tr></thead>
+<tbody>
+<tr><td><code>~/.claude/settings.json</code></td><td>You, all projects</td><td>No</td></tr>
+<tr><td><code>.claude/settings.json</code></td><td>This project, the team</td><td>Yes</td></tr>
+<tr><td><code>.claude/settings.local.json</code></td><td>This project, only you</td><td>No (git-ignored)</td></tr>
+</tbody></table></div>
+<p>Settings hold permission rules (<code>allow</code>, <code>ask</code>, <code>deny</code>), hooks, environment variables and more. More specific and local files override broader ones, and a deny rule wins. Rule syntax and the full key list are in the docs, and they change, so look them up when you write a client config.</p>
+<div class="tip"><b>Rule of thumb for client work:</b> allow read-only and test commands; deny reading <code>.env</code> and secrets; leave anything that writes outside the repo, installs packages or touches the network on "ask". The <code>/permissions</code> command shows what is active. Do not use a "skip all permissions" mode on a client machine.</div>
+
+<!-- 7.5 -->
+<h2>7.5 Slash commands, hooks, subagents, skills, MCP</h2>
+
+<h3>Custom slash commands</h3>
+<p>A Markdown file in <code>.claude/commands/</code> becomes a command. <code>.claude/commands/eval.md</code> is run as <code>/eval</code>. The body is a prompt; <code>$ARGUMENTS</code> is replaced by what you type after the command. A short frontmatter block can set a description and, optionally, allowed tools and a model. Commands are how you turn your own methods ("how we scope a use case") into a one-line habit that every developer on the project uses.</p>
+
+<h3>Hooks</h3>
+<p>A hook is a shell command that Claude Code runs automatically at a defined moment, for example after a file edit or when Claude finishes a turn. Hooks are deterministic: they run every time, which a CLAUDE.md instruction does not guarantee. Typical uses are running <code>ruff</code> after edits, running <code>pytest</code> before Claude says it is done, and blocking edits to protected files. Hooks run with your permissions, so review any hook you copy from somewhere. Event names, matcher syntax and exit-code behaviour are in the <a href="https://docs.claude.com/en/docs/claude-code/hooks" target="_blank" rel="noopener">hooks reference</a>; verify them there.</p>
+
+<h3>Subagents</h3>
+<p>A subagent is a Markdown file in <code>.claude/agents/</code> (project) or <code>~/.claude/agents/</code> (user). Frontmatter sets its name, a description that tells Claude when to use it, an optional list of tools, and an optional model. The body is its system prompt. Claude delegates to a subagent automatically when the description matches the task, or when you ask by name.</p>
+<div class="tbl"><table>
+<thead><tr><th>Use a subagent for</th><th>Why</th><th>Model and tools</th></tr></thead>
+<tbody>
+<tr><td>Exploration: "where is invoice parsing done?"</td><td>Reading many files floods the main context; you only need the answer</td><td>Haiku; read-only tools</td></tr>
+<tr><td>Running tests and reporting</td><td>Test output is long; you only need the failures and likely cause</td><td>Haiku; bash and read</td></tr>
+<tr><td>Review of a diff</td><td>A fresh context judges the change without the author's assumptions</td><td>Sonnet; read-only tools</td></tr>
+</tbody></table></div>
+<p>Do not make a subagent for work that needs the full conversation history, or for one small edit. Delegation has overhead. See the <a href="https://docs.claude.com/en/docs/claude-code/sub-agents" target="_blank" rel="noopener">sub-agents docs</a> for the current frontmatter fields and model values.</p>
+
+<h3>Skills in Claude Code</h3>
+<p>Skills are folders with a <code>SKILL.md</code> and optional scripts that Claude loads when the task matches. In Claude Code they live in <code>.claude/skills/</code> (project) or <code>~/.claude/skills/</code> (user). The difference from CLAUDE.md: a skill loads only when relevant, so it costs nothing the rest of the time. Put always-true rules in CLAUDE.md and task-specific procedures in a skill. Module 8 covers skills in depth.</p>
+
+<h3>MCP servers in a project</h3>
+<p>A <code>.mcp.json</code> file at the repo root declares MCP servers for everyone who works in the project. Claude Code asks each person to approve a project server before using it. This is how the server you built in Module 6 becomes available to the whole team without anyone editing personal settings. Never put secrets in <code>.mcp.json</code>; reference environment variables instead, and check the docs for the expansion syntax.</p>
+
+<figure>
+<svg viewBox="0 0 800 330" role="img" aria-label="Where Claude Code configuration lives: user folder and project repository tree">
+  <rect class="s-plain" x="20" y="20" width="240" height="290" rx="8"/>
+  <text x="140" y="46" text-anchor="middle" font-weight="600">User: ~/.claude/</text>
+  <text x="40" y="78" class="sm">CLAUDE.md</text><text x="40" y="100" class="sm">settings.json</text>
+  <text x="40" y="122" class="sm">commands/</text><text x="40" y="144" class="sm">agents/</text>
+  <text x="40" y="166" class="sm">skills/</text>
+  <text x="140" y="210" text-anchor="middle" class="sm">yours, in every project,</text>
+  <text x="140" y="228" text-anchor="middle" class="sm">never committed</text>
+  <rect class="s-acc" x="300" y="20" width="480" height="290" rx="8"/>
+  <text x="540" y="46" text-anchor="middle" font-weight="600">Project: the repository</text>
+  <text x="320" y="78" class="sm">CLAUDE.md                     project memory, committed</text>
+  <text x="320" y="100" class="sm">.mcp.json                      project MCP servers</text>
+  <text x="320" y="122" class="sm">.claude/settings.json          permissions + hooks, shared</text>
+  <text x="320" y="144" class="sm">.claude/settings.local.json    yours only, git-ignored</text>
+  <text x="320" y="166" class="sm">.claude/commands/              /new-usecase, /eval</text>
+  <text x="320" y="188" class="sm">.claude/agents/                explorer, test-runner, reviewer</text>
+  <text x="320" y="210" class="sm">.claude/skills/                task procedures</text>
+  <text x="320" y="232" class="sm">src/api/CLAUDE.md              rules for one folder</text>
+  <path class="ln" d="M262 165 H298"/><path class="ln" d="M290 159 L300 165 L290 171"/>
+  <text x="540" y="272" text-anchor="middle" class="sm">more specific files add to or override broader ones</text>
+  <text x="540" y="292" text-anchor="middle" class="sm">a deny rule always wins</text>
+</svg>
+<figcaption>Commit what the team shares. Keep personal and secret things in the user folder or the local files.</figcaption>
+</figure>
+
+<!-- 7.6 -->
+<h2>7.6 The working loop: plan, implement, test, review</h2>
+<p>Most failed Claude Code sessions skip the plan. Plan mode (cycle to it with Shift+Tab, or start the session in it; confirm the current key in the docs) lets Claude read and think but not edit. You read the plan, correct it, and only then approve implementation.</p>
+
+<figure>
+<svg viewBox="0 0 800 210" role="img" aria-label="Loop: plan, implement, test, review, with a return arrow to plan when review finds problems">
+  <rect class="s-acc" x="20" y="60" width="160" height="70" rx="8"/>
+  <text x="100" y="90" text-anchor="middle" font-weight="600">1 Plan</text>
+  <text x="100" y="111" text-anchor="middle" class="sm">plan mode, no edits</text>
+  <rect class="s-plain" x="220" y="60" width="160" height="70" rx="8"/>
+  <text x="300" y="90" text-anchor="middle" font-weight="600">2 Implement</text>
+  <text x="300" y="111" text-anchor="middle" class="sm">small steps, ruff hook</text>
+  <rect class="s-plain" x="420" y="60" width="160" height="70" rx="8"/>
+  <text x="500" y="90" text-anchor="middle" font-weight="600">3 Test</text>
+  <text x="500" y="111" text-anchor="middle" class="sm">test-runner on Haiku</text>
+  <rect class="s-warm" x="620" y="60" width="160" height="70" rx="8"/>
+  <text x="700" y="90" text-anchor="middle" font-weight="600">4 Review</text>
+  <text x="700" y="111" text-anchor="middle" class="sm">reviewer on Sonnet, then you</text>
+  <path class="ln" d="M180 95 H218"/><path class="ln" d="M380 95 H418"/><path class="ln" d="M580 95 H618"/>
+  <path class="ln" d="M700 130 V180 H100 V132"/><path class="ln" d="M94 142 L100 130 L106 142"/>
+  <text x="400" y="173" text-anchor="middle" class="sm">problems found: back to the plan, not to guessing</text>
+  <text x="400" y="30" text-anchor="middle" class="sm">you approve at step 1 and read the result at step 4</text>
+</svg>
+<figcaption>A human gate at the plan and at the review. The middle two steps are where the cheap models and hooks do the work.</figcaption>
+</figure>
+
+<p>Habits that make the loop work:</p>
+<ul>
+<li>Ask for a plan that lists files to change, tests to add and risks. Reject plans that touch more than the task needs.</li>
+<li>Write the test first when you can, and let Claude make it pass.</li>
+<li>Commit after each working step so you can roll back. <code>/rewind</code> and checkpoints exist too; check the docs for what they cover.</li>
+<li>Read every diff yourself. The reviewer subagent helps; it does not replace you.</li>
+</ul>
+
+<!-- 7.7 -->
+<h2>7.7 Git, GitHub and CI</h2>
+<p>Claude Code runs <code>git</code> and, if installed and authenticated, the GitHub <code>gh</code> CLI. A clean delivery flow:</p>
+<ol>
+<li>Create a branch per task (<code>git switch -c feature/phone-normalizer</code>). Never work on <code>main</code>.</li>
+<li>Run the plan, implement, test loop. Commit in small steps with clear messages.</li>
+<li>Ask Claude to open the pull request with <code>gh pr create</code> and write the description: what changed, how it was tested, what to check.</li>
+<li>Review the PR in GitHub like any other. Merge only after your approval.</li>
+</ol>
+<p>For automatic review on every pull request, Anthropic provides a Claude Code GitHub Action. It can review PRs and respond when someone mentions Claude in a comment. Setup (the <code>/install-github-app</code> command in a session, or a manual workflow file plus a repository secret) and the current options are in the <a href="https://docs.claude.com/en/docs/claude-code/github-actions" target="_blank" rel="noopener">GitHub Actions docs</a>. Store the API key as a repository secret and never in the workflow file.</p>
+
+<h3>Headless use</h3>
+<p>The <code>-p</code> (print) flag runs Claude Code once, non-interactively, and prints the result. That makes it usable in scripts and CI: summarize a failing build, draft release notes, check a migration. Output can be requested as plain text or JSON. In CI, restrict the tools with allow rules and run with a scoped, low-privilege key. The exact flags (output format, allowed tools, turn limits) are in the CLI reference. Run <code>claude --help</code> and read the docs; do not trust a flag you remember from last month.</p>
+<pre><code># Example shape only: confirm every flag with `claude --help` and the CLI reference
+claude -p "List functions in src/ that have no tests" --output-format json</code></pre>
+
+<!-- 7.8 -->
+<h2>7.8 Cost discipline</h2>
+<p>Claude Code cost follows tokens, and tokens follow context. Four habits matter more than any setting:</p>
+<ul>
+<li><b>Right model per job.</b> Use the strong model for planning and hard edits; Haiku subagents for searching and test running; Sonnet for review. Switch the main model with <code>/model</code>.</li>
+<li><b>Small context.</b> A short CLAUDE.md, subagents for noisy work, and <code>/clear</code> between unrelated tasks. A session that carries three old tasks pays for them on every turn.</li>
+<li><b>Compact on purpose.</b> <code>/compact</code> summarizes the conversation so far; you can add instructions about what to keep, such as "keep the plan and the failing test names". Do it at a natural break, not when quality has already dropped.</li>
+<li><b>Tight prompts.</b> Name the files. "Fix the null case in <code>src/app/core.py</code>" beats "find the bug".</li>
+</ul>
+<p>Use <code>/cost</code> or the usage views to see where tokens go, and look at the <a href="https://docs.claude.com/en/docs/about-claude/pricing" target="_blank" rel="noopener">pricing page</a> and the plan's usage rules before you tell a client what a Claude Code rollout will cost. Do not quote numbers from memory.</p>
+
+<!-- 7.9 -->
+<h2>7.9 Teaching client developers</h2>
+<p>Many of your clients have one to five developers and no process for AI-assisted coding. Your template repo is the teaching tool. A good first session runs 90 minutes:</p>
+<ol>
+<li>Show the loop on a real, small ticket from their backlog, live, including a mistake Claude makes and how plan mode and tests catch it.</li>
+<li>Walk through CLAUDE.md. Have them add two rules from their own codebase.</li>
+<li>Let each developer do one ticket alone with you watching. Give feedback on prompts, not on code style.</li>
+<li>Agree three rules: always branch, always read the diff, never paste client secrets into prompts.</li>
+</ol>
+<p>Their security person will ask what data leaves the machine, so prepare the answer from current Anthropic documentation and Trust Center pages, with the date you checked.</p>
+
+<!-- 7.10 -->
+<h2>7.10 Check the docs for exact flags</h2>
+<p>Claude Code changes fast: commands, settings keys, hook events and model aliases are added and renamed. Treat this page as the map and the docs as the ground truth. Before you commit a config to a client repo, verify each key in the docs, start a session, and run <code>/permissions</code>, <code>/agents</code>, <code>/hooks</code> and <code>/mcp</code> to see that your files are actually loaded. If something does not load, the config is usually silently wrong, not broken.</p>
+
+<!-- LAB -->
+<div class="lab">
+<h3>Lab 7. The client-engagement template repo</h3>
+<p>Goal: one repository you clone at the start of every engagement, so each project begins with memory, guardrails, cheap subagents and a test loop already in place. Then prove it by building a tiny feature with plan mode.</p>
+<p>The files below are complete. Config key names were correct when this course was written; verify each against the docs from section 7.10 and adjust. Model aliases in subagent files (<code>haiku</code>, <code>sonnet</code>) are shorthand; the docs list the accepted values.</p>
+
+<p><b>Setup</b></p>
+<pre><code>mkdir client-engagement-template &amp;&amp; cd client-engagement-template
+git init -b main
+mkdir -p .claude/commands .claude/agents src/app tests
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install ruff pytest</code></pre>
+
+<p><b>CLAUDE.md</b></p>
+<pre><code># Project: CLIENT_NAME engagement
+
+Python service built by Vastama Ltd for CLIENT_NAME. Replace this paragraph
+with two lines on what the system does and who uses it.
+
+## Commands
+- Install: `pip install -e ".[dev]"`
+- Test: `pytest -q`
+- Lint: `ruff check .`
+- Format: `ruff format .`
+
+## Layout
+- `src/app/` application code
+- `tests/` pytest tests, mirror the `src/app/` structure
+- `docs/` decisions and use-case briefs
+
+## Conventions
+- Python 3.11+, type hints on all public functions
+- Small functions, no global state, no print in library code (use logging)
+- Comments and docstrings in English. User-facing strings may be Hebrew,
+  Russian or English; keep them in one place so they can be translated.
+- Model IDs live in one config module. Add a "check current IDs" comment.
+
+## Hard rules
+- Never read or edit `.env` or anything under `secrets/`.
+- Tests must not call the Claude API or touch client data. Use fixtures.
+- Ask before adding a dependency.
+- Work on a branch, never on `main`.
+
+## Definition of done
+1. `pytest -q` passes
+2. `ruff check .` is clean
+3. New behaviour has a test
+4. README or docs updated if usage changed
+
+## Working style
+- For any change over ~20 lines, propose a plan first and wait for approval.
+- Use the `explorer` subagent to find code, `test-runner` to run tests,
+  `reviewer` before suggesting a commit.
+</code></pre>
+
+<p><b>.claude/settings.json</b> (permissions and hooks)</p>
+<pre><code>{
+  "permissions": {
+    "allow": [
+      "Bash(pytest:*)",
+      "Bash(ruff check:*)",
+      "Bash(ruff format:*)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./secrets/**)",
+      "Bash(git push --force:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ruff check --fix --quiet . ; ruff format --quiet ."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pytest -q 1>&amp;2 || exit 2"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+<p>The first hook formats and lints after every edit. The second runs the tests when Claude finishes a turn; exit code 2 is how a hook feeds a failure back to Claude so it keeps working. Confirm that behaviour for the <code>Stop</code> event in the hooks reference. If it differs in your version, move the pytest hook to <code>PostToolUse</code> with a narrower matcher, or drop it and rely on the <code>test-runner</code> subagent.</p>
+
+<p><b>.claude/commands/new-usecase.md</b></p>
+<pre><code>---
+description: Scope a new AI use case and create its brief
+argument-hint: short name of the use case
+---
+
+Create a brief for a new use case called: $ARGUMENTS
+
+1. Ask me up to five questions you need answered. Stop and wait for answers.
+2. Then write `docs/usecase-$ARGUMENTS.md` with these sections:
+   - Problem and who has it
+   - Input and output (examples, in the real language of the data)
+   - Success metric and how we measure it
+   - Risks and what a human must approve
+   - Proposed model tier and why
+   - First test cases (at least five, including two hard ones)
+3. Do not write application code yet. End with a suggested plan to implement
+   the first slice.
+</code></pre>
+
+<p><b>.claude/commands/eval.md</b></p>
+<pre><code>---
+description: Run the test suite and summarize results
+argument-hint: optional pytest path or -k expression
+---
+
+Use the `test-runner` subagent to run `pytest -q $ARGUMENTS`.
+
+Report:
+- number passed, failed, skipped
+- for each failure: test name, one-line cause, the file and line to look at
+- whether the failures look like a code bug or a bad test
+
+Do not edit any files. Wait for my instruction before fixing anything.
+</code></pre>
+
+<p><b>.claude/agents/explorer.md</b></p>
+<pre><code>---
+name: explorer
+description: Finds code and explains how a part of the codebase works. Use for "where is X", "how does Y flow" and any search across many files. Read-only.
+tools: Read, Grep, Glob
+model: haiku
+---
+
+You explore the repository and answer questions about it.
+
+- Search first, read second. Read only the files you need.
+- Answer in under 200 words: the relevant file paths with line numbers, and
+  a short description of how they connect.
+- If you are not sure, say what you checked and what you did not find.
+- Never suggest edits and never invent paths.
+</code></pre>
+
+<p><b>.claude/agents/test-runner.md</b></p>
+<pre><code>---
+name: test-runner
+description: Runs the test suite and reports failures concisely. Use after code changes and before suggesting a commit.
+tools: Bash, Read, Grep
+model: haiku
+---
+
+You run tests and report results. You do not fix code.
+
+1. Run `pytest -q` (or the path or expression you were given).
+2. If everything passes, reply with the counts and nothing else.
+3. If something fails, reply with, for each failure: test name, the assertion
+   or error in one line, and the most likely file and line responsible.
+4. Do not paste full tracebacks unless asked.
+</code></pre>
+
+<p><b>.claude/agents/reviewer.md</b></p>
+<pre><code>---
+name: reviewer
+description: Reviews the current uncommitted diff for bugs, missing tests, security problems and convention violations. Use before every commit or PR.
+tools: Read, Grep, Glob, Bash
+model: sonnet
+---
+
+You are a careful code reviewer. Run `git diff` and `git status` to see the
+change, then read surrounding code where needed.
+
+Check, in this order:
+1. Correctness: edge cases, wrong assumptions, off-by-one, None handling
+2. Tests: is the new behaviour covered, including a failure case?
+3. Security and data: secrets, client data in logs or fixtures, unsafe input
+4. Conventions from CLAUDE.md
+5. Simplicity: anything that can be removed
+
+Reply with a short list grouped as Must fix, Should fix, Nice to have. Each
+item has the file, line and a one-sentence reason. If there is nothing to
+fix, say so. Do not edit files.
+</code></pre>
+
+<p><b>.mcp.json</b> (the Module 6 server)</p>
+<pre><code>{
+  "mcpServers": {
+    "client-data": {
+      "command": "python",
+      "args": ["-m", "client_data_mcp"],
+      "env": {
+        "CLIENT_DATA_DIR": "${CLIENT_DATA_DIR}"
+      }
+    }
+  }
+}</code></pre>
+<p>Replace <code>client-data</code>, the module name and the variable with the real names from your Module 6 server, and use the <code>uv</code> or <code>pip</code> install you chose there. Confirm the environment variable expansion syntax in the MCP section of the Claude Code docs. No secrets go in this file.</p>
+
+<p><b>pyproject.toml</b></p>
+<pre><code>[project]
+name = "client-engagement"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+</code></pre>
+
+<p><b>src/app/__init__.py</b></p>
+<pre><code>"""Application package."""
+</code></pre>
+
+<p><b>src/app/core.py</b></p>
+<pre><code>"""Core helpers. Replace with the first real slice of the engagement."""
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+def clean_text(value: str) -> str:
+    """Trim whitespace and collapse internal runs of spaces."""
+    return " ".join(value.split())
+</code></pre>
+
+<p><b>tests/test_core.py</b></p>
+<pre><code>from app.core import clean_text
+
+
+def test_clean_text_trims_and_collapses():
+    assert clean_text("  שלום   עולם  ") == "שלום עולם"
+
+
+def test_clean_text_empty():
+    assert clean_text("") == ""
+</code></pre>
+
+<p><b>.gitignore</b></p>
+<pre><code>.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.env
+secrets/
+.claude/settings.local.json
+CLAUDE.local.md
+</code></pre>
+
+<p><b>README.md</b></p>
+<pre><code># Client engagement template
+
+Starting point for Vastama client projects built with Claude Code.
+
+## Start a new engagement
+1. Click "Use this template" on GitHub (or clone and delete `.git`).
+2. Edit `CLAUDE.md`: client name, what the system does, any extra rules.
+3. Edit `.mcp.json` to point at the client's MCP server, or remove it.
+4. `python -m venv .venv &amp;&amp; source .venv/bin/activate &amp;&amp; pip install -e ".[dev]"`
+5. Run `claude` in the folder. Check `/agents`, `/hooks`, `/mcp` and
+   `/permissions` show what you expect.
+
+## What is in the box
+| Path | Purpose |
+| --- | --- |
+| `CLAUDE.md` | Project memory: commands, layout, rules, definition of done |
+| `.claude/settings.json` | Permissions and hooks (ruff after edits, pytest on stop) |
+| `.claude/commands/` | `/new-usecase`, `/eval` |
+| `.claude/agents/` | `explorer` (Haiku), `test-runner` (Haiku), `reviewer` (Sonnet) |
+| `.mcp.json` | Project MCP server |
+| `src/app/`, `tests/` | Skeleton with one passing test |
+
+## Daily flow
+Branch, plan mode, implement, test, review, pull request. See
+"How we build with Claude Code" in `docs/`.
+
+## Rules
+Never commit `.env`. Tests never call external APIs. Always read the diff.
+</code></pre>
+
+<p><b>Commit and push</b></p>
+<pre><code>pytest -q &amp;&amp; ruff check .
+git add -A &amp;&amp; git commit -m "Client engagement template"
+gh repo create client-engagement-template --private --source . --push
+# On GitHub: Settings, then tick "Template repository"</code></pre>
+
+<p><b>Use it: a tiny feature with plan mode</b></p>
+<p>Feature: normalize Israeli mobile phone numbers (<code>050-123-4567</code>, <code>+972 50 123 4567</code>, <code>0501234567</code>) to <code>+972501234567</code>, and return <code>None</code> for anything invalid.</p>
+<ol>
+<li>Create a repo from the template. Run <code>git switch -c feature/phone-normalizer</code>.</li>
+<li>Start <code>claude</code>, switch to plan mode, and run <code>/new-usecase phone-normalizer</code>. Answer its questions, then read <code>docs/usecase-phone-normalizer.md</code>.</li>
+<li>Still in plan mode, prompt: "Plan the phone normalizer from the brief. List files, tests first, and risks." Reject the plan once on purpose with a correction (for example "no new dependencies") and check it revises.</li>
+<li>Approve. Let Claude write the tests, then the code in <code>src/app/phones.py</code>. Watch the ruff hook run after each edit.</li>
+<li>Run <code>/eval</code>. Confirm the <code>test-runner</code> subagent was used and the summary is short.</li>
+<li>Ask: "Use the reviewer subagent on the current diff." Fix every Must-fix item.</li>
+<li>Commit, then ask Claude to push and run <code>gh pr create</code> with a description. Review the PR page yourself and merge.</li>
+<li>Write down: how many turns, what you corrected, and which subagent saved you the most reading.</li>
+</ol>
+<p><b>Stretch (1 h):</b> add the Claude Code GitHub Action to the template using the current docs, open a PR with a deliberate bug, and see whether the review catches it. Then run one headless <code>claude -p</code> command from a shell script and save the output.</p>
+</div>
+
+<!-- DELIVERABLE -->
+<h2>Deliverable: the template repo and "How we build with Claude Code"</h2>
+<p>Two things you can hand to any client:</p>
+<ol>
+<li><b>The template repository</b> on GitHub, marked as a template, with a README that a stranger can follow in ten minutes. Share the link.</li>
+<li><b>A one-page client note, "How we build with Claude Code"</b>, saved as <code>docs/how-we-build.md</code> in the repo and as a PDF. Suggested structure:
+<ul>
+<li><b>Our loop:</b> plan, implement, test, review, with a human approving the plan and the merge</li>
+<li><b>What AI does and what people do:</b> Claude drafts and runs checks; a named engineer owns every change</li>
+<li><b>Guardrails:</b> branch-only work, permission rules, secrets never read, tests never use client data</li>
+<li><b>Quality evidence:</b> tests, lint, review notes and PR history you can inspect</li>
+<li><b>Data handling:</b> what is sent to Anthropic when we work, with a link to the current terms and the date checked</li>
+<li><b>What we hand over:</b> the repo, CLAUDE.md, the template, and a training session for your developers</li>
+</ul></li>
+</ol>
+
+<!-- SELF CHECK -->
+<h2>Self-check</h2>
+<ol class="check">
+<li>Your CLAUDE.md says "always run ruff after editing", but Claude sometimes forgets. What do you change, and why?
+<details><summary>Model answer</summary>Move the rule into a hook (a PostToolUse hook on edits). CLAUDE.md is guidance the model may miss; a hook is a command that runs every time. Keep the CLAUDE.md line only as explanation.</details></li>
+<li>Which three subagents does the template include, which model does each use, and why those?
+<details><summary>Model answer</summary>explorer (Haiku, read-only) for searching many files, test-runner (Haiku) for running tests and returning only failures, reviewer (Sonnet, read-only) for judging the diff. Cheap models do high-volume reading and running; a stronger model does the judgment. Each keeps noisy output out of the main context.</details></li>
+<li>Where would you put each: your personal habit of terse replies; the test command for the project; a rule only for the <code>src/api/</code> folder?
+<details><summary>Model answer</summary>Terse replies in the user file <code>~/.claude/CLAUDE.md</code>. The test command in the project <code>./CLAUDE.md</code>, committed. The API rule in <code>src/api/CLAUDE.md</code>, loaded when Claude works there.</details></li>
+<li>A developer wants to run Claude Code in CI to summarize failing builds. What do you tell them about how, and what must they check first?
+<details><summary>Model answer</summary>Use headless mode (the <code>-p</code> flag) with a restricted set of allowed tools and a scoped key stored as a CI secret. Before writing the pipeline, check the CLI reference for the exact flags and output formats, because they change. Review what the job can read and write.</details></li>
+<li>A session has become slow and expensive after three unrelated tasks. List three actions that reduce cost, in order.
+<details><summary>Model answer</summary>Use <code>/clear</code> when switching to an unrelated task, or <code>/compact</code> with instructions when you must continue the same task. Push searching and test running to Haiku subagents. Name files in prompts and trim CLAUDE.md. Optionally switch the main model for the next step with <code>/model</code>.</details></li>
+</ol>
+
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://docs.claude.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code overview</a></li>
+<li><a href="https://docs.claude.com/en/docs/claude-code/memory" target="_blank" rel="noopener">Memory and CLAUDE.md</a></li>
+<li><a href="https://docs.claude.com/en/docs/claude-code/sub-agents" target="_blank" rel="noopener">Subagents</a></li>
+<li><a href="https://docs.claude.com/en/docs/claude-code/hooks" target="_blank" rel="noopener">Hooks reference</a></li>
+<li><a href="https://docs.claude.com/en/docs/claude-code/github-actions" target="_blank" rel="noopener">Claude Code GitHub Actions</a></li>
+</ul>
+
+<div class="nav"><span>← Module 6 · Model Context Protocol (MCP)</span><span>Next: Module 8 · Agents, Skills and plugins →</span></div>
+</div>
+
+</html>

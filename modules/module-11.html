@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Module 11 · Discovery and ROI</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column; lesson sections in order; flat SVG illustrations; warm boxes = things you do, teal = reference */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --ink:#14232b; --muted:#56666e; --line:#d5dfe1;
+  --accent:#0f7a72; --accent-soft:#dcefed; --warm:#c8642c; --warm-soft:#f6e6dc;
+  --code-bg:#eef3f4;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,5vw,2.8rem);font-weight:700}
+h2{font-size:1.55rem;font-weight:700;margin-top:52px;margin-bottom:12px}
+h3{font-size:1.15rem;font-weight:700;margin-top:24px;margin-bottom:8px}
+p{margin:0 0 12px;max-width:68ch}
+ul,ol{padding-left:20px;max-width:68ch}
+li{margin-bottom:6px}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:1.15rem;color:var(--muted);margin-top:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font-family:var(--mono);font-size:.78rem;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}
+.objectives{margin-top:28px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.objectives h3{margin-top:0}
+figure{margin:24px 0;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:10px}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .sm{font-size:12px;fill:var(--muted)}
+.s-acc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.s-warm{fill:var(--warm-soft);stroke:var(--warm);stroke-width:2}
+.s-plain{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.ln{stroke:var(--muted);stroke-width:2;fill:none}
+.dot{fill:var(--accent)}
+.dot-w{fill:var(--warm)}
+.tbl{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.5;margin:12px 0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:3px}
+pre code{background:none;padding:0}
+.lab{margin-top:20px;padding:18px 20px;background:var(--warm-soft);border-radius:10px}
+.lab h3{margin-top:0;color:var(--warm)}
+.tip{padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 6px 6px 0;margin:16px 0;font-size:.95rem}
+.check li{margin-bottom:10px}
+details{margin-top:6px}
+summary{cursor:pointer;color:var(--accent);font-size:.9rem}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+</style>
+
+<div class="wrap">
+
+<div class="eyebrow">AI Transformation with Claude · Part 4 · Week 11</div>
+<h1>Module 11. Discovery, ROI and proposals</h1>
+<p class="lede">Technical skill gets you a pilot only if the client trusts your numbers. This module turns discovery into a repeatable product: a two-week readiness audit, a scored list of use cases, an ROI model that survives a sceptical CFO, and a proposal the client can sign.</p>
+<div class="meta"><span class="chip">≈ 9 h</span><span class="chip">reading 2 h</span><span class="chip">lab 4 h</span><span class="chip">deliverable 3 h</span></div>
+
+<div class="objectives">
+<h3>By the end of this module you can</h3>
+<ul>
+<li>Run a fixed-scope, two-week AI readiness audit and say what the client receives at the end</li>
+<li>Interview stakeholders by function, map a current-state process and inventory data and systems</li>
+<li>Place a company on the five-step maturity ladder and defend the placement with evidence</li>
+<li>Score use cases on value, feasibility and risk with a weighted sheet, and apply a risk gate</li>
+<li>Build an ROI model with a measured baseline, run costs, payback and low, base and high scenarios</li>
+<li>Package audit, pilot and retainer, compare pricing approaches, and write a complete SOW</li>
+<li>Plan change management and answer the four common objections without bluffing</li>
+</ul>
+</div>
+
+<!-- 11.1 -->
+<h2>11.1 The readiness audit as your entry offer</h2>
+<p>A small company does not buy "AI transformation". It buys a clear answer to "what should we do first, what will it return, and what could go wrong?". The readiness audit sells that answer for a fixed scope and a short time. It is also the cheapest way for you to learn whether the client is a good fit before you commit to a build.</p>
+<p>The audit is the design stage of Vastama's design, build, test, monitor pipeline, packaged so a client can buy it alone. Done well, it sells the build stage for you, because the pilot is already specified and costed.</p>
+
+<div class="tbl"><table>
+<thead><tr><th>When</th><th>Activity</th><th>Output</th></tr></thead>
+<tbody>
+<tr><td>Before day 1</td><td>Kick-off call, signed SOW, named sponsor, interview slots booked, data request sent</td><td>Interview schedule, access list</td></tr>
+<tr><td>Week 1</td><td>6 to 10 stakeholder interviews; swimlane mapping of 2 or 3 processes; data and systems inventory; start measuring baselines</td><td>Interview notes, current-state swimlanes, inventory</td></tr>
+<tr><td>Week 2</td><td>Maturity scoring; long list of use cases scored; ROI for the top 2 or 3; risk and governance notes; report; readout meeting</td><td>Audit report, scoring sheet, ROI workbook, pilot proposal</td></tr>
+</tbody></table></div>
+
+<p>What makes it a product and not a favour: a fixed scope, a fixed number of interviews, named outputs, and a readout where the sponsor makes a decision. What stays out: building anything, connecting to production systems, or touching personal data beyond samples the client chooses to share.</p>
+
+<!-- 11.2 -->
+<h2>11.2 Stakeholder interviews</h2>
+<p>Interviews are where you find the real work. Ask about the last time something happened, not about how things usually go. Ask to see the artefacts: the spreadsheet, the inbox, the form. Forty-five minutes per person; two people from the same function if the team is large. Interview in the language the person works in (Hebrew, Russian or English) and take notes in English.</p>
+
+<div class="tbl"><table>
+<thead><tr><th>Function</th><th>Question bank (pick 6 to 8)</th></tr></thead>
+<tbody>
+<tr><td>Owner / CEO</td><td>What decision do you make with the least information? What would you want to see every Monday? What have you already tried with AI? What data must never leave the company? What would make this project a failure for you?</td></tr>
+<tr><td>Finance</td><td>How many invoices, payments and reminders per month? Walk me through the last invoice from receipt to payment. Which tasks are done at month end under pressure? Where do errors come from and what do they cost?</td></tr>
+<tr><td>Sales</td><td>How does a quote request arrive and how long until it is answered? What gets forgotten? What do reps write in the CRM, and what do they skip? Which customers get the slowest replies?</td></tr>
+<tr><td>Operations</td><td>How do you find out a shipment is late? Who chases suppliers and how? Which spreadsheets run the business? What breaks when one person is away?</td></tr>
+<tr><td>Customer service</td><td>What are the five most common questions? Where do the answers live? How often do you escalate and why? Which languages do customers write in?</td></tr>
+<tr><td>Marketing</td><td>Which content is missing or out of date? Who translates, and how long does it take? How do you reuse supplier material?</td></tr>
+<tr><td>HR</td><td>How many roles and CVs per year? Which documents do you write again and again? What personal data do you hold and where?</td></tr>
+<tr><td>IT / systems</td><td>Which systems hold customers, stock and finance? Can they export data, and in what format? Who has admin rights? Is there a data policy, a backup, a Microsoft 365 or Google Workspace admin?</td></tr>
+</tbody></table></div>
+
+<div class="tip"><b>Always ask these closing questions:</b> "What did I not ask that I should have?", "Who else should I talk to?", "What worries you about AI here?", "If we could save you three hours a week, which three hours?"</div>
+
+<!-- 11.3 -->
+<h2>11.3 Process mapping and the data and systems inventory</h2>
+<p>For each of the two or three processes that came up most in interviews, draw a current-state swimlane: one lane per actor (person, team or system), steps left to right, and a note on each step for volume, time and pain. Do it on a whiteboard or in a shared document with the process owner in the room. Do not draw the future state yet; the point is to see where time and errors accumulate.</p>
+
+<div class="tbl"><table>
+<thead><tr><th>Capture on every step</th><th>Why it matters later</th></tr></thead>
+<tbody>
+<tr><td>Actor and system used</td><td>Shows where Claude would need a connector or an export</td></tr>
+<tr><td>Volume per month</td><td>Feeds the ROI baseline and the model-choice decision</td></tr>
+<tr><td>Minutes per item (measured or sampled)</td><td>The core of hours saved</td></tr>
+<tr><td>Inputs and outputs (email, PDF, spreadsheet, form)</td><td>Tells you if the work is text-heavy and checkable</td></tr>
+<tr><td>Failure or rework points</td><td>Feeds error-reduction value and acceptance criteria</td></tr>
+<tr><td>Language of the content</td><td>Hebrew, Russian and English each need test samples</td></tr>
+</tbody></table></div>
+
+<h3>Data and systems inventory</h3>
+<p>One row per system or data source. Keep it a table, not a diagram.</p>
+<div class="tbl"><table>
+<thead><tr><th>Field</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>System and owner</td><td>Local Israeli ERP, finance manager</td></tr>
+<tr><td>What it holds</td><td>Customers, items, invoices, stock</td></tr>
+<tr><td>Access method</td><td>CSV export, database read, API, none</td></tr>
+<tr><td>Data class</td><td>Public, internal, personal data, financial, confidential</td></tr>
+<tr><td>Quality</td><td>Duplicates, missing fields, mixed languages</td></tr>
+<tr><td>Who may grant access</td><td>Named person, plus any outsourced IT contact</td></tr>
+<tr><td>Connector path</td><td>Existing MCP server, build one, or manual export for the pilot</td></tr>
+</tbody></table></div>
+<p>Connected data is the step that most often blocks SMBs. A system with an export is enough for a pilot; a system with no export means the first project is the export.</p>
+
+<!-- 11.4 -->
+<h2>11.4 Maturity scoring: the five-step ladder</h2>
+<p>The ladder gives the owner a picture of where they are and what "better" means, without jargon. Score the company as a whole and each department that matters, with evidence from interviews.</p>
+<div class="tbl"><table>
+<thead><tr><th>Step</th><th>What it looks like</th><th>Evidence you look for</th><th>Typical next move</th></tr></thead>
+<tbody>
+<tr><td>1. Ad hoc chat</td><td>Individuals use chat tools on their own, no rules</td><td>Personal accounts, no policy, no shared prompts</td><td>Usage policy, team workspace</td></tr>
+<tr><td>2. Team workspace</td><td>Shared team plan, shared Projects and prompts, a usage policy</td><td>Admin console in use, a few champions, saved templates</td><td>Connect the first data source</td></tr>
+<tr><td>3. Connected data</td><td>Claude reads company data through approved connectors</td><td>Connectors or MCP in place, data classes agreed</td><td>Automate one reviewed workflow</td></tr>
+<tr><td>4. Automated flows</td><td>Specific workflows run on triggers, a person reviews exceptions</td><td>Logs, evals, an owner per workflow, cost tracking</td><td>Add monitoring and a change process</td></tr>
+<tr><td>5. AI-native ops</td><td>New processes are designed around AI from the start, with continuous measurement</td><td>Governance in routine use, metrics reviewed monthly</td><td>Expand by function; keep evaluating models</td></tr>
+</tbody></table></div>
+<p>Score four dimensions from 1 to 5 each: people and skills, data and systems, process clarity, governance. The overall step is the lowest of the four, rounded down, because the weakest dimension limits what you can safely build. A company with a good team but no usable data is at step 1 or 2, whatever the enthusiasm.</p>
+
+<!-- 11.5 -->
+<h2>11.5 Use-case scoring: value, feasibility, risk</h2>
+<p>Collect 10 to 15 candidate use cases from interviews. Score each 1 to 5 on three questions, with the client in the room for value and risk.</p>
+<div class="tbl"><table>
+<thead><tr><th>Criterion</th><th>Question</th><th>1 means</th><th>5 means</th></tr></thead>
+<tbody>
+<tr><td>Value</td><td>How much time, error cost or revenue is at stake?</td><td>A few hours a month</td><td>Large share of a team's week, or a clear revenue effect</td></tr>
+<tr><td>Feasibility</td><td>Is the data reachable, the task text-based and checkable, the owner willing?</td><td>No data access, vague task</td><td>Data exportable now, clear right answer, eager owner</td></tr>
+<tr><td>Risk</td><td>What happens if the output is wrong or leaks?</td><td>Internal draft, easily corrected</td><td>Money moves, legal exposure, personal data, no review step</td></tr>
+</tbody></table></div>
+
+<p>Combine them in a weighted sheet. Risk is inverted so a higher total is always better: <code>score = w_v × value + w_f × feasibility + w_r × (6 − risk)</code>. A starting set of weights is 0.45, 0.35 and 0.20, but agree the weights with the client before you score, so the ranking is theirs. Then apply a gate: risk 4 or 5, or feasibility below 3, is never the first pilot, whatever the total.</p>
+
+<figure>
+<svg viewBox="0 0 800 390" role="img" aria-label="Value by feasibility matrix with twelve sample use cases placed in four quadrants">
+  <rect class="s-plain" x="80" y="30" width="264" height="128"/>
+  <rect class="s-acc" x="344" y="30" width="176" height="128"/>
+  <rect class="s-plain" x="80" y="158" width="264" height="192"/>
+  <rect class="s-plain" x="344" y="158" width="176" height="192"/>
+  <text x="90" y="50" class="sm">Prepare data first, then pilot</text>
+  <text x="510" y="50" text-anchor="end" class="sm">Pilot now</text>
+  <text x="90" y="340" class="sm">Park</text>
+  <text x="510" y="340" text-anchor="end" class="sm">Cheap wins, lower value</text>
+  <circle class="dot" cx="380" cy="62" r="8"/><text x="368" y="66" text-anchor="end" font-size="12">UC01</text>
+  <circle class="dot" cx="416" cy="74" r="8"/><text x="428" y="78" font-size="12">UC02</text>
+  <circle class="dot" cx="476" cy="190" r="8"/><text x="476" y="214" text-anchor="middle" font-size="12">UC03</text>
+  <circle class="dot" cx="388" cy="190" r="8"/><text x="388" y="214" text-anchor="middle" font-size="12">UC04</text>
+  <circle class="dot-w" cx="388" cy="254" r="8"/><text x="388" y="278" text-anchor="middle" font-size="12">UC09</text>
+  <circle class="dot" cx="270" cy="126" r="8"/><text x="270" y="110" text-anchor="middle" font-size="12">UC06</text>
+  <circle class="dot" cx="306" cy="126" r="8"/><text x="306" y="150" text-anchor="middle" font-size="12">UC05</text>
+  <circle class="dot" cx="342" cy="126" r="8"/><text x="342" y="110" text-anchor="middle" font-size="12">UC07</text>
+  <circle class="dot" cx="196" cy="126" r="8"/><text x="196" y="110" text-anchor="middle" font-size="12">UC08</text>
+  <circle class="dot-w" cx="232" cy="134" r="8"/><text x="232" y="158" text-anchor="middle" font-size="12">UC12</text>
+  <circle class="dot-w" cx="300" cy="190" r="8"/><text x="300" y="214" text-anchor="middle" font-size="12">UC11</text>
+  <circle class="dot" cx="124" cy="190" r="8"/><text x="124" y="214" text-anchor="middle" font-size="12">UC10</text>
+  <path class="ln" d="M80 350 H520"/><path class="ln" d="M80 350 V30"/>
+  <text x="300" y="376" text-anchor="middle" class="sm">feasibility, 1 to 5 →</text>
+  <text x="10" y="22" class="sm">value, 1 to 5 ↑</text>
+  <circle class="dot" cx="560" cy="80" r="7"/><text x="574" y="84" class="sm">risk 1 to 3</text>
+  <circle class="dot-w" cx="560" cy="106" r="7"/><text x="574" y="110" class="sm">risk 4 to 5 (gated)</text>
+  <text x="552" y="150" class="sm">Sample from the lab data.</text>
+  <text x="552" y="170" class="sm">Points with equal scores are</text>
+  <text x="552" y="190" class="sm">nudged apart so they stay visible.</text>
+  <text x="552" y="226" class="sm">The gate overrides the total:</text>
+  <text x="552" y="246" class="sm">orange dots are never a first pilot.</text>
+</svg>
+<figcaption>Twelve candidate use cases for the lab company. Two sit in "pilot now"; the high-value, high-risk ones need governance before anyone builds them.</figcaption>
+</figure>
+
+<div class="tip"><b>Do not sell the top score. Sell the top score that also passes the gate and has a measurable baseline.</b> A use case with no baseline cannot be proven, so it cannot become a retainer.</div>
+
+<!-- 11.6 -->
+<h2>11.6 The ROI model</h2>
+<p>A credible ROI model is boring and conservative. It has five parts.</p>
+<ol>
+<li><b>Baseline first.</b> Measure what happens today before you promise anything: items per month, minutes per item, errors per month, cost per error. Use a two-week sample, a log, or a timesheet extract. If you cannot measure, say "estimate" next to the number and widen the range.</li>
+<li><b>Time value.</b> Hours saved per month × loaded cost per hour. Loaded cost is salary plus employer costs and overhead, from the client's finance manager. Hours saved = baseline hours × share of time removed × adoption.</li>
+<li><b>Error reduction.</b> Errors avoided × average cost to fix one. Include rework time and the cost of a customer complaint only if the client can show it.</li>
+<li><b>Revenue lift.</b> Faster quotes or follow-ups can raise margin, but count it only when you can name the mechanism and the number. Default to zero in the low case.</li>
+<li><b>Run costs.</b> Licences, API usage, maintenance and monitoring time (yours or theirs). Take licence and API prices from the current pricing pages on the day you quote, and write that date in the model.</li>
+</ol>
+<p>Then compute <b>net benefit per month</b> = time value + error value + revenue lift − run costs, and <b>payback period</b> = one-off cost ÷ net monthly benefit. Show it as low, base and high so the client sees the range, not a single hopeful number.</p>
+
+<figure>
+<svg viewBox="0 0 800 300" role="img" aria-label="Waterfall-style bars for one month: time saved, errors avoided, run costs and net benefit">
+  <path class="ln" d="M60 250 H760"/>
+  <rect class="s-acc" x="100" y="117" width="110" height="133"/>
+  <text x="155" y="108" text-anchor="middle" font-weight="600">+6,662</text>
+  <text x="155" y="272" text-anchor="middle" class="sm">time saved</text>
+  <rect class="s-acc" x="250" y="74" width="110" height="43"/>
+  <text x="305" y="65" text-anchor="middle" font-weight="600">+2,160</text>
+  <text x="305" y="272" text-anchor="middle" class="sm">errors avoided</text>
+  <rect class="s-warm" x="400" y="74" width="110" height="54"/>
+  <text x="455" y="65" text-anchor="middle" font-weight="600">−2,700</text>
+  <text x="455" y="272" text-anchor="middle" class="sm">run costs</text>
+  <rect class="s-plain" x="550" y="128" width="110" height="122"/>
+  <text x="605" y="119" text-anchor="middle" font-weight="600">6,122</text>
+  <text x="605" y="272" text-anchor="middle" class="sm">net per month</text>
+  <path class="ln" d="M210 117 H250"/><path class="ln" d="M360 74 H400"/><path class="ln" d="M510 128 H550"/>
+  <text x="400" y="25" text-anchor="middle" class="sm">UC01 invoice extraction, base case, ILS per month (lab example, fictional inputs)</text>
+  <text x="400" y="292" text-anchor="middle" class="sm">revenue lift is zero in this case</text>
+</svg>
+<figcaption>Savings stack up, run costs come off, and what is left is the number that pays back the one-off cost. Show clients this picture before the spreadsheet.</figcaption>
+</figure>
+
+<h3>Sensitivity and honesty</h3>
+<ul>
+<li>Vary only the inputs that are uncertain: share of time removed, adoption, error reduction, API usage. Leave measured inputs alone.</li>
+<li>If the low case never pays back, say so. Offer a smaller pilot, a gate after two weeks, or a different use case. A client who sees the low case in your model will trust the base case.</li>
+<li>Time saved is not cash saved. State where the freed hours go: more quotes answered, faster month end, no new hire. If the answer is "nowhere", the benefit is soft; label it soft.</li>
+<li>Re-measure at the end of the pilot with the same method as the baseline. That comparison is what you show at the retainer conversation.</li>
+</ul>
+
+<!-- 11.7 -->
+<h2>11.7 Packaging: audit, pilot, retainer</h2>
+<figure>
+<svg viewBox="0 0 800 240" role="img" aria-label="Funnel from audit to pilot to retainer">
+  <rect class="s-plain" x="20" y="30" width="230" height="180" rx="8"/>
+  <text x="135" y="62" text-anchor="middle" font-weight="600">Audit</text>
+  <text x="135" y="86" text-anchor="middle" class="sm">2 weeks, fixed scope</text>
+  <text x="135" y="118" text-anchor="middle" class="sm">report, ranked use cases,</text>
+  <text x="135" y="136" text-anchor="middle" class="sm">ROI, pilot proposal</text>
+  <text x="135" y="176" text-anchor="middle" class="sm">design stage</text>
+  <rect class="s-acc" x="310" y="55" width="210" height="130" rx="8"/>
+  <text x="415" y="86" text-anchor="middle" font-weight="600">Pilot</text>
+  <text x="415" y="108" text-anchor="middle" class="sm">4 to 6 weeks</text>
+  <text x="415" y="132" text-anchor="middle" class="sm">one use case, measured</text>
+  <text x="415" y="168" text-anchor="middle" class="sm">build and test stages</text>
+  <rect class="s-warm" x="580" y="80" width="200" height="80" rx="8"/>
+  <text x="680" y="108" text-anchor="middle" font-weight="600">Retainer</text>
+  <text x="680" y="128" text-anchor="middle" class="sm">monitor and improve</text>
+  <text x="680" y="146" text-anchor="middle" class="sm">monitor stage</text>
+  <path class="ln" d="M252 120 H306"/><path class="ln" d="M298 114 L308 120 L298 126"/>
+  <path class="ln" d="M522 120 H576"/><path class="ln" d="M568 114 L578 120 L568 126"/>
+  <text x="280" y="108" text-anchor="middle" class="sm">decision</text>
+  <text x="549" y="108" text-anchor="middle" class="sm">proof</text>
+</svg>
+<figcaption>Each step is a gate. The client can stop after the audit and still keep a useful document. Fewer clients reach the retainer, which is why the pilot must produce a measured result.</figcaption>
+</figure>
+
+<div class="tbl"><table>
+<thead><tr><th>Offer</th><th>Scope</th><th>Client gets</th><th>Ends when</th></tr></thead>
+<tbody>
+<tr><td>Audit (2 weeks)</td><td>Interviews, mapping, inventory, scoring, ROI, report</td><td>Ranked use cases, ROI range, pilot proposal</td><td>Readout held, decision made</td></tr>
+<tr><td>Pilot (4 to 6 weeks)</td><td>One use case, small user group, baseline and end measurement, training</td><td>Working workflow, evals, measured result, handover notes</td><td>Acceptance criteria met or not, decision on scaling</td></tr>
+<tr><td>Retainer (monthly)</td><td>Monitoring, prompt and model updates, new-model checks, cost tracking, one improvement per month, support</td><td>Stable workflow, monthly report, change requests handled</td><td>Notice period given by either side</td></tr>
+</tbody></table></div>
+<p>The retainer is Vastama's monitor stage sold as a service. It is the part clients underestimate, because models, prices, data and staff change. Sell it as keeping the result alive, with a monthly report showing the same metrics you measured in the pilot.</p>
+
+<h3>Pricing approaches</h3>
+<p>This course does not give prices; market rates change and depend on your positioning. Choose the approach by how well the work is defined.</p>
+<div class="tbl"><table>
+<thead><tr><th>Approach</th><th>How it works</th><th>Fits when</th><th>Main risk</th></tr></thead>
+<tbody>
+<tr><td>Fixed scope</td><td>One price for named deliverables and acceptance criteria</td><td>Audit, pilot, any well-defined build</td><td>Scope creep eats your margin; control with out-of-scope list and change control</td></tr>
+<tr><td>Time and materials</td><td>Hourly or daily rate, with an estimate and a cap or review point</td><td>Unclear integrations, exploratory work</td><td>Client fears an open bill; you carry no overrun risk but lose trust if unmanaged</td></tr>
+<tr><td>Value-based</td><td>Fee tied to measured benefit (share of savings, or price anchored to a business outcome)</td><td>Baseline is solid and the client trusts the measurement</td><td>Disputes over measurement; benefits may come late. Agree the metric and method in the SOW first</td></tr>
+</tbody></table></div>
+<p>A common sequence: fixed scope for audit and pilot, then a monthly retainer, with value-based elements only after a measured pilot. Whatever you choose, state what is included, what is billed separately (for example licences and API usage, which belong to the client's account), and when prices are reviewed.</p>
+
+<!-- 11.8 -->
+<h2>11.8 Writing the SOW</h2>
+<p>A statement of work is a short contract-backed description of what you will do. Its job is to prevent the argument you can already see coming. Seven parts do most of the work.</p>
+<div class="tbl"><table>
+<thead><tr><th>Part</th><th>What to write</th><th>Common mistake</th></tr></thead>
+<tbody>
+<tr><td>Scope</td><td>Deliverables as nouns, with quantities (number of interviews, workflows, users, languages)</td><td>Verbs like "support" or "optimise" with no object</td></tr>
+<tr><td>Out of scope</td><td>Things a reasonable client might expect that you will not do</td><td>Leaving it empty</td></tr>
+<tr><td>Assumptions</td><td>Conditions the plan depends on: data available by date X, a named reviewer, a plan with required features</td><td>Hiding them in the body text</td></tr>
+<tr><td>Acceptance criteria</td><td>Measurable tests on real samples: accuracy on a sample set, time per item, review process</td><td>"To the client's satisfaction"</td></tr>
+<tr><td>Client responsibilities</td><td>People, decisions and access the client must provide, with response times</td><td>Not saying what happens if they are late</td></tr>
+<tr><td>Data access</td><td>Which data, which systems, read-only or not, who approves, where it is processed, retention and deletion</td><td>Asking for full access "to be safe"</td></tr>
+<tr><td>Change control</td><td>How new requests are estimated and approved in writing</td><td>Verbal agreements</td></tr>
+</tbody></table></div>
+<p>The full skeleton is in the Deliverable section below. Have an Israeli lawyer review your template once; after that you adapt it per client.</p>
+
+<!-- 11.9 -->
+<h2>11.9 Change management</h2>
+<p>Most pilots that fail technically work; most that fail in practice were never adopted. Plan the human side with the same discipline as the build.</p>
+<div class="tbl"><table>
+<thead><tr><th>Element</th><th>What you do</th><th>Adoption signal</th></tr></thead>
+<tbody>
+<tr><td>Champions</td><td>One respected person per team, given time and a direct line to you. They test early, collect complaints and teach peers.</td><td>Champion keeps using it after week 2</td></tr>
+<tr><td>Training</td><td>Short role-based sessions on the team's own tasks, in their language, followed by a one-page guide and office hours</td><td>Tasks per user per week rising</td></tr>
+<tr><td>Communications</td><td>Owner announces why, what changes, what does not, and how people can raise concerns. Keep a short FAQ in Hebrew and Russian.</td><td>Fewer rumours; questions arrive through the agreed channel</td></tr>
+<tr><td>Adoption metrics</td><td>Weekly active users, tasks completed, share of outputs accepted without edit, time per task vs baseline</td><td>Reviewed at weeks 2, 4 and 6 of the pilot</td></tr>
+<tr><td>Feedback loop</td><td>Log errors and requests; fix the top item each week and say so</td><td>Complaints shift from "it is wrong" to "can it also do X"</td></tr>
+</tbody></table></div>
+
+<!-- 11.10 -->
+<h2>11.10 Objection handling</h2>
+<p>Objections are information. Treat each as a request for evidence, not a challenge to answer cleverly.</p>
+<div class="tbl"><table>
+<thead><tr><th>Objection</th><th>What is behind it</th><th>Response</th><th>Evidence to bring</th></tr></thead>
+<tbody>
+<tr><td>"It costs too much"</td><td>Fear of paying for nothing, unclear value</td><td>Start with the fixed-scope audit; show the low case; set a stop gate in the pilot</td><td>Your ROI sheet with baseline and assumptions</td></tr>
+<tr><td>"What about our data and privacy?"</td><td>Customer lists, prices, employee data leaving the company</td><td>Classify data first; use the least data needed; choose the plan by its current terms; no personal data in the pilot unless approved</td><td>Data inventory, current terms and Trust Center pages with the date you checked, your governance work from Module 10</td></tr>
+<tr><td>"AI makes mistakes"</td><td>Past bad experience, or fear of blame</td><td>Agreed: so a person reviews, and we measure accuracy on your own samples against the human error rate you have today</td><td>Acceptance criteria, a sample test run on their documents</td></tr>
+<tr><td>"It will take our jobs"</td><td>Staff and owner worries; resistance from the people you need</td><td>We change tasks, not roles; say where freed time goes; involve staff in choosing what to automate. Never promise either "no change" or "fewer people"</td><td>Champion programme, task-level maps showing the dull work being removed</td></tr>
+</tbody></table></div>
+
+<!-- LAB -->
+<div class="lab">
+<h3>Lab 11. Mock audit for Negev Import &amp; Distribution Ltd</h3>
+<p>Goal: run the full analysis chain of an audit on a fictional 45-person Israeli import and distribution company: interview notes, 12 scored use cases with a chart, an ROI calculator with low, base and high scenarios, and an audit report outline. All data is inline and fictional. Loaded cost, error cost and project cost are made-up inputs; the seat cost is a placeholder you must replace with the current plan page.</p>
+<p><b>Setup</b></p>
+<pre><code>mkdir audit-lab &amp;&amp; cd audit-lab
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install pandas matplotlib</code></pre>
+<p>Create the four files below in the same folder. No API key is needed; this lab is analysis only.</p>
+
+<p><b>audit_data.py</b> (interview notes and the 12 candidate use cases)</p>
+<pre><code>"""Sample data for the mock audit: Negev Import &amp; Distribution Ltd (fictional, 45 people)."""
+
+INTERVIEWS = [
+    {"function": "Owner / CEO", "who": "Avi, owner",
+     "notes": "Wants margin visibility every Monday. Today it takes the CFO two days to assemble. "
+              "Worried about customer price lists leaving the company. Has used ChatGPT personally."},
+    {"function": "Finance", "who": "Irina, finance manager",
+     "notes": "About 600 supplier invoices a month, PDF and scanned, English, Chinese and Turkish. "
+              "Two clerks key them into the ERP. Customs documents arrive by email. "
+              "Chasing late payers is done by hand, in Hebrew and Russian."},
+    {"function": "Sales", "who": "Moshe, sales manager",
+     "notes": "Eight reps. Quote requests arrive by email and WhatsApp, many in Hebrew with part numbers. "
+              "A quote takes 25 minutes on average. Reps forget follow-ups. CRM notes are thin."},
+    {"function": "Operations", "who": "Dana, operations manager",
+     "notes": "Shipment delays and supplier confirmations are tracked in a shared spreadsheet. "
+              "Exceptions are found late. Demand planning is done in Excel by one person."},
+    {"function": "Customer service", "who": "Yulia, service lead",
+     "notes": "Four agents. 70 percent of questions repeat: delivery dates, stock, invoices. "
+              "Answers live in people's heads and old emails."},
+    {"function": "Marketing", "who": "Tal, marketing",
+     "notes": "5,000 SKUs. Descriptions exist only in English from suppliers. "
+              "Hebrew and Russian versions for the web shop are mostly missing."},
+    {"function": "HR", "who": "Shira, HR",
+     "notes": "Hires about 10 people a year. Reads every CV. Wants help with job posts and onboarding packs."},
+    {"function": "IT (outsourced)", "who": "Boris, IT contractor",
+     "notes": "ERP is a local Israeli system with CSV and database export, no modern API. "
+              "Shared drive is a mess. Microsoft 365 for email. No data policy on paper."},
+]
+
+# value, feasibility, risk: 1-5 (risk: 5 = most risky). hours = baseline hours per month today.
+USE_CASES = [
+    # id, name, function, value, feasibility, risk, hours
+    ("UC01", "Supplier invoice extraction and ERP pre-coding", "Finance", 5, 4, 2, 150),
+    ("UC02", "Quote request triage and draft replies", "Sales", 5, 4, 2, 170),
+    ("UC03", "Late-payment reminders in Hebrew and Russian", "Finance", 3, 5, 2, 25),
+    ("UC04", "Catalogue descriptions and translation (HE/RU/EN)", "Marketing", 3, 4, 1, 60),
+    ("UC05", "Shipment exception alerts and supplier chasers", "Operations", 4, 3, 3, 70),
+    ("UC06", "Weekly management summary from ERP exports", "Management", 4, 3, 2, 16),
+    ("UC07", "Service knowledge base answers for agents", "Customer service", 4, 3, 3, 90),
+    ("UC08", "Demand forecasting", "Operations", 4, 2, 3, 40),
+    ("UC09", "CV screening summaries", "HR", 2, 4, 4, 20),
+    ("UC10", "Warehouse pick-path optimisation", "Operations", 3, 1, 2, 10),
+    ("UC11", "Supplier contract review", "Legal", 3, 3, 5, 12),
+    ("UC12", "Autonomous price changes in the ERP", "Sales", 4, 2, 5, 15),
+]</code></pre>
+
+<p><b>score_usecases.py</b> (weighted scoring, risk gate, chart)</p>
+<pre><code>import matplotlib
+matplotlib.use("Agg")  # no display needed
+import matplotlib.pyplot as plt
+import pandas as pd
+
+from audit_data import USE_CASES
+
+WEIGHTS = {"value": 0.45, "feasibility": 0.35, "risk": 0.20}  # agree these with the client first
+assert abs(sum(WEIGHTS.values()) - 1.0) &lt; 1e-9
+
+def build_sheet() -&gt; pd.DataFrame:
+    cols = ["id", "name", "function", "value", "feasibility", "risk", "hours"]
+    df = pd.DataFrame(USE_CASES, columns=cols)
+    # risk is inverted so that a higher number is always better
+    df["risk_inv"] = 6 - df["risk"]
+    df["score"] = (
+        WEIGHTS["value"] * df["value"]
+        + WEIGHTS["feasibility"] * df["feasibility"]
+        + WEIGHTS["risk"] * df["risk_inv"]
+    ).round(2)
+    # gate: risk 4-5 or feasibility below 3 is never a first pilot, whatever its score
+    df["pilot_ok"] = (df["risk"] &lt;= 3) &amp; (df["feasibility"] &gt;= 3)
+    df = df.sort_values("score", ascending=False).reset_index(drop=True)
+    df["rank"] = df.index + 1
+    return df
+
+def plot_matrix(df: pd.DataFrame, path: str = "usecase_matrix.png") -&gt; None:
+    fig, ax = plt.subplots(figsize=(8, 6))
+    colors = df["risk"].map(lambda r: "#c8642c" if r &gt;= 4 else "#0f7a72")
+    ax.scatter(df["feasibility"], df["value"], s=df["hours"] * 4 + 40, c=colors, alpha=0.75)
+    for _, r in df.iterrows():
+        ax.annotate(r["id"], (r["feasibility"], r["value"]), xytext=(6, 6), textcoords="offset points")
+    ax.axhline(3.5, color="grey", lw=0.8)
+    ax.axvline(3.5, color="grey", lw=0.8)
+    ax.set_xlim(0.5, 5.5)
+    ax.set_ylim(0.5, 5.5)
+    ax.set_xlabel("Feasibility (1-5)")
+    ax.set_ylabel("Value (1-5)")
+    ax.set_title("Use cases: value vs feasibility (size = baseline hours, orange = high risk)")
+    fig.tight_layout()
+    fig.savefig(path, dpi=130)
+    plt.close(fig)
+
+if __name__ == "__main__":
+    sheet = build_sheet()
+    pd.set_option("display.width", 140)
+    pd.set_option("display.max_colwidth", 52)
+    print(sheet[["rank", "id", "name", "value", "feasibility", "risk", "score", "pilot_ok"]].to_string(index=False))
+    sheet.to_csv("usecase_scores.csv", index=False)
+    plot_matrix(sheet)
+    print("\nSaved usecase_scores.csv and usecase_matrix.png")</code></pre>
+
+<p><b>roi_calc.py</b> (ROI calculator with scenarios and payback)</p>
+<pre><code>from dataclasses import dataclass
+
+@dataclass
+class Case:
+    name: str
+    baseline_hours: float          # MEASURED hours per month on this task today
+    loaded_cost_hour: float        # salary + employer costs + overhead, per hour (ILS)
+    time_saved_share: float        # share of baseline hours removed at full adoption
+    adoption: float                # share of the team actually using it
+    errors_per_month: float        # MEASURED errors or rework items today
+    cost_per_error: float          # average cost to fix one (ILS)
+    error_reduction: float         # share of errors removed
+    revenue_lift_month: float      # extra gross margin per month, 0 if you cannot defend it
+    seats: int                     # paid licences for this use case
+    seat_cost_month: float         # PLACEHOLDER: copy from the current plan page on the day you quote
+    api_cost_month: float          # estimate from tokens per item x items x current API pricing
+    maintenance_hours_month: float # your retainer time or client time
+    maintenance_cost_hour: float
+    one_off_cost: float            # audit share + pilot build + training (ILS)
+
+# Multipliers applied to the "base" case. Low = cautious, high = good adoption.
+SCENARIOS = {
+    "low":  {"time_saved_share": 0.60, "adoption": 0.70, "error_reduction": 0.50,
+             "revenue_lift_month": 0.0, "api_cost_month": 1.5},
+    "base": {"time_saved_share": 1.00, "adoption": 1.00, "error_reduction": 1.00,
+             "revenue_lift_month": 1.0, "api_cost_month": 1.0},
+    "high": {"time_saved_share": 1.25, "adoption": 1.10, "error_reduction": 1.20,
+             "revenue_lift_month": 1.5, "api_cost_month": 0.9},
+}
+
+def run(case: Case, scenario: str) -&gt; dict:
+    m = SCENARIOS[scenario]
+    share = min(case.time_saved_share * m["time_saved_share"], 0.9)
+    adoption = min(case.adoption * m["adoption"], 1.0)
+    hours_saved = case.baseline_hours * share * adoption
+    time_value = hours_saved * case.loaded_cost_hour
+    err_red = min(case.error_reduction * m["error_reduction"], 0.95)
+    error_value = case.errors_per_month * err_red * case.cost_per_error
+    revenue = case.revenue_lift_month * m["revenue_lift_month"]
+    gross = time_value + error_value + revenue
+    run_cost = (case.seats * case.seat_cost_month
+                + case.api_cost_month * m["api_cost_month"]
+                + case.maintenance_hours_month * case.maintenance_cost_hour)
+    net = gross - run_cost
+    payback = case.one_off_cost / net if net &gt; 0 else float("inf")
+    return {
+        "scenario": scenario,
+        "hours_saved": round(hours_saved, 1),
+        "time_value": round(time_value),
+        "error_value": round(error_value),
+        "revenue": round(revenue),
+        "gross_month": round(gross),
+        "run_cost_month": round(run_cost),
+        "net_month": round(net),
+        "payback_months": round(payback, 1) if payback != float("inf") else None,
+        "net_year_1": round(net * 12 - case.one_off_cost),
+    }
+
+def table(case: Case):
+    import pandas as pd
+    return pd.DataFrame([run(case, s) for s in SCENARIOS]).set_index("scenario")
+
+# Example: UC01 invoice extraction. All numbers are fictional inputs for the exercise.
+UC01 = Case(
+    name="UC01 Supplier invoice extraction",
+    baseline_hours=150, loaded_cost_hour=95, time_saved_share=0.55, adoption=0.85,
+    errors_per_month=30, cost_per_error=180, error_reduction=0.40,
+    revenue_lift_month=0,
+    seats=3, seat_cost_month=100, api_cost_month=900,
+    maintenance_hours_month=6, maintenance_cost_hour=250,
+    one_off_cost=45000,
+)
+
+UC02 = Case(
+    name="UC02 Quote triage and drafts",
+    baseline_hours=170, loaded_cost_hour=110, time_saved_share=0.35, adoption=0.75,
+    errors_per_month=12, cost_per_error=400, error_reduction=0.30,
+    revenue_lift_month=3000,
+    seats=8, seat_cost_month=100, api_cost_month=600,
+    maintenance_hours_month=4, maintenance_cost_hour=250,
+    one_off_cost=40000,
+)
+
+if __name__ == "__main__":
+    import pandas as pd
+    pd.set_option("display.width", 140)
+    for c in (UC01, UC02):
+        print(f"\n{c.name}  (one-off cost {c.one_off_cost} ILS)")
+        print(table(c).T.to_string())</code></pre>
+
+<p><b>report_outline.py</b> (assembles the audit report outline)</p>
+<pre><code>import pandas as pd
+from audit_data import INTERVIEWS
+from score_usecases import build_sheet, WEIGHTS
+from roi_calc import UC01, UC02, run
+
+def outline() -&gt; str:
+    sheet = build_sheet()
+    shortlist = sheet[sheet["pilot_ok"]].head(3)
+    lines = ["# AI readiness audit: Negev Import &amp; Distribution Ltd", ""]
+    lines += ["## 1. Executive summary (one page)",
+              "- Maturity today: step 1 of 5, ad hoc chat. Target in 12 months: step 3, connected data.",
+              f"- Recommended pilot: {shortlist.iloc[0]['name']}",
+              "- Decision requested: approve a 4-6 week pilot", ""]
+    lines += ["## 2. What we did",
+              f"- {len(INTERVIEWS)} stakeholder interviews ({', '.join(i['function'] for i in INTERVIEWS)})",
+              "- Current-state swimlane for invoice-to-ERP and quote-to-order",
+              "- Data and systems inventory, maturity scoring", ""]
+    lines += ["## 3. Maturity scoring (table: 5-step ladder, current step, evidence)", ""]
+    lines += ["## 4. Use-case ranking",
+              f"- Weights: {WEIGHTS}", "- Table of 12 use cases, 2x2 chart, gate: risk 4-5 or feasibility under 3 is never a first pilot"]
+    for _, r in shortlist.iterrows():
+        lines.append(f"- Shortlist: {r['id']} {r['name']} (score {r['score']})")
+    lines.append("")
+    lines += ["## 5. ROI for the shortlist (low / base / high, baseline measured, assumptions listed)"]
+    for c in (UC01, UC02):
+        b, lo = run(c, "base"), run(c, "low")
+        lines.append(f"- {c.name}: base net {b['net_month']} ILS/month, payback {b['payback_months']} months "
+                     f"(low case {lo['payback_months']} months)")
+    lines.append("")
+    lines += ["## 6. Risks, privacy and governance (data classes, who sees what, human review points)", "",
+              "## 7. Roadmap: pilot (4-6 weeks), then retainer (monitor and improve)", "",
+              "## 8. Change plan: champions, training, communications, adoption metrics", "",
+              "## 9. Next steps and SOW reference", "",
+              "## Appendix: interview notes, scoring sheet, ROI workbook, data inventory"]
+    return "\n".join(lines)
+
+if __name__ == "__main__":
+    text = outline()
+    print(text)
+    with open("audit_report_outline.md", "w", encoding="utf-8") as f:
+        f.write(text)</code></pre>
+
+<p><b>Run</b></p>
+<pre><code>python score_usecases.py   # prints ranking, writes usecase_scores.csv and usecase_matrix.png
+python roi_calc.py         # prints low/base/high tables for UC01 and UC02
+python report_outline.py   # prints and writes audit_report_outline.md</code></pre>
+
+<p><b>Steps</b></p>
+<ol>
+<li>Read the eight interviews in <code>audit_data.py</code>. For each one, write three lines in your own words: the pain, the data involved, the constraint. Add a ninth interview of your own (the warehouse manager) and add two use cases that come from it.</li>
+<li>Run the scoring. Check the ranking against your intuition. Change the weights to 0.30, 0.30, 0.40 (a cautious client) and note which use cases move. Which stay in the top three?</li>
+<li>Open <code>usecase_matrix.png</code>. Decide which use cases are "pilot now", "prepare first" and "park", and write one sentence for each of the top five.</li>
+<li>Run the ROI calculator. Look at the low case for both use cases: payback is very long. Find which input drives that (hint: time saved share and adoption together). Write what you would change in the pilot design to protect the low case.</li>
+<li>Add a third <code>Case</code> for UC03 (late-payment reminders) using baseline 25 hours a month. Does it pay back? Explain in two lines why a high feasibility score does not make it the first pilot.</li>
+<li>Replace the placeholder seat cost and the API estimate with numbers from the current pricing pages, and write the date in a comment at the top of <code>roi_calc.py</code>.</li>
+<li>Complete the report outline: fill sections 3 and 6 with real content for this company (maturity table with evidence; data classes and review points for the shortlist).</li>
+</ol>
+<p><b>Check yourself:</b> every number in your outline must trace to a file or a sample you can show. If it cannot, mark it "estimate".</p>
+</div>
+
+<!-- DELIVERABLE -->
+<h2>Deliverable: your consulting kit</h2>
+<p>Four reusable documents. Build them from the lab, then clean them so you could send them to a real client tomorrow.</p>
+
+<h3>1. Audit questionnaire</h3>
+<p>A two-page document with: an opening script (purpose, confidentiality, how notes are used), eight function sections from 11.2 with 6 to 8 questions each, the four closing questions, and a one-page pre-interview data request (org chart, process documents, system list, a sample of each key document). Keep Hebrew and Russian versions of the opening script.</p>
+
+<h3>2. Use-case scoring sheet</h3>
+<p>A spreadsheet or the CSV from the lab with columns: id, use case, function, owner, value, feasibility, risk, weights, score, gate result, baseline hours, baseline source, notes. Include a "scale anchors" tab with the table from 11.5 so scorers rate consistently.</p>
+
+<h3>3. ROI calculator</h3>
+<p><code>roi_calc.py</code> from the lab, with these upgrades: read cases from a CSV, write the results to a spreadsheet, add a column for the source and date of every input, and add a line that prints "BASELINE NOT MEASURED" when an input is flagged as an estimate.</p>
+
+<h3>4. Proposal and SOW template</h3>
+<p>The full skeleton. Replace square brackets; delete what does not apply; have a lawyer review the legal clauses.</p>
+<pre><code>STATEMENT OF WORK
+Vastama Ltd (company no. 515052702) and [Client legal name, company no.]
+SOW number: [ ]    Date: [ ]    Version: [ ]
+
+1. PURPOSE AND BACKGROUND
+   [Two or three sentences: the client's goal, the problem, and how this
+   engagement fits in the sequence audit -&gt; pilot -&gt; retainer.]
+
+2. SCOPE
+   2.1 Deliverables (nouns, with quantities)
+       D1  [e.g. 8 stakeholder interviews, notes in English]
+       D2  [e.g. 2 current-state process maps]
+       D3  [e.g. Data and systems inventory]
+       D4  [e.g. Scored list of up to 15 use cases]
+       D5  [e.g. ROI model for the top 3, low/base/high]
+       D6  [e.g. Audit report and one readout meeting]
+   2.2 Working method and timeline
+       Start date [ ]. Milestones: [M1 date], [M2 date], [readout date].
+   2.3 Languages of deliverables: [English / Hebrew / Russian]
+
+3. OUT OF SCOPE
+   - [Building or deploying any workflow (covered by a separate pilot SOW)]
+   - [Connection to production systems or write access]
+   - [Training of all staff]
+   - [Legal advice or regulatory certification]
+   - [Work in languages or departments not listed above]
+
+4. ASSUMPTIONS
+   - [Sponsor available for a 45-minute weekly check-in]
+   - [Interviewees available in the agreed week]
+   - [Data samples supplied by date X, in the formats listed in Annex A]
+   - [Client holds, or will obtain, the Claude plan needed for the pilot]
+   - [Third-party prices and terms are as published on the date of this SOW]
+   If an assumption proves false, timeline and fees are adjusted through
+   change control (section 11).
+
+5. ACCEPTANCE CRITERIA
+   - Each deliverable is accepted when it matches the description in 2.1
+     and the client has had [5] working days to review it.
+   - [For a pilot: accuracy of at least X percent on the agreed sample set of N items,
+     measured against the human reviewer, and median time per item below Y minutes.]
+   - Comments are consolidated by the sponsor; one revision round is included.
+   - Silence after the review period counts as acceptance.
+
+6. CLIENT RESPONSIBILITIES
+   - Name a sponsor with authority to decide, and a day-to-day contact.
+   - Provide people, documents and system access listed in Annex A within [2] working days of request.
+   - Review deliverables within the review period.
+   - Ensure it has the right to share the data it provides.
+   - Delays by the client move the timeline day for day.
+
+7. DATA ACCESS AND SECURITY
+   7.1 Data the Supplier may access: [list systems, read-only or not].
+   7.2 Data classes excluded unless approved in writing: [personal data of customers,
+       employee records, payment card data, ...].
+   7.3 Access method and accounts: [client-issued accounts, least privilege, revoked at end].
+   7.4 Where data is processed and which AI services are used: [list], under the
+       client's own account and its current commercial terms.
+   7.5 Retention and deletion: working copies deleted within [ ] days of acceptance.
+   7.6 Incidents: the Supplier informs the client without delay and within [ ] hours of discovery.
+
+8. TIMELINE AND MILESTONES
+   [Table: milestone, date, dependency, owner.]
+
+9. FEES AND PAYMENT
+   9.1 Pricing approach: [fixed scope / time and materials with cap / value-based].
+   9.2 Fee: [amount and currency, VAT treatment].
+   9.3 Payment schedule: [on signature / on milestone / on acceptance], payment terms [ ] days.
+   9.4 Pass-through costs (licences, API usage) are paid by the client directly to the provider.
+   9.5 Expenses: [included / billed at cost with prior approval].
+
+10. RETAINER OPTION (only in a pilot SOW)
+    Monitoring, improvements and support after acceptance: scope [ ], monthly report,
+    notice period [ ], price review date [ ].
+
+11. CHANGE CONTROL
+    Any change to scope, timeline or fees is requested in writing, estimated by the
+    Supplier within [3] working days, and takes effect only when both parties sign.
+
+12. INTELLECTUAL PROPERTY
+    [Client owns its data and the deliverables made for it; Supplier keeps its tools,
+    templates and know-how; licence terms for reuse.]
+
+13. CONFIDENTIALITY AND PRIVACY
+    [Mutual confidentiality for [ ] years; compliance with applicable Israeli privacy law;
+    data processing terms if personal data is processed.]
+
+14. WARRANTIES AND LIMITS OF LIABILITY
+    [AI outputs may contain errors; the human review step in section 5 is part of the
+    design. Liability cap and exclusions per master agreement, reviewed by counsel.]
+
+15. TERM AND TERMINATION
+    [Start, end, termination for convenience with notice, what is delivered and paid on early end.]
+
+16. CONTACTS AND GOVERNANCE
+    Supplier: [name, role, email, phone]    Client: [name, role, email, phone]
+    Check-ins: [weekly, 30 minutes]    Escalation: [role at each side]
+
+17. SIGNATURES
+    For Vastama Ltd: ____________  Name/Title: ________  Date: ______
+    For [Client]:    ____________  Name/Title: ________  Date: ______
+
+ANNEX A  Data, systems and people requested
+ANNEX B  Interview schedule or pilot plan
+ANNEX C  ROI assumptions and baseline measurements (pilot SOW)</code></pre>
+
+<!-- SELF CHECK -->
+<h2>Self-check</h2>
+<ol class="check">
+<li>Why do you measure the baseline before you build the ROI model, and what do you do if the client cannot provide one?
+<details><summary>Model answer</summary>Without a baseline you cannot prove any improvement, and the model rests on guesses. If none exists, take a short sample (two weeks of logs or a timed sample of items), label the figures as estimates, widen the low-to-high range, and make baseline measurement the first task of the pilot.</details></li>
+<li>A use case has the highest total score but risk 5 (it changes prices in the ERP without review). What do you do?
+<details><summary>Model answer</summary>Apply the gate: risk 4 or 5 is not a first pilot. Propose a lower-risk step on the same process, for example Claude proposes price changes and a person approves them, and plan governance work before any autonomy. Keep the full-automation version on the roadmap.</details></li>
+<li>In the lab, the low case pays back in more than five years. What do you tell the client, and what do you change?
+<details><summary>Model answer</summary>Show it openly: the project depends on adoption and time saved. Change the design to protect it: smaller scope, a two-week checkpoint with a stop option, a training plan to raise adoption, lower fixed costs, or choose a use case with stronger value. A visible low case builds trust in the base case.</details></li>
+<li>Name three items that belong in "out of scope" for a pilot SOW, and the section that handles a client request for more.
+<details><summary>Model answer</summary>For example: connecting to production systems beyond the agreed read access, supporting additional languages or departments, training every employee, ongoing monitoring after handover (that is the retainer). New requests go through change control: written estimate, written approval, adjusted timeline and fee.</details></li>
+<li>An owner says: "AI makes mistakes, and my staff are afraid for their jobs." Give a response that deals with both without overpromising.
+<details><summary>Model answer</summary>Agree that mistakes happen and show how you control them: human review, accuracy measured on their own samples against today's human error rate, acceptance criteria. On jobs, say the pilot changes specific tasks, say where freed time will go, involve staff and champions in the design, and do not promise either outcome on headcount.</details></li>
+</ol>
+
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://www.anthropic.com/economic-index" target="_blank" rel="noopener">Anthropic Economic Index</a> (task-level usage patterns for framing opportunity)</li>
+<li><a href="https://www.anthropic.com/customers" target="_blank" rel="noopener">Anthropic customer stories</a> (how other organisations describe results; use for ideas, not as your own evidence)</li>
+<li><a href="https://anthropic.skilljar.com" target="_blank" rel="noopener">Anthropic Academy</a> (free courses)</li>
+</ul>
+
+<div class="nav"><span>← Module 10 · Security, governance and compliance</span><span>Next: Module 12 · Capstone engagement and positioning →</span></div>
+</div>
+
+</html>

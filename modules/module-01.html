@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Module 1 · Transformation Landscape</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column; lesson sections in order; flat SVG illustrations; warm boxes = things you do, teal = reference */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --ink:#14232b; --muted:#56666e; --line:#d5dfe1;
+  --accent:#0f7a72; --accent-soft:#dcefed; --warm:#c8642c; --warm-soft:#f6e6dc;
+  --code-bg:#eef3f4;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1719; --surface:#162226; --ink:#e4ecee; --muted:#9aabb1; --line:#2a3a3f;
+  --accent:#4cc3b8; --accent-soft:#16322f; --warm:#e8935f; --warm-soft:#3a2518; --code-bg:#1b2a2e; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,5vw,2.8rem);font-weight:700}
+h2{font-size:1.55rem;font-weight:700;margin-top:52px;margin-bottom:12px}
+h3{font-size:1.15rem;font-weight:700;margin-top:24px;margin-bottom:8px}
+p{margin:0 0 12px;max-width:68ch}
+ul,ol{padding-left:20px;max-width:68ch}
+li{margin-bottom:6px}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:1.15rem;color:var(--muted);margin-top:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font-family:var(--mono);font-size:.78rem;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}
+.objectives{margin-top:28px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.objectives h3{margin-top:0}
+figure{margin:24px 0;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:10px}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--body);fill:var(--ink)}
+svg .sm{font-size:12px;fill:var(--muted)}
+.s-acc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.s-warm{fill:var(--warm-soft);stroke:var(--warm);stroke-width:2}
+.s-plain{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.ln{stroke:var(--muted);stroke-width:2;fill:none}
+.dot{fill:var(--accent)}
+.dot-w{fill:var(--warm)}
+.tbl{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.5;margin:12px 0}
+code{font-family:var(--mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:3px}
+pre code{background:none;padding:0}
+.lab{margin-top:20px;padding:18px 20px;background:var(--warm-soft);border-radius:10px}
+.lab h3{margin-top:0;color:var(--warm)}
+.tip{padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 6px 6px 0;margin:16px 0;font-size:.95rem}
+.check li{margin-bottom:10px}
+details{margin-top:6px}
+summary{cursor:pointer;color:var(--accent);font-size:.9rem}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:56px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+</style>
+
+<div class="wrap">
+
+<div class="eyebrow">AI Transformation with Claude · Part 1 · Week 1</div>
+<h1>Module 1. The AI transformation landscape</h1>
+<p class="lede">Before you build anything, you need a clear way to talk about what AI changes inside a small company, which Claude product fits which problem, and what evidence backs your claims.</p>
+<div class="meta"><span class="chip">≈ 8 h</span><span class="chip">reading 2 h</span><span class="chip">lab 4 h</span><span class="chip">deliverable 2 h</span></div>
+
+<div class="objectives">
+<h3>By the end of this module you can</h3>
+<ul>
+<li>Explain AI transformation to a business owner in three levels: assist, augment, automate</li>
+<li>Pick a Claude model for a task using capability, speed and cost</li>
+<li>Name each Claude product surface and say which client problems it solves</li>
+<li>Answer the first data-privacy questions a client will ask</li>
+<li>Use the Anthropic Economic Index as evidence in a pitch</li>
+<li>Call the Claude API from Python and compare two models on the same task</li>
+</ul>
+</div>
+
+<!-- 1.1 -->
+<h2>1.1 What AI transformation means for an SMB</h2>
+<p>For a company of 10 to 200 people, AI transformation is not a moonshot. It is a sequence of small changes to how work gets done, each one measurable. The useful mental model has three levels.</p>
+
+<figure>
+<svg viewBox="0 0 800 230" role="img" aria-label="Three levels: assist, augment, automate, with increasing value and increasing risk">
+  <rect class="s-plain" x="30" y="130" width="220" height="70" rx="8"/>
+  <text x="140" y="160" text-anchor="middle" font-weight="600">Assist</text>
+  <text x="140" y="182" text-anchor="middle" class="sm">a person asks, Claude answers</text>
+  <rect class="s-acc" x="290" y="85" width="220" height="115" rx="8"/>
+  <text x="400" y="130" text-anchor="middle" font-weight="600">Augment</text>
+  <text x="400" y="152" text-anchor="middle" class="sm">Claude does a step inside</text>
+  <text x="400" y="170" text-anchor="middle" class="sm">a person's workflow</text>
+  <rect class="s-warm" x="550" y="40" width="220" height="160" rx="8"/>
+  <text x="660" y="100" text-anchor="middle" font-weight="600">Automate</text>
+  <text x="660" y="122" text-anchor="middle" class="sm">Claude runs the workflow;</text>
+  <text x="660" y="140" text-anchor="middle" class="sm">a person approves exceptions</text>
+  <path class="ln" d="M30 218 H770"/><path class="ln" d="M760 212 L772 218 L760 224"/>
+  <text x="400" y="20" text-anchor="middle" class="sm">more value per use case, and more design, testing and governance needed →</text>
+</svg>
+<figcaption>Most SMBs today sit in "assist". Your job is to move the right processes one level to the right, not all of them to the far right.</figcaption>
+</figure>
+
+<div class="tbl"><table>
+<thead><tr><th>Level</th><th>Example in a 40-person distributor</th><th>Typical Claude product</th><th>What you measure</th></tr></thead>
+<tbody>
+<tr><td>Assist</td><td>Sales reps ask Claude to draft replies to quotes</td><td>Claude app with a Project</td><td>Weekly active users, minutes saved per task</td></tr>
+<tr><td>Augment</td><td>Incoming supplier invoices are extracted and pre-coded; a clerk reviews</td><td>API + a small Python service, or a Skill</td><td>Documents per hour, error rate</td></tr>
+<tr><td>Automate</td><td>Every new lead is researched, scored and given a draft proposal overnight</td><td>Agent SDK + MCP to the CRM</td><td>Time to first response, conversion rate</td></tr>
+</tbody></table></div>
+
+<div class="tip"><b>Consultant's line:</b> "We'll start where the risk is low and the time saved is easy to count, then automate only what has proven itself."</div>
+
+<!-- 1.2 -->
+<h2>1.2 Where the value is</h2>
+<p>Value hides in tasks, not job titles. A finance clerk's job contains dozens of tasks; a few of them (matching invoices, chasing late payers, writing the monthly variance comment) are text-heavy, repetitive and rule-guided. Those are your targets.</p>
+<p>A quick screen you can run in any client conversation. A task is a good first candidate when it scores yes on at least four of these:</p>
+<ol>
+<li>It happens weekly or more often</li>
+<li>Its inputs and outputs are mostly text, documents or tables</li>
+<li>A good result can be checked by a person in under a minute</li>
+<li>Mistakes are recoverable (a draft, not a payment)</li>
+<li>The data it needs is already digital and reachable</li>
+<li>Someone senior is annoyed by how long it takes now</li>
+</ol>
+
+<div class="tbl"><table>
+<thead><tr><th>Function</th><th>Common first wins</th></tr></thead>
+<tbody>
+<tr><td>Sales</td><td>Lead research, proposal drafts, CRM notes from calls, follow-up emails</td></tr>
+<tr><td>Finance</td><td>Invoice extraction, payment reminders, month-end commentary, expense coding</td></tr>
+<tr><td>Operations</td><td>SOP writing, supplier email triage, order exception handling</td></tr>
+<tr><td>HR</td><td>Job posts, CV screening summaries, policy Q&amp;A, onboarding packs</td></tr>
+<tr><td>Customer service</td><td>Reply drafts, ticket triage, knowledge base answers in Hebrew, Russian and English</td></tr>
+<tr><td>Management</td><td>Weekly business summary across tools, meeting notes to tasks</td></tr>
+</tbody></table></div>
+
+<!-- 1.3 -->
+<h2>1.3 Choosing a Claude model</h2>
+<p>Anthropic ships models in tiers. In October 2026 the public models are Claude Haiku 5.5, Claude Sonnet 5.5 and Claude Opus 5.5, plus Claude Fable 5.1 in the top Mythos tier with extra safeguards. Version numbers change; the tiers stay the same, so think in tiers.</p>
+
+<figure>
+<svg viewBox="0 0 800 250" role="img" aria-label="Model tiers placed by capability and cost">
+  <path class="ln" d="M70 210 H760"/><path class="ln" d="M750 204 L762 210 L750 216"/>
+  <path class="ln" d="M70 210 V25"/><path class="ln" d="M64 35 L70 23 L76 35"/>
+  <text x="760" y="234" text-anchor="end" class="sm">cost and latency per call</text>
+  <text x="80" y="22" class="sm">capability on hard tasks</text>
+  <circle class="dot" cx="160" cy="165" r="9"/><text x="178" y="160" font-weight="600">Haiku</text><text x="178" y="178" class="sm">triage, extraction, routing, high volume</text>
+  <circle class="dot" cx="380" cy="110" r="11"/><text x="400" y="105" font-weight="600">Sonnet</text><text x="400" y="123" class="sm">default for most business work and coding</text>
+  <circle class="dot" cx="580" cy="70" r="12"/><text x="562" y="65" text-anchor="end" font-weight="600">Opus</text><text x="562" y="83" text-anchor="end" class="sm">hard reasoning, agents, planning</text>
+  <circle class="dot-w" cx="700" cy="40" r="10"/><text x="690" y="20" text-anchor="end" class="sm">Mythos tier (Fable): frontier work</text>
+</svg>
+<figcaption>Start every design with Sonnet. Move a step down when evals show the cheaper model holds quality; move up only for the steps that need it.</figcaption>
+</figure>
+
+<div class="tbl"><table>
+<thead><tr><th>Task</th><th>Start with</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Classify 10,000 emails by topic</td><td>Haiku (via Batch API)</td><td>Simple decision, huge volume, cost dominates</td></tr>
+<tr><td>Extract fields from invoices</td><td>Haiku or Sonnet</td><td>Try Haiku first, keep Sonnet for messy scans</td></tr>
+<tr><td>Draft a proposal from notes</td><td>Sonnet</td><td>Writing quality matters, moderate volume</td></tr>
+<tr><td>Agent that researches, plans and calls tools</td><td>Opus for the planner, Sonnet or Haiku for sub-steps</td><td>Planning errors are expensive; sub-steps are not</td></tr>
+<tr><td>Coding with Claude Code</td><td>Sonnet or Opus</td><td>Depends on codebase size and task difficulty</td></tr>
+</tbody></table></div>
+<p>Exact prices, context windows and model IDs change. Always read the current <a href="https://docs.claude.com/en/docs/about-claude/models/overview" target="_blank" rel="noopener">models overview</a> and <a href="https://docs.claude.com/en/docs/about-claude/pricing" target="_blank" rel="noopener">pricing page</a> before you put a number in a proposal.</p>
+
+<!-- 1.4 -->
+<h2>1.4 The Claude product surfaces</h2>
+<p>Clients will hear brand names. You need to map each one to a job.</p>
+<div class="tbl"><table>
+<thead><tr><th>Surface</th><th>What it is</th><th>Use it when the client needs</th></tr></thead>
+<tbody>
+<tr><td>Claude app (web, desktop, mobile)</td><td>Chat plus Projects, artifacts, Docs, Slides, Sheets, research, memory, connectors, scheduled tasks</td><td>Fast adoption across a team with no code</td></tr>
+<tr><td>Claude in Chrome</td><td>Claude acting in the user's own browser</td><td>Work in web tools that have no API or connector</td></tr>
+<tr><td>Claude for Microsoft 365</td><td>Claude inside Office apps</td><td>Teams that live in Word, Excel and Outlook</td></tr>
+<tr><td>Claude Tag (Slack)</td><td>A shared, proactive agent in team channels</td><td>Team-wide assistance where conversations already happen</td></tr>
+<tr><td>Claude Code</td><td>Agentic coding in terminal, IDE, web, desktop</td><td>Building and maintaining software, including your client deliveries</td></tr>
+<tr><td>Claude API and Console</td><td>Programmatic access, keys, usage, workbench</td><td>Custom apps, integrations, batch processing</td></tr>
+<tr><td>Claude Agent SDK / Managed Agents</td><td>Libraries and hosting for your own agents</td><td>Multi-step automations that run without a person in the chat</td></tr>
+<tr><td>Claude Security</td><td>Finds and patches vulnerabilities in a codebase</td><td>Clients with in-house software and a security worry</td></tr>
+<tr><td>MCP</td><td>Open protocol for connecting Claude to tools and data</td><td>Any of the above talking to the client's systems</td></tr>
+</tbody></table></div>
+<p>Skills, plugins, Projects and artifacts are capabilities inside these products, not separate products. "Claude for Financial Services" and similar names are packages of Claude for an industry.</p>
+
+<!-- 1.5 -->
+<h2>1.5 Plans, data and the first privacy questions</h2>
+<p>The first three questions every owner asks: "Will it train on our data?", "Who can see what?", and "What does it cost per person?". Have a clear, sourced answer for each.</p>
+<div class="tbl"><table>
+<thead><tr><th>Plan</th><th>Who it fits</th><th>Points to check in current terms</th></tr></thead>
+<tbody>
+<tr><td>Pro / Max</td><td>Individuals, the owner, you</td><td>Consumer terms; model-training setting is the user's choice</td></tr>
+<tr><td>Team</td><td>Small teams, the usual SMB starting point</td><td>Commercial terms, admin console, shared Projects, connectors</td></tr>
+<tr><td>Enterprise</td><td>Larger or regulated clients</td><td>SSO, audit logs, retention controls, larger context, network controls</td></tr>
+<tr><td>API</td><td>Custom builds</td><td>Commercial terms, retention options, usage-based billing</td></tr>
+</tbody></table></div>
+<div class="tip">Do not answer privacy questions from memory in a sales meeting. Send the client the relevant page from the <a href="https://trust.anthropic.com" target="_blank" rel="noopener">Anthropic Trust Center</a> and <a href="https://support.claude.com" target="_blank" rel="noopener">support.claude.com</a>, and note the date you checked it.</div>
+
+<!-- 1.6 -->
+<h2>1.6 Evidence: the Anthropic Economic Index</h2>
+<p>The <a href="https://www.anthropic.com/economic-index" target="_blank" rel="noopener">Anthropic Economic Index</a> publishes how Claude is actually used, broken down by work task, occupation category and country (Israel included). It shows patterns of use, not job outcomes, and you should present it that way.</p>
+<p>Three ways to use it in consulting:</p>
+<ul>
+<li><b>Prioritise:</b> tasks that already see heavy Claude usage elsewhere are proven territory for a pilot.</li>
+<li><b>Benchmark:</b> compare Israel's usage index with other countries to frame the opportunity.</li>
+<li><b>Frame:</b> show the split between augmentation (people working with Claude) and automation (Claude completing the task) for the client's function.</li>
+</ul>
+<p>Correct phrasing: "conversations matched to bookkeeping tasks", not "accountants use Claude".</p>
+
+<!-- LAB -->
+<div class="lab">
+<h3>Lab 1. Same task, two models</h3>
+<p>Goal: feel the speed, cost and quality differences yourself, and start the Python repo you will use all course.</p>
+<p><b>Setup</b></p>
+<pre><code>mkdir claude-transformation &amp;&amp; cd claude-transformation
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install anthropic python-dotenv
+echo "ANTHROPIC_API_KEY=sk-ant-..." &gt; .env   # key from console.anthropic.com, set a monthly spend limit</code></pre>
+<p><b>compare_models.py</b></p>
+<pre><code>import os, time, json
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic()
+
+# Check current model IDs at docs.claude.com before running
+MODELS = ["claude-haiku-5-5", "claude-sonnet-5-5"]
+
+TASK = """You are helping a 40-person Israeli logistics company.
+Below is a customer email. Return JSON with keys:
+intent (quote|complaint|tracking|other), urgency (1-5), language,
+summary (one sentence, English), draft_reply (in the customer's language).
+
+EMAIL:
+שלום, המשלוח שלנו לחיפה מתעכב כבר שלושה ימים ואנחנו צריכים אותו עד יום חמישי.
+מה קורה? יוסי, מחסני הצפון"""
+
+def run(model: str) -&gt; dict:
+    start = time.perf_counter()
+    msg = client.messages.create(
+        model=model,
+        max_tokens=600,
+        messages=[{"role": "user", "content": TASK}],
+    )
+    elapsed = time.perf_counter() - start
+    return {
+        "model": model,
+        "seconds": round(elapsed, 2),
+        "input_tokens": msg.usage.input_tokens,
+        "output_tokens": msg.usage.output_tokens,
+        "text": msg.content[0].text,
+    }
+
+if __name__ == "__main__":
+    results = [run(m) for m in MODELS]
+    for r in results:
+        print(f"\n=== {r['model']}  {r['seconds']}s  in={r['input_tokens']} out={r['output_tokens']}")
+        print(r["text"])
+    with open("results_lab1.json", "w", encoding="utf-8") as f:
+        json.dump(results, f, ensure_ascii=False, indent=2)</code></pre>
+<p><b>Steps</b></p>
+<ol>
+<li>Run it three times. Note average seconds and tokens per model.</li>
+<li>Look up current per-token prices and compute cost per email for each model. Multiply by 2,000 emails a month.</li>
+<li>Judge quality yourself: is the Hebrew reply natural? Is the JSON valid every time?</li>
+<li>Add a third run with Opus and a harder email (an angry complaint mixing Hebrew and Russian). Does the cheaper model still hold?</li>
+<li>Write a five-line conclusion: which model you would put in production for this task and why.</li>
+</ol>
+<p><b>Part B (30 min):</b> in the Claude app, use the Anthropic Economic Index connector (or the website) to find the top work tasks matched to two occupation categories your target clients employ, and Israel's usage index. Save the numbers and the date.</p>
+</div>
+
+<!-- DELIVERABLE -->
+<h2>Deliverable: "Claude for SMBs" one-page briefing</h2>
+<p>A single page you can send to a prospect after the first call. Write it with Claude, but every claim must be yours and sourced. Suggested structure:</p>
+<ol>
+<li><b>Headline:</b> one sentence on what AI can do for a company their size this quarter</li>
+<li><b>Three levels:</b> assist, augment, automate, each with an example from their industry</li>
+<li><b>Evidence:</b> two numbers from the Economic Index, with date and link</li>
+<li><b>What it costs and what it protects:</b> plan options and the data-use answer, with links</li>
+<li><b>How we start:</b> a two-week readiness audit, what they get, what you need from them</li>
+<li><b>About Vastama:</b> three lines and a contact</li>
+</ol>
+<p>Save it as a Claude Docs document or a one-page PDF. Keep an English version and plan a Hebrew one.</p>
+
+<!-- SELF CHECK -->
+<h2>Self-check</h2>
+<ol class="check">
+<li>A client wants Claude to "handle all supplier emails automatically" from day one. What do you propose instead, and why?
+<details><summary>Model answer</summary>Start at augment: Claude classifies and drafts, a person approves. Measure accuracy for 2–4 weeks, then automate only the categories that hit the agreed accuracy. This limits risk and builds trust.</details></li>
+<li>Which model would you start with for a nightly job that tags 50,000 product descriptions, and which API feature would you use?
+<details><summary>Model answer</summary>Haiku via the Batch API, after a small eval confirms tag quality. Batch processing is cheaper and suits non-urgent jobs.</details></li>
+<li>An owner asks whether Claude trains on their data. What do you say?
+<details><summary>Model answer</summary>It depends on the plan and terms. Show the current commercial terms and Trust Center pages for the plan you recommend, with the date checked, rather than answering from memory.</details></li>
+<li>Name the product surface for each: a team that lives in Slack; a web tool with no API; a custom invoice pipeline.
+<details><summary>Model answer</summary>Claude Tag in Slack; Claude in Chrome; the Claude API (possibly with the Batch API) in a Python service.</details></li>
+<li>Rewrite this sentence correctly: "Economic Index shows lawyers are being replaced by Claude."
+<details><summary>Model answer</summary>"The Economic Index shows a share of Claude conversations matched to legal tasks, and how much of that is augmentation versus automation." It describes usage patterns, not jobs.</details></li>
+</ol>
+
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://docs.claude.com/en/docs/about-claude/models/overview" target="_blank" rel="noopener">Claude models overview</a></li>
+<li><a href="https://docs.claude.com/en/api/overview" target="_blank" rel="noopener">Claude API overview</a></li>
+<li><a href="https://www.anthropic.com/economic-index" target="_blank" rel="noopener">Anthropic Economic Index</a></li>
+<li><a href="https://support.claude.com" target="_blank" rel="noopener">Claude Help Center</a> (plans, admin, privacy)</li>
+<li><a href="https://anthropic.skilljar.com" target="_blank" rel="noopener">Anthropic Academy</a> (free courses)</li>
+</ul>
+
+<div class="nav"><span>← Syllabus</span><span>Next: Module 2 · Prompt and context engineering →</span></div>
+</div>
+
+</html>
